@@ -21,41 +21,39 @@ n	result
 1부터 5 사이의 소수는 [2,3,5] 3개가 존재하므로 3를 반환
 """
 
+
 def solution(n):
-    cnt = 0
-    for i in range(2, n+1):
-        flag = False
-        if i % 2 == 0:
-            cnt += 1 if i == 2 else 0
-        else:
-            # 1.1835615
-            # for j in range(3, (i//2)+1):
-
-            # 0.5282692333333333
-            for j in range(3, int(i ** 0.5)+1):
-                if i % j == 0:
-                    flag = True
-                    break
-            if not flag:
-                cnt += 1
-    return cnt
-
-    # if n % 2 == 0:
-    #     return 'prime' if n == 2 else 'no prime'
-    # else:
+    # 문제풀이 01 / 에스토스테네스의 체를 몰랐
+    # 0.5282692333333333
+    # cnt = 0
+    # for i in range(2, n+1):
     #     flag = False
-    #     for i in range(3, int(n ** 0.5)+1):
-    #         if n % i == 0:
-    #             flag = True
-    #             break
-    #     return 'prime' if not flag else 'no prime'
+    #     if i % 2 == 0:
+    #         cnt += 1 if i == 2 else 0
+    #     else:
+    #         for j in range(3, int(i ** 0.5)+1):
+    #             if i % j == 0:
+    #                 flag = True
+    #                 break
+    #         if not flag:
+    #             cnt += 1
+    # return cnt
+
+    # 문제풀이 02 / 에스토스테네스의 체
+    # 0.09606202783333333 (약,5.4배 속도 증가)
+    prime_b = [True] * (n-1)
+    for i in range(2, int(n**0.5)+1):
+        if prime_b[i-2]:
+            for j in range(i*i, n+1, i):
+                prime_b[j-2] = False
+    return len([pb for pb in prime_b if pb])
+
 
 # print(f'2 pred: {solution(2)}')
+# print(f'3 pred: {solution(3)}')
 # print(f'4 pred: {solution(4)}')
-# print(f'10: {solution(10)}')
 # print(f'5: {solution(5)}')
-# print(f'80: {solution(80)}')
-# print(f'1223: {solution(1223)}')
+# print(f'10: {solution(10)}')
 
 import timeit
 avg_time = 0.
