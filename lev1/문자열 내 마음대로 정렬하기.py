@@ -30,25 +30,64 @@ abce와 abcd는 사전순으로 정렬하면 abcd가 우선하므로, 답은 [ab
 
 def solution(strings, n):
     # run time error in programmers site
-    # 0.02970385325
-    sorted_strings = sorted(strings, key=lambda x: x[n], reverse=False)
-    duplication = [i for i in range(len(sorted_strings)-1) if sorted_strings[i][n] == sorted_strings[i+1][n]]
-    if duplication:
-        sorted_duplication = sorted(sorted_strings[duplication[0]: duplication[0]+len(duplication)+1])
-        for i in range(len(sorted_duplication)-1):
-            sorted_strings[duplication[i]] = sorted_duplication[i]
-        sorted_strings[duplication[-1]+1] = sorted_duplication[duplication[-1]+1]
-    return sorted_strings
+    # 0.030307105499999997
+    # sorted_strings = sorted(strings, key=lambda x: x[n], reverse=False)
+    # duplication = [i for i in range(len(sorted_strings)-1) if sorted_strings[i][n] == sorted_strings[i+1][n]]
+    # if duplication:
+    #     sorted_duplication = sorted(sorted_strings[duplication[0]: duplication[0]+len(duplication)+1])
+    #     for i in range(len(sorted_duplication)-1):
+    #         sorted_strings[duplication[i]] = sorted_duplication[i]
+    #     sorted_strings[duplication[-1]+1] = sorted_duplication[duplication[-1]+1]
+    # return sorted_strings
+
+    # 정렬하면서 중복되는 n자리수 인덱스 판단하면서 소팅
+    # 중복되는 n자리수에 대하여 재소
+
+    pass
 
 
-print(solution(['sun', 'bed', 'car'], 1))
-print(solution(['abce', 'abcd', 'cdx'], 2))
-print(solution(['abce', 'abcd', 'abcc'], 2))
-print(solution(['xzc', 'abce', 'abcd', 'abcc'], 2))
+def swap(arr, i, j):
+    temp = arr[i]
+    arr[i] = arr[j]
+    arr[j] = temp
+    return arr
 
-import timeit
-avg_time = 0.
-tests = [[['sun', 'bed', 'car'], 1], [['abce', 'abcd', 'cdx'], 2], [['abce', 'abcd', 'abcc'], 2], [['xzc', 'abce', 'abcd', 'abcc'], 2]]
-for t in tests:
-    avg_time += timeit.timeit(lambda: solution(*t), number=10000)
-print(f'avg_time: {avg_time / len(tests)}')
+
+def quick_sort(n):
+    if len(n) <= 2:
+        print(f'return n: {n}')
+        return n
+    print(f'quick_sort: {n}')
+    pivot = 0
+    left = 1
+    right = len(n) - 1
+    while True:
+        while n[left] < n[pivot] and left <= len(n):
+            left += 1
+        while n[right] > n[pivot] and right >= 0:
+            right -= 1
+        if left <= right:
+            n = swap(n, left, right)
+            print(f'swap n: {n}, l: {n[left]}, r: {n[right]}')
+        else:
+            if n[pivot] >= n[right]:
+                n = swap(n, pivot, right)
+            print(f'i==j n: {n}, l: {left}, r: {right}')
+            quick_sort(n[:right])
+            quick_sort(n[left:])
+
+
+# print(quick_sort([5, 3, 8, 4, 9, 1, 6, 2, 7]))
+print(quick_sort([5, 3, 7, 6, 2, 1, 4]))
+
+# print(solution(['sun', 'bed', 'car'], 1))
+# print(solution(['abce', 'abcd', 'cdx'], 2))
+# print(solution(['abce', 'abcd', 'abcc'], 2))
+# print(solution(['xzc', 'abce', 'abcd', 'abcc'], 2))
+
+# import timeit
+# avg_time = 0.
+# tests = [[['sun', 'bed', 'car'], 1], [['abce', 'abcd', 'cdx'], 2], [['abce', 'abcd', 'abcc'], 2], [['xzc', 'abce', 'abcd', 'abcc'], 2]]
+# for t in tests:
+#     avg_time += timeit.timeit(lambda: solution(*t), number=10000)
+# print(f'avg_time: {avg_time / len(tests)}')
