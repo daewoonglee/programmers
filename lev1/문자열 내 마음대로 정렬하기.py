@@ -52,42 +52,85 @@ def swap(arr, i, j):
     arr[j] = temp
     return arr
 
-
+# custom quick sort
+# 0.059250399333333335
 def quick_sort(n):
-    if len(n) <= 2:
-        print(f'return n: {n}')
+    if len(n) <= 1:
         return n
-    print(f'quick_sort: {n}')
+    elif len(n) == 2:
+        if n[0] >= n[1]:
+            n = swap(n, 0, 1)
+        return n
     pivot = 0
     left = 1
     right = len(n) - 1
     while True:
-        while n[left] < n[pivot] and left <= len(n):
+        while left < len(n) and n[left] < n[pivot]:
             left += 1
-        while n[right] > n[pivot] and right >= 0:
+        while right >= 0 and n[right] > n[pivot]:
             right -= 1
         if left <= right:
             n = swap(n, left, right)
-            print(f'swap n: {n}, l: {n[left]}, r: {n[right]}')
         else:
             if n[pivot] >= n[right]:
                 n = swap(n, pivot, right)
-            print(f'i==j n: {n}, l: {left}, r: {right}')
-            quick_sort(n[:right])
-            quick_sort(n[left:])
+            return quick_sort(n[:right]) + [n[right]] + quick_sort(n[left:])
 
 
-# print(quick_sort([5, 3, 8, 4, 9, 1, 6, 2, 7]))
+print(quick_sort([5, 3, 8, 4, 9, 1, 6, 2, 7]))
 print(quick_sort([5, 3, 7, 6, 2, 1, 4]))
+print(quick_sort([9, 8, 6, 7, 5, 1, 4, 3, 2]))
+
+# geeksforgeeks - https://www.geeksforgeeks.org/python-program-for-quicksort/
+def partition(arr, low, high):
+    i = (low - 1)  # index of smaller element
+    pivot = arr[high]  # pivot
+
+    for j in range(low, high):
+
+        # If current element is smaller than or
+        # equal to pivot
+        if arr[j] <= pivot:
+            # increment index of smaller element
+            i = i + 1
+            arr[i], arr[j] = arr[j], arr[i]
+
+    arr[i + 1], arr[high] = arr[high], arr[i + 1]
+    return i + 1
+
+
+# geeksforgeeks - https://www.geeksforgeeks.org/python-program-for-quicksort/
+# 0.07451250833333334
+def quickSort(arr, low, high):
+    if len(arr) == 1:
+        return arr
+    if low < high:
+        # pi is partitioning index, arr[p] is now
+        # at right place
+        pi = partition(arr, low, high)
+
+        # Separately sort elements before
+        # partition and after partition
+        quickSort(arr, low, pi - 1)
+        quickSort(arr, pi + 1, high)
+
+
+# Driver code to test above
+arr = [10, 7, 8, 9, 1, 5]
+quickSort(arr, 0, len(arr) - 1)
+print(arr)
 
 # print(solution(['sun', 'bed', 'car'], 1))
 # print(solution(['abce', 'abcd', 'cdx'], 2))
 # print(solution(['abce', 'abcd', 'abcc'], 2))
 # print(solution(['xzc', 'abce', 'abcd', 'abcc'], 2))
 
-# import timeit
-# avg_time = 0.
+import timeit
+avg_time = 0.
 # tests = [[['sun', 'bed', 'car'], 1], [['abce', 'abcd', 'cdx'], 2], [['abce', 'abcd', 'abcc'], 2], [['xzc', 'abce', 'abcd', 'abcc'], 2]]
-# for t in tests:
-#     avg_time += timeit.timeit(lambda: solution(*t), number=10000)
-# print(f'avg_time: {avg_time / len(tests)}')
+tests = [[[5, 3, 8, 4, 9, 1, 6, 2, 7]], [5, 3, 7, 6, 2, 1, 4], [9, 8, 6, 7, 5, 1, 4, 3, 2]]
+for t in tests:
+    # avg_time += timeit.timeit(lambda: solution(*t), number=10000)
+    # avg_time += timeit.timeit(lambda: quick_sort(t), number=10000)
+    avg_time += timeit.timeit(lambda: quickSort(t, 0, len(t)-1), number=10000)
+print(f'avg_time: {avg_time / len(tests)}')
