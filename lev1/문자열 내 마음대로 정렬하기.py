@@ -27,27 +27,27 @@ abce와 abcd, cdx의 2번째 인덱스 값은 c, c, x입니다.
 abce와 abcd는 사전순으로 정렬하면 abcd가 우선하므로, 답은 [abcd, abce, cdx] 입니다.
 """
 
-from collections import defaultdict
-
 
 def get_duplication_idx(s_strings):
-    duplication_list = defaultdict(list)
+    d_dict = {}
     for i, s in enumerate(s_strings):
-        duplication_list[s].append(i)
-    return [v for v in duplication_list.values() if len(v) > 1]
+        d_dict.setdefault(s, []).append(i)
+    return [v for v in d_dict.values() if len(v) > 1]
 
 
 def solution(strings, n):
-    # test case error
-    # 0.03420615975
-    sorted_strings = sorted(strings, key=lambda x: x[n], reverse=False)
+    # 0.03122448975
+    sorted_strings = sorted(strings, key=lambda x: x[n])
     duplication_idx = get_duplication_idx([s[n] for s in sorted_strings])
     if duplication_idx:
-        sorted_duplication = sorted(sorted_strings[duplication_idx[0][0]: duplication_idx[0][-1]+1], key=lambda x: x)
-        start = duplication_idx[0][0]
-        for i in duplication_idx[0]:
-            sorted_strings[i] = sorted_duplication[i-start]
+        for d_idx in duplication_idx:
+            d_sorted = sorted_strings[d_idx[0]: d_idx[-1]+1]
+            d_sorted.sort()
+            sorted_strings[d_idx[0]: d_idx[-1]+1] = d_sorted
     return sorted_strings
+
+    # easy way, 0.012922232249999999
+    # return sorted(sorted(strings), key=lambda x:x[n])
 
 
 print(solution(['sun','bed','bedf','bedd','bed','car'], 1))
@@ -56,6 +56,8 @@ print(solution(['abce', 'abcd', 'cdx'], 2))
 print(solution(['abce', 'abcd', 'abcc'], 2))
 print(solution(['xzc', 'abce', 'abcd', 'abcc'], 2))
 print(solution(['xzc', 'abce', 'abcd', 'abcc', 'xac', 'abac'], 2))
+print(solution(['xzc', 'abce', 'abcd', 'abcc', 'xac', 'abac'], 0))
+print(solution(['xzc', 'abce', 'abcd', 'abcc', 'xac', 'abac', 'czb'], 0))
 print(solution(['abzcd','cdzab','abzfg','abzaa','abzbb','bbzaa'], 2))
 
 import timeit
