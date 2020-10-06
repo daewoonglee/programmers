@@ -36,27 +36,36 @@ n	lost	reserve	return
 ※ 공지 - 2019년 2월 27일, 28일 테스트케이스가 추가되었습니다.
 '''
 
-
 def solution(n, lost, reserve):
-    # 0.006992152199999999
+    # 0.011462102400000002
     lost.sort()
     reserve.sort()
+
+    remove_list = [r for r in reserve if r in lost]
+    for r in remove_list:
+        lost.remove(r)
+        reserve.remove(r)
+
     for r in reserve:
-        if r in lost:
-            lost.remove(r)
-        elif r+1 in lost:
-            lost.remove(r+1)
-        elif r-1 in lost:
-            lost.remove(r-1)
+        for l in lost:
+            if r+1 == l or r-1 == l:
+                lost.remove(l)
+                break
     return n - len(lost)
 
 
 # print(solution(5, [2, 4], [1, 3, 5]))
 # print(solution(5, [2, 4], [3]))
 # print(solution(3, [3], [1]))
-print(solution(3, [3], [3]))
+# print(solution(3, [3], [3]))
 # print(solution(3, [2], [3, 1]))
 # print(solution(3, [3, 2, 1], [1, 2, 3]))
+# print(solution(6, [5, 6], [4, 5]))
+# print(solution(5, [4, 5], [3, 4]))
+# print(solution(10, [2, 3, 4], [6, 7, 4]))
+print(solution(5, [1, 2, 3, 4, 5], [2, 3, 4, 1, 5]))
+# print(solution(10, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [2, 3, 4, 5, 6, 1, 7, 8, 9, 10]))
+
 
 import timeit
 avg_time = 0.
@@ -64,3 +73,4 @@ tests = [[5, [2, 4], [1, 3, 5]], [5, [2, 4], [3]], [3, [3], [1]], [3, [2], [3, 1
 for t in tests:
     avg_time += timeit.timeit(lambda: solution(*t), number=10000)
 print(f'avg_time: {avg_time / len(tests)}')
+
