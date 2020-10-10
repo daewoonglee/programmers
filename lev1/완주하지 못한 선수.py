@@ -30,13 +30,22 @@ mislav는 참여자 명단에는 두 명이 있지만, 완주자 명단에는 �
 
 
 def solution(participant, completion):
+    # 0.8345414, 0.8214931999999999
+    # participant.sort()
+    # completion.sort()
+    # for i in range(len(completion)):
+    #     if participant[i] != completion[i]:
+    #         return participant[i]
+    # return participant[-1]
+
+    # code refactoring
+    # 0.6521052
     participant.sort()
     completion.sort()
-
-    for c in completion:
-        if c in participant:
-            participant.remove(c)
-    return participant[0]
+    for p, c in zip(participant, completion):
+        if p != c:
+            return p
+    return participant[-1]
 
 
 print(solution(['leo', 'kiki', 'eden'], ['eden', 'kiki']))
@@ -44,12 +53,16 @@ print(solution(['marina', 'josipa', 'nikola', 'vinko', 'filipa'], ['josipa', 'fi
 print(solution(['mislav', 'stanko', 'mislav', 'ana'], ['stanko', 'ana', 'mislav']))
 print(solution(['mislav', 'mislav', 'mislav', 'ana'], ['mislav', 'mislav', 'ana']))
 
-# import timeit
-# avg_time = 0.
-# tests = [[['leo', 'kiki', 'eden'], ['eden', 'kiki']],
-#          [['marina', 'josipa', 'nikola', 'vinko', 'filipa'], ['josipa', 'filipa', 'marina', 'nikola']],
-#          [['mislav', 'stanko', 'mislav', 'ana'], ['stanko', 'ana', 'mislav']],
-#          [['mislav', 'mislav', 'mislav', 'ana'], ['mislav', 'mislav', 'ana']]]
-# for t in tests:
-#     avg_time += timeit.timeit(lambda: solution(*t), number=10000)
-# print(f'avg_time: {avg_time / len(tests)}')
+p = [str(i) for i in range(999)]
+c = [str(i) for i in range(998)]
+import random
+random.shuffle(p)
+random.shuffle(c)
+print(solution(p, c))
+
+import timeit
+avg_time = 0.
+tests = [[p, c]]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(*t), number=10000)
+print(f'avg_time: {avg_time / len(tests)}')
