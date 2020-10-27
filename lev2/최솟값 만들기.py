@@ -33,24 +33,18 @@ A에서 첫번째 숫자인 1, B에서 두번째 숫자인 4를 뽑아 곱하여
 이 경우가 최소이므로 10을 return 합니다.
 """
 
-import itertools
-def solution(A, B):
-    # 0.02811905
-    # p_b = list(itertools.permutations(B))
-    # sum_list = []
-    # for b in p_b:
-    #     sum_n = 0
-    #     for a, bb in zip(A, b):
-    #         sum_n += a * bb
-    #     sum_list.append(sum_n)
-    # return min(sum_list)
 
-    # 0.037046
-    p_b = list(itertools.permutations(B))
-    return min([sum([a*bb for a, bb in zip(A, b)]) for b in p_b])
+def solution(A, B):
+    # 0.0123792615
+    A.sort()
+    B.sort(reverse=True)
+    return sum([a*b for a, b in zip(A, B)])
+
 
 print(solution([1, 4, 2], [5, 4, 4]))
 print(solution([1, 2], [3, 4]))
+print(solution([1, 2, 1, 2], [1, 2, 2, 1]))
+
 
 import timeit
 avg_time = 0.
