@@ -27,37 +27,24 @@ land	answer
 
 
 def solution(land):
-    max_land = [[] for _ in land]
-    for i, row in enumerate(land):
-        second_largest_n, largest_n = sorted(row)[-2:]
-        largest_idx = row.index(largest_n)
-        second_idx = row.index(second_largest_n)
-        max_land[i].append((largest_n, largest_idx))
-        max_land[i].append((second_largest_n, second_idx))
+    # 0.06948250000000002
+    for i in range(1, len(land)):
+        for j in range(len(land[0])):
+            land[i][j] += max(land[i-1][:j] + land[i-1][j+1:])
+    return max(land[-1])
 
-    answers = [0 for _ in range(2)]
-    for i in range(2):
-        pre_idx = max_land[0][i][1]
-        answers[i] += max_land[0][i][0]
-        for m in max_land[1:]:
-            for j in range(2):
-                if pre_idx != m[j][1]:
-                    pre_idx = m[j][1]
-                    answers[i] += m[j][0]
-                    break
-    return max(answers)
+print(solution([[1, 2, 3, 5], [5, 6, 7, 8], [4, 3, 2, 1]]))               # 16
+print(solution([[1, 2, 3, 5], [5, 6, 7, 8], [4, 3, 2, 1], [1, 2, 3, 4]])) # 20
+print(solution([[1, 2, 3, 5], [5, 6, 7, 100], [4, 3, 2, 1]]))             # 107
+print(solution([[1, 2, 3, 50], [1, 2, 3, 51], [1, 2, 3, 100]]))           # 153
+print(solution([[1, 2, 3, 5], [5, 6, 7, 100], [4, 3, 2, 1]]))             # 107
+print(solution([[4, 3, 2, 1], [2, 2, 2, 1], [6, 6, 6, 4], [8, 7, 6, 5]])) # 20
 
-
-# print(solution([[1, 2, 3, 5], [5, 6, 7, 8], [4, 3, 2, 1]]))
-# print(solution([[1, 2, 3, 5], [5, 6, 7, 100], [4, 3, 2, 1]]))
-# print(solution([[1, 2, 3, 50], [1, 2, 3, 51], [1, 2, 3, 100]]))
-print(solution([[4, 3, 2, 1], [2, 2, 2, 1], [6, 6, 6, 4], [8, 7, 6, 5]]))
-
-# import timeit
-# avg_time = 0.
-# tests = [[[1, 2, 3, 5], [5, 6, 7, 8], [4, 3, 2, 1]],
-#          [[1, 2, 3, 4, 5], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5]],
-#          [[100, 2, 3, 5], [5, 6, 7, 8], [4, 3, 2, 1]]]
-# for t in tests:
-#     avg_time += timeit.timeit(lambda: solution(t), number=10000)
-# print(f'avg_time: {avg_time / len(tests)}')
+import timeit
+avg_time = 0.
+tests = [[[1, 2, 3, 5], [5, 6, 7, 8], [4, 3, 2, 1]],
+         [[1, 2, 3, 4, 5], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5]],
+         [[100, 2, 3, 5], [5, 6, 7, 8], [4, 3, 2, 1]]]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(t), number=10000)
+print(f'avg_time: {avg_time / len(tests)}')
