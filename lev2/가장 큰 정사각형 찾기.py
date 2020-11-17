@@ -90,31 +90,42 @@ board = [[0, 1, 1, 1],
          [1, 1, 0, 1],
          [1, 1, 1, 1]]
 
+# board = [[0, 0, 0, 0],
+#          [0, 0, 0, 0],
+#          [1, 1, 1, 1]]
+
+# board = [[0, 0, 1, 1],
+#          [1, 1, 1, 1]]
+
 answers = []
 matching = [[0] * len(board[0])]*len(board)
-print(matching)
+print(f'matching: {matching}\n')
+matching_col = 1
 for i, row in enumerate(board):
     print(f'row: {row}')
     another_rows = board[i+1:]
     print(f'another rows: {another_rows}')
+    flag = False
     for a_row in another_rows:
+        print(f'a_row: {a_row}')
         matching_row = 1
         for r, ar in zip(row, a_row):
             print(f'r: {r}, ar: {ar}')
-            if r == ar:
+            if r and ar:
+                if not flag:
+                    matching_col += 1
+                    flag = True
                 matching_row += 1
-            else:
-                break
             print(f'matching_row: {matching_row}')
-        if matching_row == 0:
-            break
-        elif matching_row == 1:
+        if matching_row == 1:
             answer = 1
+        else:
+            answer = matching_col * (matching_row-1)
         # else:
         #     answer = diff * cnt if diff == cnt else diff-1 * cnt if diff > cnt else diff * cnt-1
         answers.append(answer)
-        # print(f'z row: {z_row}')
-        # if all([j_r in z_row for j_r in j_row]):
-        #     cnt += 1
-        #     print(f'cnt: {cnt}')
+    flag = False
+    print(f'matching col: {matching_col}')
     print()
+
+print(f'answers: {max(answers)}')
