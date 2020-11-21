@@ -42,23 +42,17 @@ board	answer
 
 
 def solution(board):
-    # 0.10346960875000001
-    answers = []
-    for i, row in enumerate(board):
-        j_row = [j for j, r in enumerate(row) if r == 1]
-        another_rows = board[:i] + board[i+1:]
-        cnt = 1
-        for a_row in another_rows:
-            z_row = [z for z, r in enumerate(a_row) if r == 1]
-            if all([j_r in z_row for j_r in j_row]):
-                cnt += 1
-        diff = len(j_row)
-        if cnt == 1:
-            answer = 1
-        else:
-            answer = diff * cnt if diff == cnt else diff-1 * cnt if diff > cnt else diff * cnt-1
-        answers.append(answer)
-    return max(answers)
+    # 0.038016865999999996
+    max_n = 0
+    if len(board) == 1:
+        return max(board[0])
+    for i in range(1, len(board)):
+        for j in range(1, len(board[0])):
+            if board[i][j] == 1:
+                board[i][j] = min(board[i-1][j], board[i-1][j-1], board[i][j-1]) + 1
+                if max_n < board[i][j]:
+                    max_n = board[i][j]
+    return max_n ** 2
 
 
 # print(solution([[0, 1, 1, 1],
@@ -67,65 +61,24 @@ def solution(board):
 #                 [0, 0, 1, 0]]))
 # print(solution([[0, 0, 1, 1],
 #                 [1, 1, 1, 1]]))
-print(solution([[0, 1, 1, 1],
-                [1, 1, 0, 1],
-                [1, 1, 1, 1]]))
+# print(solution([[0, 1, 1, 1],
+#                 [1, 1, 0, 1],
+#                 [1, 1, 1, 1]]))
 # print(solution([[0, 0, 0, 0],
 #                 [0, 0, 0, 0],
 #                 [1, 1, 1, 1]]))
+print(solution([[0]]))
+print(solution([[1]]))
+print(solution([[0, 1, 1, 1]]))
+print(solution([[0, 0]]))
 
 
-# import timeit
-# avg_time = 0.
-# tests = [[[0, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [0, 0, 1, 0]],
-#          [[0, 0, 1, 1], [1, 1, 1, 1]],
-#          [[0, 1, 1, 1], [1, 1, 0, 1], [1, 1, 1, 1]],
-#          [[0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 1, 1]]]
-# for t in tests:
-#     avg_time += timeit.timeit(lambda: solution(t), number=10000)
-# print(f'avg_time: {avg_time / len(tests)}')
-
-
-board = [[0, 1, 1, 1],
-         [1, 1, 0, 1],
-         [1, 1, 1, 1]]
-
-# board = [[0, 0, 0, 0],
-#          [0, 0, 0, 0],
-#          [1, 1, 1, 1]]
-
-# board = [[0, 0, 1, 1],
-#          [1, 1, 1, 1]]
-
-answers = []
-matching = [[0] * len(board[0])]*len(board)
-print(f'matching: {matching}\n')
-matching_col = 1
-for i, row in enumerate(board):
-    print(f'row: {row}')
-    another_rows = board[i+1:]
-    print(f'another rows: {another_rows}')
-    flag = False
-    for a_row in another_rows:
-        print(f'a_row: {a_row}')
-        matching_row = 1
-        for r, ar in zip(row, a_row):
-            print(f'r: {r}, ar: {ar}')
-            if r and ar:
-                if not flag:
-                    matching_col += 1
-                    flag = True
-                matching_row += 1
-            print(f'matching_row: {matching_row}')
-        if matching_row == 1:
-            answer = 1
-        else:
-            answer = matching_col * (matching_row-1)
-        # else:
-        #     answer = diff * cnt if diff == cnt else diff-1 * cnt if diff > cnt else diff * cnt-1
-        answers.append(answer)
-    flag = False
-    print(f'matching col: {matching_col}')
-    print()
-
-print(f'answers: {max(answers)}')
+import timeit
+avg_time = 0.
+tests = [[[0, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [0, 0, 1, 0]],
+         [[0, 0, 1, 1], [1, 1, 1, 1]],
+         [[0, 1, 1, 1], [1, 1, 0, 1], [1, 1, 1, 1]],
+         [[0, 0, 0, 0], [0, 0, 0, 0], [1, 1, 1, 1]]]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(t), number=10000)
+print(f'avg_time: {avg_time / len(tests)}')
