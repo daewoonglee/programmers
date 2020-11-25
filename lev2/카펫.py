@@ -26,26 +26,65 @@ brown	yellow	return
 
 
 def solution(brown, yellow):
-    N = brown + yellow
-    # print(N)
-    divisor = [i for i in range(3, N//2) if N % i == 0]
-    # print(divisor)
+    # 0.020155151
+    # divisor = [i for i in range(1, yellow+1) if yellow % i == 0]
+    # pivot = len(divisor)//2
+    # if len(divisor) % 2:
+    #     h = divisor[pivot] + 2
+    #     if h*h == brown + yellow:
+    #         return [h, h]
+    #     divisor.pop(pivot)
+    # for i in range(pivot):
+    #     h = divisor[pivot-i-1] + 2
+    #     w = divisor[pivot+i] + 2
+    #     if h*w == brown + yellow:
+    #         return [w, h]
 
-    # 0.030745288666666665
-    divisor.reverse()
-    return [divisor[len(divisor)//2]] * 2 if len(divisor) % 2 else divisor[len(divisor)//2-1: len(divisor)//2+1]
+    # code refactoring
+    # 0.011519009714285714
+    # for i in range(1, int(yellow**(1/2))+1):
+    #     if yellow % i == 0:
+    #         if 2*(i + yellow//i) == brown-4:
+    #             return [yellow//i+2, i+2]
+
+    # 0.014715602857142854
+    # nm = brown + yellow
+    # for n in range(1, nm+1):
+    #     if nm % n != 0:
+    #         continue
+    #     m = nm//n
+    #     if (n-2)*(m-2) == yellow:
+    #         return sorted([n, m], reverse = True)
+
+    # 0.012528091142857144
+    import math
+    # w = ((brown+4)/2 + math.sqrt(((brown+4)/2)**2-4*(brown+yellow)))/2
+    # h = ((brown+4)/2 - math.sqrt(((brown+4)/2)**2-4*(brown+yellow)))/2
+    # return [w,h]
+
+    ans=((brown-4)+math.sqrt((brown-4)**2-16*yellow))//4
+    return [ans+2,yellow//ans+2]
 
 
-print(solution(8, 1))
-print(solution(10, 2))
-print(solution(24, 24))
+print(solution(8, 1))   # 3, 3
+print(solution(10, 2))  # 4, 3
+print(solution(24, 24)) # 8, 6
+print(solution(26, 10)) # 12, 3
+print(solution(22, 14)) # 9, 4
+print(solution(20, 16)) # 6, 6
+print(solution(38, 16)) # 18, 3
+
 
 
 import timeit
 avg_time = 0.
 tests = [[8, 1],
          [10, 2],
-         [24, 24]]
+         [24, 24],
+         [26, 10],
+         [22, 14],
+         [20, 16],
+         [38, 16]]
 for t in tests:
     avg_time += timeit.timeit(lambda: solution(*t), number=10000)
 print(f'avg_time: {avg_time / len(tests)}')
