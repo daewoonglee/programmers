@@ -35,16 +35,28 @@ phone_book	                return
 
 
 def solution(phone_book):
-    str_phone_book = list(map(str, phone_book))
-    number = str_phone_book[0]
-    for phone_b in str_phone_book[1:]:
-        for i in range(len(phone_b)-len(number)+1):
-            if number == phone_b[i:i+len(number)]:
-                return False
+    # 0.0199450915
+    phone_book = sorted(list(map(str, phone_book)))
+    p_num = phone_book[0]
+    for pb in phone_book[1:]:
+        if p_num == pb[:len(p_num)]:
+            return False
     return True
 
 
-print(solution([119, 97674223, 1195524421]))
-print(solution([123, 456, 789]))
-print(solution([12, 123, 1235, 567, 88]))
+# print(solution([119, 97674223, 1195524421]))
+# print(solution([21, 97674223, 1195524421]))
+# print(solution([123, 456, 789]))
+# print(solution([12, 123, 1235, 567, 88]))
+print(solution([123, 123, 1245, 567, 88]))
 
+
+import timeit
+avg_time = 0.
+tests = [[119, 97674223, 1195524421],
+         [21, 97674223, 1195524421],
+         [123, 456, 789],
+         [12, 123, 1235, 567, 88]]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(t), number=10000)
+print(f'avg_time: {avg_time / len(tests)}')
