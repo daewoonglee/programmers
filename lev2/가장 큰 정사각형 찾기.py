@@ -5,6 +5,9 @@
 (단, 정사각형이란 축에 평행한 정사각형을 말합니다.)
 
 예를 들어
+<<<<<<< Updated upstream
+=======
+
 1	2	3	4
 0	1	1	1
 1	1	1	1
@@ -29,7 +32,9 @@
 board	answer
 [[0,1,1,1],[1,1,1,1],[1,1,1,1],[0,0,1,0]]	9
 [[0,0,1,1],[1,1,1,1]]	4
+<<<<<<< Updated upstream
 
+=======
 입출력 예 설명
 입출력 예 #1
 위의 예시와 같습니다.
@@ -54,11 +59,16 @@ def solution(board):
                     max_n = board[i][j]
     return max_n ** 2
 
+    min_r = 0
+    for row in board:
+        row.index('1')
+
 
 # print(solution([[0, 1, 1, 1],
 #                 [1, 1, 1, 1],
 #                 [1, 1, 1, 1],
 #                 [0, 0, 1, 0]]))
+
 # print(solution([[0, 0, 1, 1],
 #                 [1, 1, 1, 1]]))
 # print(solution([[0, 1, 1, 1],
@@ -82,3 +92,16 @@ tests = [[[0, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [0, 0, 1, 0]],
 for t in tests:
     avg_time += timeit.timeit(lambda: solution(t), number=10000)
 print(f'avg_time: {avg_time / len(tests)}')
+
+print(solution([[0, 0, 1, 1],
+                [1, 1, 1, 1]]))
+print(solution([[0, 1, 1, 1],
+                [1, 1, 1, 1],
+                [0, 0, 0, 1]]))
+
+# import timeit
+# avg_time = 0.
+# tests = [15, 9, 21, 100, 99]
+# for t in tests:
+#     avg_time += timeit.timeit(lambda: solution(t), number=10000)
+# print(f'avg_time: {avg_time / len(tests)}')
