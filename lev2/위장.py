@@ -46,22 +46,32 @@ face에 해당하는 의상이 crow_mask, blue_sunglasses, smoky_makeup이므로
 
 
 def solution(clothes):
+    # 0.012974866250000001
     c_dict = dict()
     for c in clothes:
-        name, category = c
+        _, category = c
         if category not in c_dict:
-            c_dict[category] = []
-        c_dict[category].append(name)
+            c_dict[category] = 1
+        c_dict[category] += 1
 
-    c_li = [len(v) for v in c_dict.values()]
-    answer = 0 if len(c_li) <= 1 else 1
-
-    for c in c_li:
-        answer *= c
-    answer += sum(c_li)
-    return answer
+    answer = 1
+    for v in c_dict.values():
+        answer *= v
+    return answer - 1
 
 
-print(solution([['yellow_hat', 'headgear'], ['blue_sunglasses', 'eyewear'], ['green_turban', 'headgear']]))
-print(solution([['crow_mask', 'face'], ['blue_sunglasses', 'face'], ['smoky_makeup', 'face']]))
+# print(solution([['yellow_hat', 'headgear'], ['blue_sunglasses', 'eyewear'], ['green_turban', 'headgear']]))
+# print(solution([['crow_mask', 'face'], ['blue_sunglasses', 'face'], ['smoky_makeup', 'face']]))
+# print(solution([['crow_mask', 'face'], ['blue_sunglasses', 'face'], ['smoky_makeup', 'face'], ['blue_sunglasses', 'eyewear'], ['blue_sunglasses1', 'eyewear']]))
+print(solution([['crow_mask', 'face'], ['blue_sunglasses', 'face'], ['smoky_makeup', 'face'], ['blue_sunglasses', 'eyewear'], ['blue_sunglasses1', 'eyewear'], ['t-shirt', 'top']]))
 
+
+import timeit
+avg_time = 0.
+tests = [[['yellow_hat', 'headgear'], ['blue_sunglasses', 'eyewear'], ['green_turban', 'headgear']],
+         [['crow_mask', 'face'], ['blue_sunglasses', 'face'], ['smoky_makeup', 'face']],
+         [['crow_mask', 'face'], ['blue_sunglasses', 'face'], ['smoky_makeup', 'face'], ['blue_sunglasses', 'eyewear'], ['blue_sunglasses1', 'eyewear']],
+         [['crow_mask', 'face'], ['blue_sunglasses', 'face'], ['smoky_makeup', 'face'], ['blue_sunglasses', 'eyewear'], ['blue_sunglasses1', 'eyewear'], ['t-shirt', 'top']]]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(t), number=10000)
+print(f'avg_time: {avg_time / len(tests)}')
