@@ -13,74 +13,62 @@ arr     	result
 [2,6,8,14]	168
 [1,2,3]	    6
 """
+from math import gcd
+from functools import reduce
 
 
-def prime_list(n):
-    if n <= 3:
-        return [1, 2, 3]
-
-    sieve = [1] * n
-    for i in range(2, int(n ** 0.5) + 1):
-        if sieve[i]:
-            for j in range(i + i, n, i):
-                sieve[j] = 0
-    return [i for i in range(2, n) if sieve[i]]
-
-
-def factorization(n, p):
-    divs = []
-    i = 0
-
-    if n in p:
-        return [n]
+def get_gcd(m, n):
+    if m < n:
+        t = n
+        n = m
+        m = t
 
     while 1:
-        if n in p:
-            divs.append(d)
+        d = m % n
+        if d == 0:
             break
-        else:
-            d, m = divmod(n, p[i])
-            if m == 0:
-                divs.append(p[i])
-                n = d
-            else:
-                i += 1
-    return divs
+        m = n
+        n = d
+    return n
 
 
-from collections import Counter
 def solution(arr):
-    primes = prime_list(max(arr))
-    print(f'primes: {primes}')
-    fact_list = list()
-    for a in arr:
-        fact_list.append(factorization(a, primes))
-    print(fact_list)
-    answers = dict()
-    for f in fact_list:
-        for k, v in Counter(f).items():
-            if k not in answers:
-                answers[k] = v
-            elif answers[k] <= v:
-                answers[k] = v
-    print(answers)
-    answer = 1
-    for k, v in answers.items():
-        answer *= k**v
-    return answer
+    # 0.028602382000826765
+    # for i in range(len(arr)-1):
+    #     a, b = arr[i], arr[i+1]
+    #     m = int(a * b / get_gcd(a, b))
+    #     arr[i+1] = m
+    # return arr[-1]
+
+    # code refactoring
+    # 0.01878237600249122
+    # n = arr[0]
+    # for a in arr[1:]:
+    #     n = n * a // get_gcd(n, a)
+    # return n
+
+    # 0.015483738003240433
+    # n = arr[0]
+    # for a in arr[1:]:
+    #     n = n * a // gcd(n, a)
+    # return n
+
+    # 0.018647045002580853
+    return reduce(lambda a, b: a * b // gcd(a, b), arr)
 
 
-# print(solution([2, 6, 8, 14]))
-# print(solution([1, 2, 3]))
+print(solution([2, 6, 8, 14]))
+print(solution([1, 2, 3]))
 print(solution([2, 4]))
+print(solution([20]))
 
 
-# import timeit
-# avg_time = 0.
-# # tests = [[2, 6, 8, 14],
-# #          [20],
-# #          [100]]
+import timeit
+avg_time = 0.
+tests = [[2, 6, 8, 14],
+         [20],
+         [100]]
 # tests = [[2], [4], [10], [5], [80], [523]]
-# for t in tests:
-#     avg_time += timeit.timeit(lambda: solution(t), number=10000)
-# print(f'avg_time: {avg_time / len(t)}')
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(t), number=10000)
+print(f'avg_time: {avg_time / len(t)}')
