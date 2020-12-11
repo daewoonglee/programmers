@@ -16,26 +16,45 @@ n	return
 입출력 예 #2
 5의 약수는 1, 5입니다. 이를 모두 더하면 6입니다.
 """
+import math
+import numpy as np
+from collections import defaultdict
+
 
 def solution(n):
-    # 0.40314791666666666
-    # return sum([i for i in range(1, n) if n % i == 0]) + n
+    if n in [0, 1]:
+        return n
 
-    # code refactoring
-    # 약수 성질 이해
-    # 0.2067881
-    return sum([i for i in range(1, (n // 2) + 1) if n % i == 0]) + n
+    prime_dict = defaultdict(int)
+    i = 2
+    while n > 1:
+        if n % i == 0:
+            n = n // i
+            prime_dict[i] += 1
+        else:
+            i += 1
+    print(prime_dict)
+
+    prime_keys = [*prime_dict.keys()]
+    print(f'prime_keys: {prime_keys}')
+    k = prime_keys.pop(0)
+    row = [[math.pow(k, i) for i in range(prime_dict[k] + 1)]]
+    print(f'row: {row}')
+    while prime_keys:
+        k = prime_keys.pop(0)
+        col = [[math.pow(k, i)] for i in range(prime_dict[k]+1)]
+        print(f'col: {col}')
+        d = np.dot(col, row)
+        print(f'd: {d}')
+        row = d.reshape(1, d.shape[0] * d.shape[1])
+        print(f'reshpae row: {row}')
+    try:
+        return d.sum()
+    except:
+        return sum(row[0])
 
 
-print(solution(0))
 print(solution(5))
 print(solution(12))
-print(solution(36))
-print(solution(199))
-
-import timeit
-avg_time = 0.
-li = [0, 5, 12, 36, 999, 3000]
-for n in li:
-    avg_time += timeit.timeit(lambda: solution(n), number=10000)
-print(f'avg_time: {avg_time / len(li)}')
+# print(solution(36))
+# print(solution(199))

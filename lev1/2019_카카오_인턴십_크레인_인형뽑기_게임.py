@@ -55,6 +55,19 @@ def solution(board, moves):
                 break
     return answer
 
+    #     # for i, b in enumerate(board[m-1]):
+    #     #     n, board[m-1][i] = (b, 0) if b != 0 else (0, b)
+    #     n, idx = [(b, i) if b != 0 else (0, i) for i, b in enumerate(board[m-1])]
+    #     if n:
+    #         board[m-1][idx] = 0
+    #         stack.append(n)
+    #         if len(stack) > 1 and stack[-1] == stack[-2]:
+    #             stack = stack[:-2]
+    #             answer += 2
+    #         break
+    # return answer
+
+
 print(solution([[0, 0, 0, 0, 0],
                 [0, 0, 1, 0, 3],
                 [0, 2, 5, 0, 1],
@@ -71,3 +84,5 @@ t = [[0, 0, 0, 0, 0],
      [3, 5, 1, 3, 1]], [1, 5, 3, 5, 1, 2, 1, 4]
 avg_time += timeit.timeit(lambda: solution(*t), number=10000)
 print(f'avg_time: {avg_time / len(t)}')
+print(f'avg_time: {avg_time / len(t)}')
+

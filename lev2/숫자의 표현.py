@@ -58,13 +58,6 @@ def solution(n):
     # 0.018500563000000005
     return len([i for i in range(1, n+1, 2) if n % i is 0])
 
-'''
-1 + 2 + 3 + 4 + 5 = 15
-4 + 5 + 6 = 15
-7 + 8 = 15
-15 = 15
-'''
-
 
 print(solution(15))
 print(solution(9))

@@ -14,7 +14,16 @@ n	return
 
 
 def solution(n):
+    # 0: 00:00.353252
     return int(''.join(sorted(str(n), reverse=True)))
 
 
 print(solution(118372))
+
+from datetime import datetime
+s = datetime.now()
+for _ in range(100000):
+    solution(12345)
+    solution(118372)
+    solution(1230553)
+print(datetime.now() - s)

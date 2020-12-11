@@ -13,8 +13,13 @@ H-Index는 과학자의 생산성과 영향력을 나타내는 지표입니다. 
 논문별 인용 횟수는 0회 이상 10,000회 이하입니다.
 
 입출력 예
+<<<<<<< Updated upstream
 citations	        return
 [3, 0, 6, 1, 5]	    3
+=======
+citations          return
+[3, 0, 6, 1, 5]      3
+>>>>>>> Stashed changes
 
 입출력 예 설명
 이 과학자가 발표한 논문의 수는 5편이고, 그중 3편의 논문은 3회 이상 인용되었습니다.
@@ -25,7 +30,11 @@ citations	        return
 
 
 def solution(citations):
+<<<<<<< Updated upstream
     # 0.04678369051543996
+=======
+    # 0.037452683375000004
+>>>>>>> Stashed changes
     # answer = 0
     # for h in range(1, len(citations)+1):
     #     up_c = len([1 for c in citations if c >= h])
@@ -35,6 +44,7 @@ def solution(citations):
     # return answer
 
     # code refactoring
+<<<<<<< Updated upstream
     # 0.009623674326576293
     citations.sort()
     n = len(citations)
@@ -46,6 +56,19 @@ def solution(citations):
     # 0.02530302049126476
     # citations.sort(reverse=True)
     # return max(map(min, enumerate(citations, start=1)))
+=======
+    # 0.00731811725
+    # citations.sort()
+    # n = len(citations)
+    # for i in range(n):
+    #     if citations[i] >= n - i:
+    #         return n - i
+    # return 0
+
+    # 0.013377879874999998
+    citations.sort(reverse=True)
+    return max(map(min, enumerate(citations, start=1)))
+>>>>>>> Stashed changes
 
 
 # print(solution([3, 0, 6, 1, 5]))
@@ -55,6 +78,7 @@ def solution(citations):
 # print(solution([5, 5, 5, 5]))
 print(solution([1, 5, 6, 5, 2, 4, 77, 0]))
 
+<<<<<<< Updated upstream
 # import timeit
 # avg_time = 0.
 # tests = [[3, 0, 6, 1, 5],
@@ -66,3 +90,16 @@ print(solution([1, 5, 6, 5, 2, 4, 77, 0]))
 # for t in tests:
 #     avg_time += timeit.timeit(lambda: solution(t), number=10000)
 # print(f'avg_time: {avg_time / len(t)}')
+=======
+import timeit
+avg_time = 0.
+tests = [[3, 0, 6, 1, 5],
+         [3, 0, 6, 1, 5, 4],
+         [5],
+         [5, 4, 10, 5],
+         [5, 5, 5, 5],
+         [1, 5, 6, 5, 2, 4, 77, 0]]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(t), number=10000)
+print(f'avg_time: {avg_time / len(t)}')
+>>>>>>> Stashed changes
