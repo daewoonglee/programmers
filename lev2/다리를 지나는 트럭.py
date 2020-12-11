@@ -38,22 +38,68 @@ bridge_length	weight	truck_weights	                    return
 """
 
 
+from collections import deque
 def solution(bridge_length, weight, truck_weights):
+    # total_w = 0
+    # trucks = []
+    # running_time = 1
+    # while 1:
+    #     if truck_weights and (total_w + truck_weights[0]) <= weight and len(trucks) < bridge_length:
+    #         tw = truck_weights.pop(0)
+    #         total_w += tw
+    #         trucks.append([tw, 0, 0])
+    #
+    #     trucks[0][1] += 1
+    #     for t in trucks:
+    #         t[2] += 1
+    #
+    #     if trucks[0][2] >= bridge_length:
+    #         tw = trucks.pop(0)
+    #         total_w -= tw[0]
+    #         running_time += tw[1]
+    #
+    #     if not truck_weights and not trucks:
+    #         break
+    # return running_time
+
+    # code refactoring
+    # bridge = deque(0 for _ in range(bridge_length))
+    # total_weight = 0
+    # step = 0
+    # truck_weights.reverse()
+    #
+    # while truck_weights:
+    #     total_weight -= bridge.popleft()
+    #     if total_weight + truck_weights[-1] > weight:
+    #         bridge.append(0)
+    #     else:
+    #         truck = truck_weights.pop()
+    #         bridge.append(truck)
+    #         total_weight += truck
+    #     step += 1
+    #
+    # step += bridge_length
+    #
+    # return step
+
     total_w = 0
-    running_time = [0] * len(truck_weights)
-    truck_idx = 0
-    while 1:
-        tw = truck_weights[truck_idx]
-        if (total_w + tw) <= weight:
-            truck_idx += 1
+    bridge = []
+    step = 0
+    while truck_weights:
+        if (total_w + truck_weights[0]) <= weight:
+            tw = truck_weights.pop(0)
             total_w += tw
-        elif running_time[truck_idx-1] >= bridge_length:
-            total_w -= truck_weights[truck_idx-1]
+            bridge.append(tw)
         else:
-            running_time[truck_idx-1] += 1
-        print(f'running_time: {running_time}, truck_idx: {truck_idx}')
-        if truck_idx == len(truck_weights):
-            break
-    print(f'running time: {running_time}')
+            bridge.append(0)
+        if len(bridge) == bridge_length:
+            total_w -= bridge.pop(0)
+        step += 1
+    step += bridge_length
+    return step
+
 
 print(solution(2, 10, [7, 4, 5, 6]))
+print(solution(2, 10, [7, 4, 5, 1, 6]))
+print(solution(100, 100, [10]))
+print(solution(100, 100, [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]))
