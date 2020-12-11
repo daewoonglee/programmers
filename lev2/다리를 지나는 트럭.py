@@ -83,17 +83,16 @@ def solution(bridge_length, weight, truck_weights):
     # return step
 
     total_w = 0
-    bridge = []
+    bridge = [0] * bridge_length
     step = 0
     while truck_weights:
+        total_w -= bridge.pop(0)
         if (total_w + truck_weights[0]) <= weight:
             tw = truck_weights.pop(0)
             total_w += tw
             bridge.append(tw)
         else:
             bridge.append(0)
-        if len(bridge) == bridge_length:
-            total_w -= bridge.pop(0)
         step += 1
     step += bridge_length
     return step
