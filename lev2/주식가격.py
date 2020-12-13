@@ -34,10 +34,11 @@ def solution(prices):
     # return answer
 
     # code refactoring
-    # 0.023550275
-    ans = [0] * len(prices)
+    # 0.022989750333333333
+    N = len(prices)
+    ans = [0] * N
     stack = [0]
-    for i in range(1, len(prices)):
+    for i in range(1, N):
         if prices[i] < prices[stack[-1]]:
             for j in stack[::-1]:
                 if prices[i] < prices[j]:
@@ -47,24 +48,25 @@ def solution(prices):
                     break
         stack.append(i)
     for i in range(0, len(stack)-1):
-        ans[stack[i]] = len(prices) - stack[i] - 1
+        ans[stack[i]] = N - stack[i] - 1
     return ans
 
 
 # print(solution([1, 2, 3, 2, 3]))
-print(solution([1, 2, 3, 1, 3]))
+# print(solution([1, 2, 3, 1, 3]))
 # print(solution([5, 4, 3, 2, 1]))
+print(solution([1, 2, 3, 4, 5]))
 # print(solution([5, 5, 5, 5, 5]))
 
 
-# import timeit
-# avg_time = 0.
-# tests = [[1, 2, 3, 2, 3],
-#          [5, 4, 3, 2, 1],
-#          [5, 1],
-#          [5, 4, 10, 5],
-#          [5, 5, 5, 5],
-#          [1, 5, 6, 5, 2, 4, 77, 0]]
-# for t in tests:
-#     avg_time += timeit.timeit(lambda: solution(t), number=10000)
-# print(f'avg_time: {avg_time / len(tests)}')
+import timeit
+avg_time = 0.
+tests = [[1, 2, 3, 2, 3],
+         [5, 4, 3, 2, 1],
+         [5, 1],
+         [5, 4, 10, 5],
+         [5, 5, 5, 5],
+         [1, 5, 6, 5, 2, 4, 77, 0]]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(t), number=10000)
+print(f'avg_time: {avg_time / len(tests)}')
