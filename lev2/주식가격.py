@@ -34,11 +34,11 @@ def solution(prices):
     # return answer
 
     # code refactoring
-    # 0.022989750333333333
+    # 0.019798879000000002
     N = len(prices)
     ans = [0] * N
     stack = [0]
-    for i in range(1, N):
+    for i in range(1, N-1):
         if prices[i] < prices[stack[-1]]:
             for j in stack[::-1]:
                 if prices[i] < prices[j]:
@@ -47,16 +47,23 @@ def solution(prices):
                 else:
                     break
         stack.append(i)
-    for i in range(0, len(stack)-1):
+    for i in range(0, len(stack)):
         ans[stack[i]] = N - stack[i] - 1
     return ans
 
+'''
+[4, 3, 1, 1, 0]
+[4, 2, 1, 1, 0]
+[1, 1, 1, 1, 0]
+[4, 3, 2, 1, 0]
+[4, 3, 2, 1, 0]
+'''
 
-# print(solution([1, 2, 3, 2, 3]))
-# print(solution([1, 2, 3, 1, 3]))
-# print(solution([5, 4, 3, 2, 1]))
+print(solution([1, 2, 3, 2, 3]))
+print(solution([1, 2, 3, 1, 3]))
+print(solution([5, 4, 3, 2, 1]))
 print(solution([1, 2, 3, 4, 5]))
-# print(solution([5, 5, 5, 5, 5]))
+print(solution([5, 5, 5, 5, 5]))
 
 
 import timeit
