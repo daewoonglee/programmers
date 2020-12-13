@@ -34,7 +34,7 @@ def solution(prices):
     # return answer
 
     # code refactoring
-    # 0.019798879000000002
+    # 0.016480596
     N = len(prices)
     ans = [0] * N
     stack = [0]
@@ -47,8 +47,8 @@ def solution(prices):
                 else:
                     break
         stack.append(i)
-    for i in range(0, len(stack)):
-        ans[stack[i]] = N - stack[i] - 1
+    for s in stack:
+        ans[s] = N-s-1
     return ans
 
 '''
