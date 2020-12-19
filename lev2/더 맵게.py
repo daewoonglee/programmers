@@ -31,22 +31,30 @@ scoville	            K	return
 """
 
 
+import heapq
 def solution(scoville, K):
-    scoville.sort(reverse=True)
-    N = len(scoville)
-    for i in range(1, N):
-        n1 = scoville.pop()
-        n2 = scoville.pop()
-        n = n1 + (n2 * 2)
-        scoville.append(n)
-        scoville.sort(reverse=True)
+    # 0.503594313
+    # N = len(scoville)
+    # scoville.sort()
+    # for i in range(1, N):
+    #     n1 = scoville.pop(0)
+    #     n = n1 + (scoville[0] * 2)
+    #     scoville[0] = n
+    #     scoville.sort()
+    #
+    #     if all([1 if s > K else 0 for s in scoville]):
+    #         return i
+    # return -1
 
-        f = False
-        for s in scoville:
-            if s < K:
-                f = True
-                break
-        if not f:
+    # 0.45384143900000007
+    N = len(scoville)
+    heapq.heapify(scoville)
+    for i in range(1, N):
+        n1 = heapq.heappop(scoville)
+        n2 = heapq.heappop(scoville)
+        n = n1 + (n2 * 2)
+        heapq.heappush(scoville, n)
+        if scoville[0] > K:
             return i
     return -1
 
