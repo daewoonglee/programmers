@@ -32,16 +32,34 @@ JAN	    23
 
 
 def solution(name):
-    # 0.016656874
-    name = name.replace('A', '')
-    answer = 0
-    for c in name:
-        diff = ord(c) - ord('A')
-        answer += diff if diff < 12 else ord('Z') - ord(c) + 1
-    return answer + len(name)-1
+    asciis = [ord('A'), ord('N'), ord('Z')]
+
+    n_list = [ord(n) - asciis[0] if ord(n) < asciis[1] else asciis[2] - ord(n) + 1 for i, n in enumerate(name)]
+    idx = max([i for i, n in enumerate(n_list) if n], default=0)
+    r_n_list = [n_list[0]] + n_list[1:][::-1]
+    r_idx = max([i for i, n in enumerate(r_n_list) if n], default=0)
+
+    return sum(n_list) + idx if idx < r_idx else sum(r_n_list) + r_idx
 
 
-# print(solution('JAZ'))
-# print(solution('JEROEN'))
-# print(solution('JAN'))
-print(solution('ABA'))
+print(solution('JAZ'))      # 11
+print(solution('JAZZAA'))   # 14
+print(solution('JEROEN'))   # 56
+print(solution('JAN'))      # 23
+print(solution('ABA'))      # 2
+print(solution('JANA'))     # 24
+print(solution('AAA'))      # 0
+
+
+import timeit
+avg_time = 0.
+tests = ['JAZ',
+         'JAZZAA',
+         'JEROEN',
+         'JAN',
+         'ABA',
+         'JANA',
+         'AAA']
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(t), number=10000)
+print(f'avg_time: {avg_time / len(tests)}')
