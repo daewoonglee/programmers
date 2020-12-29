@@ -32,23 +32,44 @@ JAN	    23
 
 
 def solution(name):
-    asciis = [ord('A'), ord('N'), ord('Z')]
+    # 0.03423396414285715
+    n_list = [min(ord(n) - ord('A'), ord('Z') - ord(n) + 1) for n in name]
+    # print(n_list)
 
-    n_list = [ord(n) - asciis[0] if ord(n) < asciis[1] else asciis[2] - ord(n) + 1 for i, n in enumerate(name)]
-    idx = max([i for i, n in enumerate(n_list) if n], default=0)
-    r_n_list = [n_list[0]] + n_list[1:][::-1]
-    r_idx = max([i for i, n in enumerate(r_n_list) if n], default=0)
+    answer = 0
+    idx = 0
+    while 1:
+        answer += n_list[idx]
+        n_list[idx] = 0
+        if not sum(n_list):
+            break
 
-    return sum(n_list) + idx if idx < r_idx else sum(r_n_list) + r_idx
+        left = idx - 1
+        right = 1 + idx
+        l_step = 1
+        r_step = 1
+        while n_list[left] == 0:
+            left -= 1
+            l_step += 1
+        while n_list[right] == 0:
+            right += 1
+            r_step += 1
+        idx, step = [right, r_step] if r_step <= l_step else [left, l_step]
+        answer += step
+
+    return answer
 
 
-print(solution('JAZ'))      # 11
-print(solution('JAZZAA'))   # 14
-print(solution('JEROEN'))   # 56
-print(solution('JAN'))      # 23
-print(solution('ABA'))      # 2
-print(solution('JANA'))     # 24
-print(solution('AAA'))      # 0
+print(solution('JAZ'))         # 11
+print(solution('JAZZAA'))      # 14
+print(solution('JEROEN'))      # 56
+print(solution('JAN'))         # 23
+print(solution('ABA'))         # 2
+print(solution('JANA'))        # 24
+print(solution('AAA'))         # 0
+print(solution('BBBAAAB'))     # 9
+print(solution('ABABAAAAABA')) # 11
+print(solution("BABAAAAB"))    # 7
 
 
 import timeit
