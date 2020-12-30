@@ -32,35 +32,77 @@ JAN	    23
 
 
 def solution(name):
-    # 0.03423396414285715
-    n_list = [min(ord(n) - ord('A'), ord('Z') - ord(n) + 1) for n in name]
-    # print(n_list)
+    # n_list = [min(ord(n) - ord('A'), ord('Z') - ord(n) + 1) for n in name]
+    #
+    # answer = 0
+    # idx = 0
+    # while 1:
+    #     answer += n_list[idx]
+    #     n_list[idx] = 0
+    #     if not sum(n_list):
+    #         break
+    #
+    #     # 0.035142608285714284
+    #     # left = idx - 1
+    #     # right = 1 + idx
+    #     # l_step = 1
+    #     # r_step = 1
+    #     # while n_list[left] == 0:
+    #     #     left -= 1
+    #     #     l_step += 1
+    #     # while n_list[right] == 0:
+    #     #     right += 1
+    #     #     r_step += 1
+    #     # idx, step = [right, r_step] if r_step <= l_step else [left, l_step]
+    #     # answer += step
+    #
+    #     # code refactoring 2 (reference for code refactoring1)
+    #     left = 1
+    #     right = 1
+    #     while n_list[idx - left] == 0:
+    #         left += 1
+    #     while n_list[idx + right] == 0:
+    #         right += 1
+    #
+    #     # code refactoring 2-1
+    #     # 0.03441166342857143
+    #     # idx, n = [idx + right, right] if right <= left else [idx - left, left]
+    #     # answer += n
+    #
+    #     # code refactoring 2-2
+    #     # 0.03316130271428572
+    #     idx += -left if left < right else right
+    #     answer += left if left < right else right
+    #
+    # return answer
+
+    # code refactoring 1
+    # 0.03448436142857143
+    m = [min(ord(c) - ord('A'), ord('Z') - ord(c) + 1) for c in name]
 
     answer = 0
-    idx = 0
-    while 1:
-        answer += n_list[idx]
-        n_list[idx] = 0
-        if not sum(n_list):
+    where = 0
+    while True:
+        answer += m[where]
+        m[where] = 0
+
+        if sum(m) == 0:
             break
 
-        left = idx - 1
-        right = 1 + idx
-        l_step = 1
-        r_step = 1
-        while n_list[left] == 0:
-            left -= 1
-            l_step += 1
-        while n_list[right] == 0:
+        left, right = (1, 1)
+
+        while m[where - left] <= 0:
+            left += 1
+        while m[where + right] <= 0:
             right += 1
-            r_step += 1
-        idx, step = [right, r_step] if r_step <= l_step else [left, l_step]
-        answer += step
+
+        answer += left if left < right else right
+        where += -left if left < right else right
 
     return answer
 
 
-print(solution('JAZ'))         # 11
+# print(solution('JAZ'))         # 11
 print(solution('JAZZAA'))      # 14
 print(solution('JEROEN'))      # 56
 print(solution('JAN'))         # 23
