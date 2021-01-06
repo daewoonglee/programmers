@@ -20,13 +20,33 @@ number	    k	return
 """
 
 
-from itertools import combinations
-
-
 def solution(number, k):
-    return max(list(map(''.join, combinations(number, len(number)-k))))
+    # 0.0379426066
+    N = len(number)
+    digit = N - k
+    answer = ''
+    for i in range(digit):
+        m = max(number[:N-digit+1+i])
+        idx = number.index(m)
+        number = '0' * (idx+1) + number[idx+1:]
+        answer += m
+    return answer
 
 
-print(solution("1924", 2))
-print(solution("1924", 1))
+print(solution("1924", 2))          # 94
+print(solution("1924", 1))          # 924
+print(solution("1231234", 3))       # 3234
+print(solution("4177252841", 4))    # 775841
+print(solution("15214111", 4))      # 5411
 
+
+import timeit
+avg_time = 0.
+tests = [["1924", 2],
+         ["1924", 1],
+         ["1231234", 3],
+         ["4177252841", 4],
+         ["15214111", 4]]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(*t), number=10000)
+print(f'avg_time: {avg_time / len(tests)}')
