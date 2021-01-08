@@ -21,15 +21,18 @@ number	    k	return
 
 
 def solution(number, k):
-    # 0.0379426066
+    # 0.0313292812
     N = len(number)
-    digit = N - k
+    idx = 0
     answer = ''
-    for i in range(digit):
-        m = max(number[:N-digit+1+i])
-        idx = number.index(m)
-        number = '0' * (idx+1) + number[idx+1:]
-        answer += m
+    for i in range(N-k):
+        slice_number = number[idx:k+1+i]
+        loc = 0
+        for j, n in enumerate(slice_number[1:]):
+            if slice_number[loc] < n:
+                loc = j+1
+        idx += loc+1
+        answer += slice_number[loc]
     return answer
 
 
@@ -50,3 +53,4 @@ tests = [["1924", 2],
 for t in tests:
     avg_time += timeit.timeit(lambda: solution(*t), number=10000)
 print(f'avg_time: {avg_time / len(tests)}')
+
