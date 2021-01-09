@@ -26,6 +26,10 @@ def solution(number, k):
     idx = 0
     answer = ''
     for i in range(N-k):
+        if idx == k+i:
+            answer += number[idx:]
+            break
+
         slice_number = number[idx:k+1+i]
         loc = 0
         for j, n in enumerate(slice_number[1:]):
@@ -41,6 +45,7 @@ print(solution("1924", 1))          # 924
 print(solution("1231234", 3))       # 3234
 print(solution("4177252841", 4))    # 775841
 print(solution("15214111", 4))      # 5411
+print(solution("4172253841", 4))    # 753841
 
 
 import timeit
