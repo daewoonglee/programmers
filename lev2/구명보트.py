@@ -25,22 +25,24 @@ people	            limit	return
 
 
 def solution(people, limit):
-    people.sort(reverse=True)
-    answer = 0
+    people.sort()
+    cnt = 0
     while people:
-        stack = people.pop()
-        N = len(people)
-        for i in range(1, N+1):
-            if stack + people[N-i] <= limit:
-                stack += people.pop()
-        answer += 1
-    return answer
+        total = people.pop()
+        while people and total + people[0] <= limit:
+            total += people.pop(0)
+        cnt += 1
+    return cnt
 
-
-print(solution([70, 50, 80, 50], 100))
-print(solution([70, 80, 50], 100))
-print(solution([240, 240, 240], 240))
-print(solution([40, 40, 40], 240))
+# print(solution([70, 50, 80, 50], 100))      # 3
+# print(solution([70, 50, 80, 50, 50], 100))  # 4
+# print(solution([70, 80, 50], 100))          # 3
+# print(solution([70, 80, 50, 90, 100], 100)) # 5
+# print(solution([40] * 13, 240))             # 7
+# print(solution([60] * 8, 240))              # 4
+# print(solution([60] * 9, 240))              # 5
+print(solution([1, 10, 1, 10, 20], 21))
+print(solution([1, 2, 3, 4, 5], 5))         # 3
 
 
 import timeit
@@ -48,7 +50,10 @@ avg_time = 0.
 tests = [[[70, 50, 80, 50], 100],
          [[70, 50, 80], 100],
          [[240, 240, 240], 240],
-         [[40, 40, 40], 240]]
+         [[40, 40, 40], 240],
+         [[60, 60, 60, 60, 60], 240],
+         [[1, 10, 1, 10, 20], 21],
+         [[1, 2, 3, 4, 5], 5]]
 for t in tests:
     avg_time += timeit.timeit(lambda: solution(*t), number=10000)
 print(f'avg_time: {avg_time / len(tests)}')
