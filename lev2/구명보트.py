@@ -25,24 +25,41 @@ people	            limit	return
 
 
 def solution(people, limit):
-    people.sort()
-    cnt = 0
-    while people:
-        total = people.pop()
-        while people and total + people[0] <= limit:
-            total += people.pop(0)
-        cnt += 1
-    return cnt
+    # 0.010046831000000003
+    # people.sort()
+    # i = 0
+    # j = len(people)
+    # while i < j:
+    #     if people[j-1] + people[i] <= limit:
+    #         i += 1
+    #     j -= 1
+    # return len(people)-j
 
-# print(solution([70, 50, 80, 50], 100))      # 3
-# print(solution([70, 50, 80, 50, 50], 100))  # 4
-# print(solution([70, 80, 50], 100))          # 3
-# print(solution([70, 80, 50, 90, 100], 100)) # 5
-# print(solution([40] * 13, 240))             # 7
-# print(solution([60] * 8, 240))              # 4
-# print(solution([60] * 9, 240))              # 5
-print(solution([1, 10, 1, 10, 20], 21))
-print(solution([1, 2, 3, 4, 5], 5))         # 3
+    # code refactoring
+    # 0.009212844000000001
+    answer = 0
+    people.sort()
+    i = 0
+    j = len(people) - 1
+    while i < j:
+        if people[j] + people[i] <= limit:
+            i += 1
+            answer += 1
+        j -= 1
+    return len(people) - answer
+
+
+print(solution([70, 50, 80, 50], 100))              # 3
+print(solution([70, 50, 80, 50, 50], 100))          # 4
+print(solution([70, 80, 50], 100))                  # 3
+print(solution([70, 80, 50, 90, 100], 100))         # 5
+print(solution([40] * 13, 240))                     # 7
+print(solution([60] * 8, 240))                      # 4
+print(solution([60] * 9, 240))                      # 5
+print(solution([1, 10, 1, 10, 20], 21))             # 3
+print(solution([1, 2, 3, 4, 5], 5))                 # 3
+print(solution([1, 2, 2, 2, 3, 3, 3, 4, 4, 4], 7))  # 5
+
 
 
 import timeit
