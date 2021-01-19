@@ -30,7 +30,6 @@ def solution(w, h):
 
     if w % 2 == 0:
         n = h//w if h % 2 == 0 else h//w+1
-        # n = h//w if h // 2 == 0 else h//w+1
         return w * h - w * n
     else:
         n = h//w if h//w == 0 else h//w + 1
