@@ -20,14 +20,29 @@ W	H	result
 
 
 def solution(w, h):
-    return w * h - max(w, h) - 1 if (w % 2 != 0 and h % 2 == 0) or (w % 2 == 0 and h % 2 != 0) else w * h - max(w, h)
+    if w == h:
+        return w * h - w
+
+    if h > w:
+        t = w
+        w = h
+        h = t
+
+    if w % 2 == 0:
+        n = h//w if h % 2 == 0 else h//w+1
+        # n = h//w if h // 2 == 0 else h//w+1
+        return w * h - w * n
+    else:
+        n = h//w if h//w == 0 else h//w + 1
+        return w * h - (w * n + 1) if h % 2 == 0 else w * h - w * n
 
 
-# print(solution(3, 3))   # 6
 # print(solution(2, 3))   # 2
 # print(solution(2, 4))   # 4
 # print(solution(2, 5))   # 4
 # print(solution(2, 6))   # 6
 # print(solution(2, 7))   # 6
-# print(solution(3, 7))   # 14
+# print(solution(3, 3))   # 6
+# print(solution(3, 7))   # 12
+# print(solution(3, 8))   # 14
 print(solution(8, 12))  # 80
