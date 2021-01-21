@@ -29,14 +29,11 @@ def gcd(a, b):
 
 
 def solution(w, h):
-    # if h < w:
-    #     w, h = h, w
-    # n = gcd(w, h)
-    # # n = math.gcd(w, h)
-    # return w * h - (w + h - n)
-
-    # code refactoring
-    return w * h - (w/math.gcd(w, h) + h/math.gcd(w, h) - 1) * math.gcd(w, h)
+    if h < w:
+        w, h = h, w
+    n = gcd(w, h)
+    # n = math.gcd(w, h)
+    return w * h - (w + h - n)
 
 
 print(solution(2, 3))   # 2
