@@ -19,29 +19,48 @@ W	H	result
 """
 
 
+import math
+
+
+def gcd(a, b):
+    while b != 0:
+        a, b = b, a%b
+    return a
+
+
 def solution(w, h):
-    if w == h:
-        return w * h - w
+    # if h < w:
+    #     w, h = h, w
+    # n = gcd(w, h)
+    # # n = math.gcd(w, h)
+    # return w * h - (w + h - n)
 
-    if h > w:
-        t = w
-        w = h
-        h = t
-
-    if w % 2 == 0:
-        n = h//w if h % 2 == 0 else h//w+1
-        return w * h - w * n
-    else:
-        n = h//w if h//w == 0 else h//w + 1
-        return w * h - (w * n + 1) if h % 2 == 0 else w * h - w * n
+    # code refactoring
+    return w * h - (w/math.gcd(w, h) + h/math.gcd(w, h) - 1) * math.gcd(w, h)
 
 
-# print(solution(2, 3))   # 2
-# print(solution(2, 4))   # 4
-# print(solution(2, 5))   # 4
-# print(solution(2, 6))   # 6
-# print(solution(2, 7))   # 6
-# print(solution(3, 3))   # 6
-# print(solution(3, 7))   # 12
-# print(solution(3, 8))   # 14
+print(solution(2, 3))   # 2
+print(solution(2, 4))   # 4
+print(solution(2, 5))   # 4
+print(solution(2, 6))   # 6
+print(solution(2, 7))   # 6
+print(solution(3, 3))   # 6
+print(solution(3, 7))   # 12
+print(solution(3, 8))   # 14
 print(solution(8, 12))  # 80
+
+
+import timeit
+avg_time = 0.
+tests = [[2, 3],
+         [2, 4],
+         [2, 5],
+         [2, 6],
+         [2, 7],
+         [3, 3],
+         [3, 7],
+         [3, 8],
+         [8, 12]]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(*t), number=10000)
+print(f'avg_time: {avg_time / len(t)}')
