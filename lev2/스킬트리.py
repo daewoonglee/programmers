@@ -34,20 +34,44 @@ BDA: B 스킬을 배우기 전에 C 스킬을 먼저 배워야 합니다. 불가
 
 
 def solution(skill, skill_trees):
+    # 0.014900360999999997
+    # answer = 0
+    # for skill_tree in skill_trees:
+    #     i = 0
+    #     flag = False
+    #     for st in skill_tree:
+    #         if st in skill:
+    #             if st != skill[i]:
+    #                 flag = True
+    #                 break
+    #             i += 1
+    #     if not flag:
+    #         answer += 1
+    # return answer
+
+    # code refactoring, for-else
+    # 0.013141324499999997
     answer = 0
-    for skill_tree in skill_trees:
+    for skills in skill_trees:
         i = 0
-        flag = False
-        for c in skill_tree:
-            if c in skill:
-                if c == skill[i]:
-                    i += 1
-                else:
-                    flag = True
+        for s in skills:
+            if s in skill:
+                if s != skill[i]:
                     break
-        if not flag:
+                i += 1
+        else:
             answer += 1
     return answer
 
 
 print(solution("CBD", ["BACDE", "CBADF", "AECB", "BDA"]))
+print(solution("CBD", ["B", "AEFGC", "DBC", "AEFG"]))
+
+
+import timeit
+avg_time = 0.
+tests = [["CBD", ["BACDE", "CBADF", "AECB", "BDA"]],
+         ["CBD", ["B", "AEFGC", "DBC", "AEFG"]]]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(*t), number=10000)
+print(f'avg_time: {avg_time / len(t)}')
