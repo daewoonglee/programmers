@@ -52,63 +52,64 @@ s	                        result
 
 
 def solution(s):
-    if len(s) == 1:
-        return 1
-
-    answer = 1000
-    for i in range(1, len(s)//2+1):
-        line = [s[n:n+i] for n in range(0, len(s), i)]
-        new_line = ""
-        idx = 0
-        cnt = 1
-        for j in range(1, len(line)):
-            if line[idx] != line[j]:
-                new_line += f"{cnt}{line[idx]}" if cnt > 1 else f"{line[idx]}"
-                idx = j
-                cnt = 1
-            else:
-                cnt += 1
-        new_line += f"{cnt}{line[idx]}" if cnt > 1 else f"{line[idx]}"
-        if answer > len(new_line):
-            answer = len(new_line)
-    return answer
-
+    # if len(s) == 1:
+    #     return 1
+    #
     # answer = 1000
     # for i in range(1, len(s)//2+1):
-    #     line = ""
-    #     cnt = 1
+    #     line = [s[n:n+i] for n in range(0, len(s), i)]
+    #     new_line = ""
     #     idx = 0
-    #     N = len(s)+1 if len(s)%i==0 else len(s)+2
-    #     for j in range(i, N, i):
-    #         word = s[idx: idx+i]
-    #         compare = s[j: j+i]
-    #         if word != compare:
-    #             line += f"{cnt}{word}" if cnt > 1 else f"{word}"
+    #     cnt = 1
+    #     for j in range(1, len(line)):
+    #         if line[idx] != line[j]:
+    #             new_line += f"{cnt}{line[idx]}" if cnt > 1 else f"{line[idx]}"
     #             idx = j
     #             cnt = 1
     #         else:
     #             cnt += 1
-    #     # line += f"{cnt}{word}" if cnt > 1 else f"{word}"
-    #     if answer > len(line):
-    #         answer = len(line)
+    #     new_line += f"{cnt}{line[idx]}" if cnt > 1 else f"{line[idx]}"
+    #     if answer > len(new_line):
+    #         answer = len(new_line)
     # return answer
 
+    # code refactoring
+    N = len(s)
+    answer = N
+    for i in range(1, N//2+1):
+        line = ""
+        cnt = 1
+        idx = 0
+        for j in range(i, N, i):
+            word = s[idx: idx+i]
+            compare = s[j: j+i]
+            if word != compare:
+                line += f"{cnt}{word}" if cnt > 1 else f"{word}"
+                idx = j
+                cnt = 1
+            else:
+                cnt += 1
+        line += f"{cnt}{s[j:]}" if cnt > 1 else f"{s[j:]}"
+        if answer > len(line):
+            answer = len(line)
+    return answer
 
-# print(solution("aabbaccc"))                   # 7
-# print(solution("ababcdcdababcdcd"))           # 9
-# print(solution("abcabcdede"))                 # 8
-# print(solution("abcabcabcabcdededededede"))   # 14
-# print(solution("xababcdcdababcdcd"))          # 17
+
+print(solution("aabbaccc"))                   # 7
+print(solution("ababcdcdababcdcd"))           # 9
+print(solution("abcabcdede"))                 # 8
+print(solution("abcabcabcabcdededededede"))   # 14
+print(solution("xababcdcdababcdcd"))          # 17
 print(solution("a"))
 
 
-# import timeit
-# avg_time = 0.
-# tests = ["aabbaccc",
-#          "ababcdcdababcdcd",
-#          "abcabcdede",
-#          "abcabcabcabcdededededede",
-#          "xababcdcdababcdcd"]
-# for t in tests:
-#     avg_time += timeit.timeit(lambda: solution(t), number=10000)
-# print(f'avg_time: {avg_time / len(t)}')
+import timeit
+avg_time = 0.
+tests = ["aabbaccc",
+         "ababcdcdababcdcd",
+         "abcabcdede",
+         "abcabcabcabcdededededede",
+         "xababcdcdababcdcd"]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(t), number=10000)
+print(f'avg_time: {avg_time / len(t)}')
