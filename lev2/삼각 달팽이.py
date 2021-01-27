@@ -28,23 +28,49 @@ n	result
 
 
 def solution(n):
-    li = [0] * 6
+    # 0.05065543157142858
+    li = [0] * (n * (n+1) // 2)
+    first = {v: i*2 for i, v in enumerate(range(n, 0, -3))}
+    second = [i for i in range(n-1, 0, -3)]
+    third = {v: n-i for i, v in enumerate(range(n-2, 0, -3))}
+    first[n] = 0
+
+    plus_n = 0
+    s_flag = False
     value = 1
     idx = 0
-    cycle = n
-    while cycle:
-        for i in range(0, cycle):
-            if cycle == 3:
-                idx += i
-            elif cycle == 2:
-                idx += 1
-            elif cycle == 1:
-                idx -= n+i
+    while n:
+        if n in first:
+            plus_n = first[n]
+            s_flag = False
+        elif n in second:
+            plus_n = 1
+            s_flag = True
+        elif n in third:
+            plus_n = -third[n]
+            s_flag = False
+
+        for i in range(n):
+            idx += plus_n
+            plus_n = 1 if s_flag else plus_n + 1
             li[idx] = value
             value += 1
-        cycle -= 1
+        n -= 1
     return li
 
 
-print(solution(3))
+# print(solution(1))
+# print(solution(2))
+# print(solution(3))
 # print(solution(4))
+# print(solution(5))
+# print(solution(6))
+print(solution(7))
+
+
+import timeit
+avg_time = 0.
+tests = [1, 2, 3, 4, 5, 6, 7]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(t), number=10000)
+print(f'avg_time: {avg_time / len(tests)}')
