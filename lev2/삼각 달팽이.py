@@ -25,38 +25,84 @@ n	result
 
 문제 예시와 같습니다.
 """
+from itertools import chain
 
 
 def solution(n):
-    # 0.05065543157142858
-    li = [0] * (n * (n+1) // 2)
-    first = {v: i*2 for i, v in enumerate(range(n, 0, -3))}
-    second = [i for i in range(n-1, 0, -3)]
-    third = {v: n-i for i, v in enumerate(range(n-2, 0, -3))}
-    first[n] = 0
+    # 0.03731264171428572
+    # li = [0] * (n * (n+1) // 2)
+    # first = {v: i*2 for i, v in enumerate(range(n, 0, -3))}
+    # second = [i for i in range(n-1, 0, -3)]
+    # third = {v: n-i for i, v in enumerate(range(n-2, 0, -3))}
+    # first[n] = 0
+    #
+    # plus_n = 0
+    # s_flag = False
+    # value = 1
+    # idx = 0
+    # while n:
+    #     if n in first:
+    #         plus_n = first[n]
+    #         s_flag = False
+    #     elif n in second:
+    #         plus_n = 1
+    #         s_flag = True
+    #     elif n in third:
+    #         plus_n = -third[n]
+    #         s_flag = False
+    #
+    #     for i in range(n):
+    #         idx += plus_n
+    #         plus_n = 1 if s_flag else plus_n + 1
+    #         li[idx] = value
+    #         value += 1
+    #     n -= 1
+    # return li
 
-    plus_n = 0
-    s_flag = False
-    value = 1
-    idx = 0
-    while n:
-        if n in first:
-            plus_n = first[n]
-            s_flag = False
-        elif n in second:
-            plus_n = 1
-            s_flag = True
-        elif n in third:
-            plus_n = -third[n]
-            s_flag = False
+    # code refactoring
+    # 0.025880859285714288
+    # li = [0] * (n * (n + 1) // 2)
+    # n_loop = ((n - 1) // 3) + 1
+    # value = 1
+    # init_idx = 0
+    # for i in range(n_loop):
+    #     idx = init_idx + i * 4
+    #     init_idx = idx
+    #     jump = i * 2
+    #     for j in range(n - 3 * i):
+    #         if j != 0:
+    #             idx += jump
+    #         li[idx] = value
+    #         value += 1
+    #         jump += 1
+    #
+    #     for _ in range((n - 1) - 3 * i):
+    #         idx += 1
+    #         li[idx] = value
+    #         value += 1
+    #
+    #     for j in range((n - 2) - 3 * i):
+    #         idx -= n - i - j
+    #         li[idx] = value
+    #         value += 1
+    #
+    # return li
 
-        for i in range(n):
-            idx += plus_n
-            plus_n = 1 if s_flag else plus_n + 1
-            li[idx] = value
-            value += 1
-        n -= 1
-    return li
+    # 0.037097911857142854
+    [row, col, cnt] = [-1, 0, 1]
+    board = [[None] * i for i in range(1, n+1)]
+    for i in range(n):
+        for _ in range(n-i):
+            if i % 3 == 0:
+                row += 1
+            elif i % 3 == 1:
+                col += 1
+            else:
+                row -= 1
+                col -= 1
+            board[row][col] = cnt
+            cnt += 1
+    return list(chain(*board))
 
 
 # print(solution(1))
