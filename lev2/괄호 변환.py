@@ -1,4 +1,4 @@
-"""
+R"""
 문제 설명
 카카오에 신입 개발자로 입사한 콘은 선배 개발자로부터 개발역량 강화를 위해 다른 개발자가 작성한 소스 코드를 분석하여 문제점을 발견하고 수정하라는 업무 과제를 받았습니다.
 소스를 컴파일하여 로그를 보니 대부분 소스 코드 내 작성된 괄호가 개수는 맞지만 짝이 맞지 않은 형태로 작성되어 오류가 나는 것을 알게 되었습니다.
@@ -65,26 +65,44 @@ u의 앞뒤 문자를 제거하고, 나머지 문자의 괄호 방향을 뒤집�
 """
 
 
-def solution(p):
-    answer = ""
-    pair = list()
-    idx = 0
-    for i, c in enumerate(p):
-        if c == "(":
-            if pair:
-                answer += c
-                answer += pair.pop(0)
-                idx += 1
-            else:
-                answer += c
-        else:
-            if answer and answer[idx] == "(":
-                answer += c
-                idx -= 1
-            else:
-                pair.append(c)
+def swap(answer, i, j):
+    t = answer[i]
+    answer[i] = answer[j]
+    answer[j] = t
     return answer
 
 
+def split_str(line, idx=-1):
+    pair = list()
+    for i, c in enumerate(line):
+        if c == "(":
+            pair.append(c)
+        else:
+            if pair:
+                pair.pop()
+            else:
+                idx = i
+                break
+    u, v = line[idx:], line[:idx]
+
+    if idx == 1:
+        return line
+
+    else:
+        l1, l2 = split_str(line[idx:], idx)
+        v = list(l1)
+        N = len(v)
+        for i in range(N//2-1, -1, -1):
+            v = swap(v, i, N-1-i)
+        return l1 + v
+
+
+def solution(p):
+    return split_str(p)
+
+
 # print(solution(")("))
-print(solution("(()())()"))
+# print(solution("(()())()"))
+print(solution("()))((()"))
+# print(solution("()))(("))
+# print(solution("(()()))("))
