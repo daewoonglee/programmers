@@ -65,44 +65,49 @@ u의 앞뒤 문자를 제거하고, 나머지 문자의 괄호 방향을 뒤집�
 """
 
 
-def swap(answer, i, j):
-    t = answer[i]
-    answer[i] = answer[j]
-    answer[j] = t
-    return answer
-
-
-def split_str(line, idx=-1):
+def correct_brackets(u):
     pair = list()
-    for i, c in enumerate(line):
+    for c in u:
         if c == "(":
             pair.append(c)
         else:
             if pair:
                 pair.pop()
             else:
-                idx = i
-                break
-    u, v = line[idx:], line[:idx]
+                return False
+    return True
 
-    if idx == 1:
-        return line
 
-    else:
-        l1, l2 = split_str(line[idx:], idx)
-        v = list(l1)
-        N = len(v)
-        for i in range(N//2-1, -1, -1):
-            v = swap(v, i, N-1-i)
-        return l1 + v
+def swap(answer, i, j):
+    answer = list(answer)
+    t = answer[i]
+    answer[i] = answer[j]
+    answer[j] = t
+    return "".join(answer)
+
+
+def split_str(line):
+    idx = 0
+    cnt = 0
+    for i, c in enumerate(line):
+        cnt += 1 if c == "(" else -1
+        if not cnt:
+            idx = i+1
+            break
+    u, v = line[:idx], line[idx:]
+    if not correct_brackets(u):
+        for i in range(idx//2):
+            u = swap(u, i, idx-1-i)
+    return u + split_str(v) if v else u
 
 
 def solution(p):
     return split_str(p)
 
 
-# print(solution(")("))
-# print(solution("(()())()"))
+print(solution(")("))
+print(solution("(()())()"))
 print(solution("()))((()"))
-# print(solution("()))(("))
-# print(solution("(()()))("))
+print(solution("()))(("))
+print(solution("(()()))("))
+print(solution(")((()())"))
