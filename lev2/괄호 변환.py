@@ -65,58 +65,77 @@ u의 앞뒤 문자를 제거하고, 나머지 문자의 괄호 방향을 뒤집�
 """
 
 
-def get_uv(brackets):
-    idx = 0
-    cnt = 0
-    for i, b in enumerate(brackets):
-        cnt += 1 if b == "(" else -1
-        if not cnt:
-            idx = i+1
-            break
-    return brackets[:idx], brackets[idx:]
+# def get_uv(brackets):
+#     cnt = 0
+#     for i, b in enumerate(brackets):
+#         cnt += 1 if b == "(" else -1
+#         if not cnt:
+#             return brackets[:i+1], brackets[i+1:]
+#     return [], brackets
+#
+#
+# def is_brackets(brackets):
+#     cnt = 0
+#     for b in brackets:
+#         cnt += 1 if b == "(" else -1
+#         if cnt < 0:
+#             return False
+#     return True
+#
+#
+# def solution(p):
+#     if not p:
+#         return p
+#
+#     u, v = get_uv(p)
+#     # print(f"u: {u}, v: {v}")
+#     if not is_brackets(u):
+#         new_u = ""
+#         for c in u[1:-1]:
+#             new_u += ")" if c == "(" else "("
+#         return "(" + solution(v) + ")" + new_u
+#     else:
+#         return u + solution(v)
 
 
-def is_brackets(u):
-    pair = list()
-    for c in u:
-        if c == "(":
-            pair.append(c)
-        else:
-            if pair:
-                pair.pop()
-            else:
-                return False
-    return True
-
-
+# code refactoring
+# 0.023765920500000003
 def solution(p):
-    u, v = get_uv(p)
-    print(f"u: {u}, v: {v}")
-    if not is_brackets(u):
-        u = list(u)
-        u = u[1:-1]
-        N = len(u)
-        for i in range(N):
-            if i < N//2:
-                u[i] = "("
+    if not p:
+        return p
+    r = True
+    c = 0
+    for i in range(len(p)):
+        c += -1 if p[i] == "(" else 1
+        if c > 0:
+            r = False
+        if c == 0:
+            if r:
+                return p[:i+1] + solution(p[i+1:])
             else:
-                u[i] = ")"
-        if v:
-            return "(" + solution(v) + ")" + "".join(u)
-        else:
-            return "(" + "".join(u) + ")"
-    else:
-        if v:
-            return u + solution(v)
-        else:
-            return u
+                return "(" + solution(p[i+1:]) + ")" + "".join(["(" if c == ")" else ")" for c in p[1:i]])
 
 
-# print(solution(")("))
-# print(solution("(()())()"))
-# print(solution("()))((()"))
-# print(solution("()))(("))
-# print(solution("(()()))("))
+print(solution(")("))
+print(solution("(()())()"))
+print(solution("()))((()"))
+print(solution("()))(("))
+print(solution("(()()))("))
 print(solution(")((()())"))
-# print(solution("))()(("))
-# print(solution(")()("))
+print(solution("))()(("))
+print(solution(")()("))
+
+
+import timeit
+avg_time = 0.
+tests = [")(",
+         "(()())()",
+         "()))((()",
+         "()))((",
+         "(()()))(",
+         ")((()())",
+         "))()((",
+         ")()("]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(t), number=10000)
+print(f'avg_time: {avg_time / len(tests)}')
