@@ -68,23 +68,39 @@ from itertools import combinations
 
 
 def solution(orders, course):
-    orders = [sorted(list(o)) for o in orders]
+    # 0.29315980633333333
+    # orders = [sorted(list(o)) for o in orders]
+    # results = list()
+    # for c in course:
+    #     p = list()
+    #     for o in orders:
+    #         p.extend(list(map("".join, combinations(o, c))))
+    #     count = Counter(p)
+    #     m = max(count.values()) if count else 0
+    #     for k, v in count.items():
+    #         if m > 1 and v == m:
+    #             results.append(k)
+    # return sorted(results)
+
+    # code refactoring
+    # 0.24487727400000003
     results = list()
     for c in course:
         p = list()
         for o in orders:
-            p.extend(list(map("".join, combinations(o, c))))
+            p += combinations(sorted(o), c)
         count = Counter(p)
         m = max(count.values()) if count else 0
         for k, v in count.items():
-            if v == m and m > 1:
+            if v > 1 and v == m:
                 results.append(k)
-    return sorted(results)
+    return ["".join(v) for v in sorted(results)]
 
 
 print(solution(["ABCFG", "AC", "CDE", "ACDE", "BCFG", "ACDEH"], [2, 3, 4])) # ["AC", "ACDE", "BCFG", "CDE"]
 print(solution(["ABCDE", "AB", "CD", "ADE", "XYZ", "XYZ", "ACD"], [2, 3, 5])) # ["ACD", "AD", "ADE", "CD", "XYZ"]
 print(solution(["XYZ", "XWY", "WXA"], [2, 3, 4])) # ["WX", "XY"]
+print(solution(["XY", "ZA"], [2]))
 
 
 import timeit
