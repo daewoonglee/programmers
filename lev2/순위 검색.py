@@ -93,16 +93,53 @@ def is_match(info_words, query_words):
     return True
 
 
+# def solution(info, query):
+#     # 0.43172835600000004
+#     answer = []
+#     for q in query:
+#         query_line = [word for word in q.split() if word != "and"]
+#         applicant = 0
+#         for i in range(len(info)):
+#             info_line = info[i].split()
+#             if int(info_line[-1]) >= int(query_line[-1]) and is_match(info_line[:-1], query_line[:-1]):
+#                 applicant += 1
+#         answer.append(applicant)
+#     return answer
+
+
+def init_table(info, table, idx=0):
+    for row in info:
+        r = row.split()
+        for i in range(len(r)):
+            if r[0] not in table:
+                table[r[0]] = dict()
+            if r[1] not in table[r[0]]:
+                table[r[0]][r[1]] = dict()
+            if r[2] not in table[r[0]][r[1]]:
+                table[r[0]][r[1]][r[2]] = dict()
+            if r[3] not in table[r[0]][r[1]][r[2]]:
+                table[r[0]][r[1]][r[2]][r[3]] = dict()
+                table[r[0]][r[1]][r[2]][r[3]] = int(r[-1])
+    # for k, v in table.items():
+    #     print(k, v)
+    return table
+
+
 def solution(info, query):
-    # 0.43172835600000004
+    info_table = dict()
+    hash_table = init_table(info, info_table)
+
     answer = []
     for q in query:
-        query_line = [word for word in q.split() if word != "and"]
+        q_line = [word for word in q.split() if word != "and"]
         applicant = 0
-        for i in range(len(info)):
-            info_line = info[i].split()
-            if int(info_line[-1]) >= int(query_line[-1]) and is_match(info_line[:-1], query_line[:-1]):
-                applicant += 1
+        if q_line[0] == "-" or q_line[0] in hash_table:
+            if q_line[1] == "-" or q_line[1] in hash_table[q_line[0]]:
+                if q_line[2] == "-" or q_line[2] in hash_table[q_line[0]][q_line[1]]:
+                    if q_line[3] == "-" or q_line[3] in hash_table[q_line[0]][q_line[1]][q_line[2]]:
+                        print(f"q_line: {q_line[-1]}, hash: {hash_table[q_line[0]][q_line[1]][q_line[2]][q_line[3]]}")
+                        if int(q_line[-1]) >= int(hash_table[q_line[0]][q_line[1]][q_line[2]][q_line[3]]):
+                            applicant += 1
         answer.append(applicant)
     return answer
 
@@ -113,12 +150,12 @@ print(solution(["java backend junior pizza 150", "python frontend senior chicken
                ["java and frontend and junior and pizza 100", "python and frontend and senior and chicken 200", "cpp and - and senior and pizza 250", "- and backend and senior and - 150", "- and - and - and - 80", "- and - and - and - 150"]))
 
 
-import timeit
-avg_time = 0.
-tests = [[["java backend junior pizza 150", "python frontend senior chicken 210", "python frontend senior chicken 150", "cpp backend senior pizza 260", "java backend junior chicken 80", "python backend senior chicken 50"],
-          ["java and backend and junior and pizza 100", "python and frontend and senior and chicken 200", "cpp and - and senior and pizza 250", "- and backend and senior and - 150", "- and - and - and chicken 100", "- and - and - and - 150"]],
-         [["java backend junior pizza 150", "python frontend senior chicken 210", "python frontend senior chicken 150", "cpp backend senior pizza 260", "java backend junior chicken 80", "python backend senior chicken 50"],
-          ["java and frontend and junior and pizza 100", "python and frontend and senior and chicken 200", "cpp and - and senior and pizza 250", "- and backend and senior and - 150", "- and - and - and - 80", "- and - and - and - 150"]]]
-for t in tests:
-    avg_time += timeit.timeit(lambda: solution(*t), number=10000)
-print(f'avg_time: {avg_time / len(tests)}')
+# import timeit
+# avg_time = 0.
+# tests = [[["java backend junior pizza 150", "python frontend senior chicken 210", "python frontend senior chicken 150", "cpp backend senior pizza 260", "java backend junior chicken 80", "python backend senior chicken 50"],
+#           ["java and backend and junior and pizza 100", "python and frontend and senior and chicken 200", "cpp and - and senior and pizza 250", "- and backend and senior and - 150", "- and - and - and chicken 100", "- and - and - and - 150"]],
+#          [["java backend junior pizza 150", "python frontend senior chicken 210", "python frontend senior chicken 150", "cpp backend senior pizza 260", "java backend junior chicken 80", "python backend senior chicken 50"],
+#           ["java and frontend and junior and pizza 100", "python and frontend and senior and chicken 200", "cpp and - and senior and pizza 250", "- and backend and senior and - 150", "- and - and - and - 80", "- and - and - and - 150"]]]
+# for t in tests:
+#     avg_time += timeit.timeit(lambda: solution(*t), number=10000)
+# print(f'avg_time: {avg_time / len(tests)}')
