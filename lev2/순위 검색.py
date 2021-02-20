@@ -90,45 +90,45 @@ from itertools import combinations
 
 
 def init_table(info, table, idx_range=range(4)):
-    for row in info:
+    for row in sorted(info):
         r = row.split()
         condition = r[:-1]
         score = int(r[-1])
-        for i in range(len(condition)+1):
-            for c in list(combinations(idx_range, i)):
+        for n in range(len(condition)+1):
+            for c in list(combinations(idx_range, n)):
                 keys = condition.copy()
-                for c_i in c:
-                    keys[c_i] = "-"
-                table["_".join(keys)] = score
+                for idx in c:
+                    keys[idx] = "-"
+                keys = "_".join(keys)
+                if keys not in table:
+                    table[keys] = list()
+                table[keys].append(score)
     return table
 
 
 def solution(info, query):
     hash_table = init_table(info, dict())
-    print(hash_table)
-
-    # idx_range = [0, 1, 2, 3]
-    # answer = []
-    # for row in info:
-    #     s_row = row.split()
-    #     for i in range(5):
-    #         print(list(combinations(range(4), i)))
-    #     break
-    # return answer
+    answer = []
+    for row in query:
+        r = row.split()
+        k = "_".join([word for word in r[:-1] if word != 'and'])
+        applicant = sum([1 for score in hash_table[k] if score >= int(r[-1])]) if k in hash_table.keys() else 0
+        answer.append(applicant)
+    return answer
 
 
 print(solution(["java backend junior pizza 150", "python frontend senior chicken 210", "python frontend senior chicken 150", "cpp backend senior pizza 260", "java backend junior chicken 80", "python backend senior chicken 50"],
                ["java and backend and junior and pizza 100", "python and frontend and senior and chicken 200", "cpp and - and senior and pizza 250", "- and backend and senior and - 150", "- and - and - and chicken 100", "- and - and - and - 150"]))
-# print(solution(["java backend junior pizza 150", "python frontend senior chicken 210", "python frontend senior chicken 150", "cpp backend senior pizza 260", "java backend junior chicken 80", "python backend senior chicken 50"],
-#                ["java and frontend and junior and pizza 100", "python and frontend and senior and chicken 200", "cpp and - and senior and pizza 250", "- and backend and senior and - 150", "- and - and - and - 80", "- and - and - and - 150"]))
+print(solution(["java backend junior pizza 150", "python frontend senior chicken 210", "python frontend senior chicken 150", "cpp backend senior pizza 260", "java backend junior chicken 80", "python backend senior chicken 50"],
+               ["java and frontend and junior and pizza 100", "python and frontend and senior and chicken 200", "cpp and - and senior and pizza 250", "- and backend and senior and - 150", "- and - and - and - 80", "- and - and - and - 150"]))
 
 
-# import timeit
-# avg_time = 0.
-# tests = [[["java backend junior pizza 150", "python frontend senior chicken 210", "python frontend senior chicken 150", "cpp backend senior pizza 260", "java backend junior chicken 80", "python backend senior chicken 50"],
-#           ["java and backend and junior and pizza 100", "python and frontend and senior and chicken 200", "cpp and - and senior and pizza 250", "- and backend and senior and - 150", "- and - and - and chicken 100", "- and - and - and - 150"]],
-#          [["java backend junior pizza 150", "python frontend senior chicken 210", "python frontend senior chicken 150", "cpp backend senior pizza 260", "java backend junior chicken 80", "python backend senior chicken 50"],
-#           ["java and frontend and junior and pizza 100", "python and frontend and senior and chicken 200", "cpp and - and senior and pizza 250", "- and backend and senior and - 150", "- and - and - and - 80", "- and - and - and - 150"]]]
-# for t in tests:
-#     avg_time += timeit.timeit(lambda: solution(*t), number=10000)
-# print(f'avg_time: {avg_time / len(tests)}')
+import timeit
+avg_time = 0.
+tests = [[["java backend junior pizza 150", "python frontend senior chicken 210", "python frontend senior chicken 150", "cpp backend senior pizza 260", "java backend junior chicken 80", "python backend senior chicken 50"],
+          ["java and backend and junior and pizza 100", "python and frontend and senior and chicken 200", "cpp and - and senior and pizza 250", "- and backend and senior and - 150", "- and - and - and chicken 100", "- and - and - and - 150"]],
+         [["java backend junior pizza 150", "python frontend senior chicken 210", "python frontend senior chicken 150", "cpp backend senior pizza 260", "java backend junior chicken 80", "python backend senior chicken 50"],
+          ["java and frontend and junior and pizza 100", "python and frontend and senior and chicken 200", "cpp and - and senior and pizza 250", "- and backend and senior and - 150", "- and - and - and - 80", "- and - and - and - 150"]]]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(*t), number=10000)
+print(f'avg_time: {avg_time / len(tests)}')
