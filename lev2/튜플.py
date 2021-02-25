@@ -58,34 +58,50 @@ s	                            result
 (3, 2, 4, 1)을 집합 기호를 이용해 표현하면 {{3},{3,2},{3,2,4},{3,2,4,1}}이 되며, 이는 {{4,2,3},{3},{2,3,4,1},{2,3}}과 같습니다.
 """
 
-
+from collections import Counter
 def solution(s):
-    numbers = list()
-    for i, ch in enumerate(s[1:-1]):
-        if ch == "{":
-            start_i = i+2
-        elif ch == "}":
-            numbers.append(s[start_i:i+1])
-    numbers.sort(key=lambda x: len(x))
+    # numbers = list()
+    # for i, ch in enumerate(s[1:-1]):
+    #     if ch == "{":
+    #         start_i = i+2
+    #     elif ch == "}":
+    #         numbers.append(s[start_i:i+1])
+    # numbers.sort(key=lambda x: len(x))
+    #
+    # answer = list()
+    # for num in numbers:
+    #     # 0.0786605228
+    #     # answer.append([n for n in list(map(int, num.split(","))) if n not in answer][0])
+    #
+    #     # 0.06119081259999999
+    #     for n in list(map(int, num.split(","))):
+    #         if n not in answer:
+    #             answer.append(n)
+    #             break
+    # return answer
 
+    # code refactoring
+    # 0.0325194944
+    new_s = s.lstrip("{").rstrip("}").split("},{")
     answer = list()
-    for num in numbers:
-        # 0.0786605228
-        # answer.append([n for n in list(map(int, num.split(","))) if n not in answer][0])
-
-        # 0.062375778800000004
-        for n in list(map(int, num.split(","))):
-            if n not in answer:
-                answer.append(n)
+    for word in sorted(new_s, key=len):
+        for w in word.split(","):
+            w = int(w)
+            if w not in answer:
+                answer.append(w)
                 break
     return answer
 
+    # 0.05164484540000001
+    # new_s = s.replace("{", "").replace("}", "").split(",")
+    # return [int(k) for k, v in sorted(Counter(new_s).items(), key=lambda x: x[1], reverse=True)]
+
 
 print(solution("{{2},{2,1},{2,1,3},{2,1,3,4}}"))    # 2 1 3 4
-print(solution("{{1,2,3},{2,1},{1,2,4,3},{2}}"))    # 2 1 3 4
-print(solution("{{20,111},{111}}"))                 # 111 20
-print(solution("{{123}}"))                          # 123
-print(solution("{{4,2,3},{3},{2,3,4,1},{2,3}}"))    # 3 2 4 1
+# print(solution("{{1,2,3},{2,1},{1,2,4,3},{2}}"))    # 2 1 3 4
+# print(solution("{{20,111},{111}}"))                 # 111 20
+# print(solution("{{123}}"))                          # 123
+# print(solution("{{4,2,3},{3},{2,3,4,1},{2,3}}"))    # 3 2 4 1
 
 
 import timeit
