@@ -60,55 +60,37 @@ maps	                                                        answer
 def solution(maps):
     n = len(maps)
     m = len(maps[0])
-    print(f"n: {n}. m: {m}")
-    S = [[1 for _ in range(n)] for _ in range(m)]
-    for i in range(n):
-        for j in range(m):
-            if maps[i][j]:
-                dist = S[i][j]+1
+    INF = n * m
+    news = [[0, 1], [1, 0], [-1, 0], [0, -1]]
+    maps = [[INF if maps[i][j] else 0 for j in range(m)] for i in range(n)]
+    maps[0][0] = 1
+    search = [[0, 0]]
+    while search:
+        x, y = search.pop()
+        for i in range(4):
+            nx = x + news[i][0]
+            ny = y + news[i][1]
+            if nx < 0 or ny < 0 or nx >= n or ny >= n:
+                continue
+            elif maps[nx][ny] == 0:
+                continue
+            elif maps[nx][ny] > maps[x][y]+1:
+                maps[nx][ny] = maps[x][y]+1
+                search.append([nx, ny])
+    if maps[n-1][m-1] != INF:
+        return maps[n-1][m-1]
+    else:
+        return -1
 
-                # left
-                if j-1 >= 0 and maps[i][j-1]:
-                    if S[i][j-1] >= 1:
-                        if S[i][j-1] > dist:
-                            S[i][j-1] = dist
-                        else:
-                            S[i][j-1] += dist
 
-                # right
-                if j+1 < n and maps[i][j+1]:
-                    if S[i][j+1] >= 1:
-                        if S[i][j+1] > dist:
-                            S[i][j+1] = dist
-                        else:
-                            S[i][j+1] += dist
-
-                # up
-                if i-1 >= 0 and maps[i-1][j]:
-                    if S[i-1][j] >= 1:
-                        if S[i-1][j] > dist:
-                            S[i-1][j] = dist
-                        else:
-                            S[i-1][j] += dist
-
-                # down
-                if i+1 < m and maps[i+1][j]:
-                    if S[i+1][j] >= 1:
-                        if S[i+1][j] > dist:
-                            S[i+1][j] = dist
-                        else:
-                            S[i+1][j] += dist
-                # else:
-                #     S[i][j] = 0
-
-            else:
-                S[i][j] = 0
-                break
-    print(S)
-
+# print(solution([[1, 0, 1, 1, 1],
+#                 [1, 0, 1, 0, 1],
+#                 [1, 0, 1, 1, 1],
+#                 [1, 1, 1, 0, 1],
+#                 [0, 0, 0, 0, 1]]))
 
 print(solution([[1, 0, 1, 1, 1],
                 [1, 0, 1, 0, 1],
                 [1, 0, 1, 1, 1],
-                [1, 1, 1, 0, 1],
+                [1, 1, 1, 0, 0],
                 [0, 0, 0, 0, 1]]))
