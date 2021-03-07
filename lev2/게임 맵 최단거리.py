@@ -60,7 +60,7 @@ maps	                                                        answer
 def solution(maps):
     n = len(maps)
     m = len(maps[0])
-    INF = n * m
+    INF = n * m + 1
     news = [[0, 1], [1, 0], [-1, 0], [0, -1]]
     maps = [[INF if maps[i][j] else 0 for j in range(m)] for i in range(n)]
     maps[0][0] = 1
@@ -70,7 +70,7 @@ def solution(maps):
         for i in range(4):
             nx = x + news[i][0]
             ny = y + news[i][1]
-            if nx < 0 or ny < 0 or nx >= n or ny >= n:
+            if nx < 0 or ny < 0 or nx >= n or ny >= m:
                 continue
             elif maps[nx][ny] == 0:
                 continue
@@ -89,8 +89,16 @@ def solution(maps):
 #                 [1, 1, 1, 0, 1],
 #                 [0, 0, 0, 0, 1]]))
 
-print(solution([[1, 0, 1, 1, 1],
-                [1, 0, 1, 0, 1],
-                [1, 0, 1, 1, 1],
-                [1, 1, 1, 0, 0],
-                [0, 0, 0, 0, 1]]))
+# print(solution([[1, 0, 1, 1, 1],
+#                 [1, 0, 1, 0, 1],
+#                 [1, 0, 1, 1, 1],
+#                 [1, 1, 1, 0, 0],
+#                 [0, 0, 0, 0, 1]]))
+
+# print(solution([[1, 0, 1, 1, 1],
+#                 [1, 0, 1, 0, 1],
+#                 [1, 0, 1, 0, 1],
+#                 [1, 1, 1, 0, 1]]))
+
+print(solution([[1, 1, 1, 1, 1]]))
+
