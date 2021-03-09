@@ -57,48 +57,51 @@ maps	                                                        answer
 """
 
 
+from collections import deque
 def solution(maps):
+    # 0.023740409500000004
     n = len(maps)
     m = len(maps[0])
-    INF = n * m + 1
-    news = [[0, 1], [1, 0], [-1, 0], [0, -1]]
-    maps = [[INF if maps[i][j] else 0 for j in range(m)] for i in range(n)]
-    maps[0][0] = 1
-    search = [[0, 0]]
+    news = [(0, 1), (1, 0), (-1, 0), (0, -1)]
+    search = deque([[0, 0, 1]])
     while search:
-        x, y = search.pop()
+        x, y, cnt = search.popleft()
         for i in range(4):
-            nx = x + news[i][0]
-            ny = y + news[i][1]
-            if nx < 0 or ny < 0 or nx >= n or ny >= m:
-                continue
-            elif maps[nx][ny] == 0:
-                continue
-            elif maps[nx][ny] > maps[x][y]+1:
-                maps[nx][ny] = maps[x][y]+1
-                search.append([nx, ny])
-    if maps[n-1][m-1] != INF:
-        return maps[n-1][m-1]
-    else:
-        return -1
+            nx, ny = x+news[i][0], y+news[i][1]
+            if nx == n-1 and ny == m-1:
+                return cnt + 1
+            elif 0 <= nx < n and 0 <= ny < m and maps[nx][ny]:
+                search.append([nx, ny, cnt+1])
+                maps[x][y] = 0
+    return -1
 
 
-# print(solution([[1, 0, 1, 1, 1],
-#                 [1, 0, 1, 0, 1],
-#                 [1, 0, 1, 1, 1],
-#                 [1, 1, 1, 0, 1],
-#                 [0, 0, 0, 0, 1]]))
+print(solution([[1, 0, 1, 1, 1],
+                [1, 0, 1, 0, 1],
+                [1, 0, 1, 1, 1],
+                [1, 1, 1, 0, 1],
+                [0, 0, 0, 0, 1]]))
 
-# print(solution([[1, 0, 1, 1, 1],
-#                 [1, 0, 1, 0, 1],
-#                 [1, 0, 1, 1, 1],
-#                 [1, 1, 1, 0, 0],
-#                 [0, 0, 0, 0, 1]]))
+print(solution([[1, 0, 1, 1, 1],
+                [1, 0, 1, 0, 1],
+                [1, 0, 1, 1, 1],
+                [1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 1]]))
 
-# print(solution([[1, 0, 1, 1, 1],
-#                 [1, 0, 1, 0, 1],
-#                 [1, 0, 1, 0, 1],
-#                 [1, 1, 1, 0, 1]]))
+print(solution([[1, 0, 1, 1, 1],
+                [1, 0, 1, 0, 1],
+                [1, 0, 1, 0, 1],
+                [1, 1, 1, 0, 1]]))
 
 print(solution([[1, 1, 1, 1, 1]]))
 
+
+import timeit
+avg_time = 0.
+tests = [[[1, 0, 1, 1, 1], [1, 0, 1, 0, 1], [1, 0, 1, 1, 1], [1, 1, 1, 0, 1], [0, 0, 0, 0, 1]],
+         [[1, 0, 1, 1, 1], [1, 0, 1, 0, 1], [1, 0, 1, 1, 1], [1, 1, 1, 0, 0], [0, 0, 0, 0, 1]],
+         [[1, 0, 1, 1, 1], [1, 0, 1, 0, 1], [1, 0, 1, 0, 1], [1, 1, 1, 0, 1]],
+         [[1, 1, 1, 1, 1]]]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(t), number=10000)
+print(f'avg_time: {avg_time / len(tests)}')
