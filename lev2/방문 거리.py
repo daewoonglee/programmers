@@ -56,29 +56,35 @@ dirs	    answer
 """
 
 
+from collections import defaultdict
 def solution(dirs):
-    keyboard = {
+    boundary = {
         "U": lambda xy: xy[0]-1 >= -5,
         "D": lambda xy: xy[0]+1 <= 5,
         "R": lambda xy: xy[1]+1 <= 5,
         "L": lambda xy: xy[1]-1 >= -5
     }
     move = {
-        "U": lambda xy: [xy[0]-1, xy[1]],
-        "D": lambda xy: [xy[0]+1, xy[1]],
-        "R": lambda xy: [xy[0], xy[1]+1],
-        "L": lambda xy: [xy[0], xy[1]-1]
+        "U": lambda xy: (xy[0]-1, xy[1]),
+        "D": lambda xy: (xy[0]+1, xy[1]),
+        "R": lambda xy: (xy[0], xy[1]+1),
+        "L": lambda xy: (xy[0], xy[1]-1)
     }
-    points = list()
-    x, y = 0, 0
+    points = defaultdict(set)
+    xy = (0, 0)
     for d in dirs:
-        if [x, y] in points:
-            continue
-        if keyboard[d]([x, y]):
-            points.append([x, y])
-            x, y = move[d]([x, y])
-    return len(points)
+        if boundary[d](xy):
+            if points[xy] not in list(move):
+                points[xy].add(d)
+            xy = move[d](xy)
+    print(points)
+    return sum([len(p) for p in points.values()])
 
-
-print(solution("ULURRDLLU"))
-print(solution("LULLLLLLU"))
+# print(solution("U"))  # 1
+# print(solution("ULURRDLLU"))  # 7
+# print(solution("LULLLLLLU"))  # 7
+# print(solution("LURDLL")) # 5
+print(solution("LLRLL"))  # 3
+# print(solution("UUUUDUDUDUUU")) # 5
+# print(solution("LURDLURDLURDLURDRULD")) # 7
+# print(solution("RRRRRRRRRRRRRRRRRRRRRUUUUUUUUUUUUULU")) # 11
