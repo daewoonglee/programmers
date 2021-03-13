@@ -58,33 +58,46 @@ dirs	    answer
 
 from collections import defaultdict
 def solution(dirs):
-    boundary = {
-        "U": lambda xy: xy[0]-1 >= -5,
-        "D": lambda xy: xy[0]+1 <= 5,
-        "R": lambda xy: xy[1]+1 <= 5,
-        "L": lambda xy: xy[1]-1 >= -5
-    }
-    move = {
-        "U": lambda xy: (xy[0]-1, xy[1]),
-        "D": lambda xy: (xy[0]+1, xy[1]),
-        "R": lambda xy: (xy[0], xy[1]+1),
-        "L": lambda xy: (xy[0], xy[1]-1)
-    }
-    points = defaultdict(set)
+    # # 0.0718682094
+    move_x = {"U": 0, "D": 0, "R": 1, "L": -1}
+    move_y = {"U": -1, "D": 1, "R": 0, "L": 0}
+    maps = set()
     xy = (0, 0)
     for d in dirs:
-        if boundary[d](xy):
-            if points[xy] not in list(move):
-                points[xy].add(d)
-            xy = move[d](xy)
-    print(points)
-    return sum([len(p) for p in points.values()])
+        _x, _y = xy
+        x, y = _x + move_x[d], _y + move_y[d]
+        if -5 <= x <= 5 and -5 <= y <= 5:
+            maps.add(tuple(sorted([(_x, _y), (x, y)])))
+            xy = (x, y)
+    return len(maps)
+
 
 # print(solution("U"))  # 1
-# print(solution("ULURRDLLU"))  # 7
 # print(solution("LULLLLLLU"))  # 7
 # print(solution("LURDLL")) # 5
-print(solution("LLRLL"))  # 3
+#
+# print(solution("ULURRDLLU"))  # 7
+# print(solution("UL"))  # 2
+# print(solution("LR"))  # 1
+# print(solution("LLRLL"))  # 3
+#
 # print(solution("UUUUDUDUDUUU")) # 5
 # print(solution("LURDLURDLURDLURDRULD")) # 7
 # print(solution("RRRRRRRRRRRRRRRRRRRRRUUUUUUUUUUUUULU")) # 11
+print(solution("LRLRL"))
+
+import timeit
+avg_time = 0.
+tests = ["U",
+         "LULLLLLLU",
+         "LURDLL",
+         "ULURRDLLU",
+         "UL",
+         "LR",
+         "LLRLL",
+         "UUUUDUDUDUUU",
+         "LURDLURDLURDLURDRULD",
+         "RRRRRRRRRRRRRRRRRRRRRUUUUUUUUUUUUULU"]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(t), number=10000)
+print(f'avg_time: {avg_time / len(tests)}')
