@@ -31,32 +31,18 @@ cdcd	0
 """
 
 
-def get_pair(s, start=[0], jump=1, end=0):
-    # print(f"s: {s}, start: {start}, jump: {jump}, end: {end}")
-    if end == -1 or (start[-1]+jump == end and s[start[-1]] == s[start[-1]+jump]):
-        return 1
-    elif start[-1]+jump >= end:
-        return 0
-
-    if s[start[-1]] == s[start[-1]+jump]:
-        if len(start) == 1:
-            return get_pair(s, [start[-1]+jump+1], 1, end)
-        else:
-            if start[-1]+jump+1 == end:
-                return get_pair(s, start[:-1], start[-1]+jump+1, end)
-            return get_pair(s, start[:-1]+[start[-1]+jump+1], 1, end)
-
-    for i in range(start[-1]+jump, end):
-        if s[i] == s[i+1]:
-            if i > 1:
-                return get_pair(s, start+list(range(start[-1]+jump, i)), jump+2, end)
-            else:
-                return get_pair(s, start[:-1]+[i-1], jump+2, end)
-    return 0
-
-
 def solution(s):
-    return get_pair(s, [0], 1, len(s)-1)
+    # 0.0071218625
+    if not s:
+        return 1
+
+    answer = [s[0]]
+    for ch in s[1:]:
+        if answer and answer[-1] == ch:
+            answer.pop()
+        else:
+            answer.append(ch)
+    return 0 if answer else 1
 
 
 # print(solution("baabaa"))       # 1
@@ -67,22 +53,22 @@ def solution(s):
 # print(solution("ccc"))          # 0
 # print(solution("baaaabaa"))     # 1
 # print(solution("baaaaabaa"))    # 0
-# print(solution("baaaaabaaaa"))  # 0
-# print(solution("baaabaaab"))    # 0
-# print(solution("bbbaabaaaa"))   # 1
-# print(solution("bbbaabbaaaaa"))   # 0
-# print(solution("babbaaab"))   # 1
-print(solution("babbaaaabba"))   # 1
+print(solution("baaaaabaaaa"))  # 0
+print(solution("baaabaaab"))    # 0
+print(solution("bbbaabaaaa"))   # 1
+print(solution("bbbaabbaaaaa"))   # 0
+print(solution("babbaaab"))   # 1
+print(solution("babbaaaabba"))   # 0
 
 
-# import timeit
-# avg_time = 0.
-# tests = ["baabaa",
-#          "cdcd",
-#          "c",
-#          "",
-#          "cc",
-#          "ccc"]
-# for t in tests:
-#     avg_time += timeit.timeit(lambda: solution(t), number=10000)
-# print(f'avg_time: {avg_time / len(tests)}')
+import timeit
+avg_time = 0.
+tests = ["baabaa",
+         "cdcd",
+         "c",
+         "",
+         "cc",
+         "ccc"]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(t), number=10000)
+print(f'avg_time: {avg_time / len(tests)}')
