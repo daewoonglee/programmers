@@ -41,11 +41,44 @@ N	road	                                                    K	result
 """
 
 # 0.0801413892
+# def solution(N, road, K):
+#     M = 500000
+#     flag = [0 for _ in range(N)]
+#     answer = [0 for _ in range(N)]
+#     answer[0] = 0
+#
+#     while sum(flag) != N:
+#         min_n, min_idx = M, 0
+#         for i, a in enumerate(answer):
+#             if not flag[i] and a < min_n:
+#                 min_n = a
+#                 min_idx = i
+#         flag[min_idx] = 1
+#
+#         for r in road:
+#             if r[0] == min_idx+1:
+#                 next_idx = r[1]-1
+#             elif r[1] == min_idx+1:
+#                 next_idx = r[0]-1
+#             else:
+#                 continue
+#             if not flag[next_idx] and answer[min_idx] + r[-1] < answer[next_idx]:
+#                 answer[next_idx] = answer[min_idx] + r[-1]
+#
+#     return sum([1 for a in answer if a <= K])
+
+
+# 0.07276859020000001
 def solution(N, road, K):
     M = 500000
     flag = [0 for _ in range(N)]
     answer = [0 for _ in range(N)]
     answer[0] = 0
+
+    road_info = [[] for _ in range(N+1)]
+    for r in road:
+        road_info[r[0]].append((r[1], r[2]))
+        road_info[r[1]].append((r[0], r[2]))
 
     while sum(flag) != N:
         min_n, min_idx = M, 0
@@ -55,17 +88,35 @@ def solution(N, road, K):
                 min_idx = i
         flag[min_idx] = 1
 
-        for r in road:
-            if r[0] == min_idx+1:
-                next_idx = r[1]-1
-            elif r[1] == min_idx+1:
-                next_idx = r[0]-1
-            else:
-                continue
-            if not flag[next_idx] and answer[min_idx] + r[-1] < answer[next_idx]:
-                answer[next_idx] = answer[min_idx] + r[-1]
+        for d, t in road_info[min_idx+1]:
+            if not flag[min_idx] and answer[min_idx] + t < answer[d-1]:
+                answer[d-1] = answer[min_idx] + t
 
     return sum([1 for a in answer if a <= K])
+
+
+# 0.07097231000000001
+# import sys
+# def solution(N, road, K):
+#     visited, D, r = [False]*(N+1), [sys.maxsize]*(N+1), [[(None, None)]] + [[] for _ in range(N)]
+#     print(f"r: {r}")
+#     for e in road:
+#         r[e[0]].append((e[1],e[2]))
+#         r[e[1]].append((e[0],e[2]))
+#     print(f"after r: {r}")
+#     D[1] = 0
+#     for _ in range(1,N+1):
+#         min_ = sys.maxsize
+#         for i in range(1,N+1):
+#             if not visited[i] and D[i] < min_:
+#                 min_ = D[i]
+#                 m = i
+#         visited[m] = True
+#         for w, wt in r[m]:
+#             if D[m] + wt < D[w]:
+#                 D[w] = D[m] + wt
+#
+#     return len([d for d in D if d <= K])
 
 
 # print(solution(5, [[1,2,1],[2,3,3],[5,2,2],[1,4,2],[5,3,1],[5,4,2]], 3))            # 4
