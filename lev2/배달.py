@@ -40,41 +40,48 @@ N	road	                                                    K	result
 1번 마을에서 배달에 4시간 이하가 걸리는 마을은 [1, 2, 3, 5] 4개이므로 4를 return 합니다.
 """
 
-
-from collections import deque
+# 0.0801413892
 def solution(N, road, K):
-    answer = [10000 for _ in range(N)]
-    answer[0] = 0
+    M = 500000
     flag = [0 for _ in range(N)]
-    search = deque([[1, 1, 0]])
-    while search:
-        pre_v, cur_v, t = search.popleft()
-        flag[pre_v-1] = 1
+    answer = [0 for _ in range(N)]
+    answer[0] = 0
+
+    while sum(flag) != N:
+        min_n, min_idx = M, 0
+        for i, a in enumerate(answer):
+            if not flag[i] and a < min_n:
+                min_n = a
+                min_idx = i
+        flag[min_idx] = 1
+
         for r in road:
-            # print(f"r: {r}, flag: {flag}")
-            if cur_v == r[0] and not flag[r[1]-1]:
-                search.append([r[0], r[1], r[-1]])
-                flag[r[1]-1] = 1
-            elif cur_v == r[1] and not flag[r[0]-1]:
-                search.append([r[1], r[0], r[-1]])
-                flag[r[0]-1] = 1
-        if answer[pre_v-1] + t < answer[cur_v-1]:
-            answer[cur_v-1] = answer[pre_v-1] + t
-        # print(f"search: {search}")
-        # print(f"answer: {answer}")
-    return sum([1 for n in answer if n <= K])
+            if r[0] == min_idx+1:
+                next_idx = r[1]-1
+            elif r[1] == min_idx+1:
+                next_idx = r[0]-1
+            else:
+                continue
+            if not flag[next_idx] and answer[min_idx] + r[-1] < answer[next_idx]:
+                answer[next_idx] = answer[min_idx] + r[-1]
 
-print(solution(5, [[1,2,1],[2,3,3],[5,2,2],[1,4,2],[5,3,1],[5,4,2]], 3))            # 4
-print(solution(6, [[1,2,1],[1,3,2],[2,3,2],[3,4,3],[3,5,2],[3,5,3],[5,6,1]], 4))    # 4
-print(solution(2, [[1,2,100],[2,1,99]], 100))                                       # 2
-print(solution(3, [[1,2,1],[3,2,3],[2,1,2]], 1))                                    # 2
-print(solution(5, [[1,2,2],[3,2,2],[3,4,2],[4,5,2],[5,1,2], [5,4,3]], 2))           # 3
+    return sum([1 for a in answer if a <= K])
 
 
-# import timeit
-# avg_time = 0.
-# tests = [[5, [[1,2,1],[2,3,3],[5,2,2],[1,4,2],[5,3,1],[5,4,2]], 3],
-#          [6, [[1,2,1],[1,3,2],[2,3,2],[3,4,3],[3,5,2],[3,5,3],[5,6,1]], 4]]
-# for t in tests:
-#     avg_time += timeit.timeit(lambda: solution(*t), number=10000)
-# print(f'avg_time: {avg_time / len(tests)}')
+# print(solution(5, [[1,2,1],[2,3,3],[5,2,2],[1,4,2],[5,3,1],[5,4,2]], 3))            # 4
+# print(solution(6, [[1,2,1],[1,3,2],[2,3,2],[3,4,3],[3,5,2],[3,5,3],[5,6,1]], 4))    # 4
+# print(solution(2, [[1,2,100],[2,1,99]], 100))                                       # 2
+# print(solution(3, [[1,2,1],[3,2,3],[2,1,2]], 1))                                    # 2
+print(solution(5, [[1,2,10000],[3,2,2],[3,4,2],[4,5,2],[5,1,2],[5,4,3]], 10))           # 5
+
+
+import timeit
+avg_time = 0.
+tests = [[5, [[1,2,1],[2,3,3],[5,2,2],[1,4,2],[5,3,1],[5,4,2]], 3],
+         [6, [[1,2,1],[1,3,2],[2,3,2],[3,4,3],[3,5,2],[3,5,3],[5,6,1]], 4],
+         [2, [[1,2,100],[2,1,99]], 100],
+         [3, [[1,2,1],[3,2,3],[2,1,2]], 1],
+         [5, [[1,2,10000],[3,2,2],[3,4,2],[4,5,2],[5,1,2],[5,4,3]], 10]]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(*t), number=10000)
+print(f'avg_time: {avg_time / len(tests)}')
