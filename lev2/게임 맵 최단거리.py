@@ -59,41 +59,48 @@ maps	                                                        answer
 
 from collections import deque
 def solution(maps):
-    # 0.023740409500000004
+    # 0.023469336749999996
     n = len(maps)
     m = len(maps[0])
-    news = [(0, 1), (1, 0), (-1, 0), (0, -1)]
+    NEWS = [(0, 1), (1, 0), (-1, 0), (0, -1)]
     search = deque([[0, 0, 1]])
     while search:
         x, y, cnt = search.popleft()
+        maps[x][y] = 0
         for i in range(4):
-            nx, ny = x+news[i][0], y+news[i][1]
+            nx, ny = x+NEWS[i][0], y+NEWS[i][1]
             if nx == n-1 and ny == m-1:
                 return cnt + 1
             elif 0 <= nx < n and 0 <= ny < m and maps[nx][ny]:
                 search.append([nx, ny, cnt+1])
-                maps[x][y] = 0
+                maps[nx][ny] = 0
     return -1
 
 
-print(solution([[1, 0, 1, 1, 1],
-                [1, 0, 1, 0, 1],
-                [1, 0, 1, 1, 1],
-                [1, 1, 1, 0, 1],
-                [0, 0, 0, 0, 1]]))
+print(solution([[1, 1, 1, 1, 1, 1],
+                [1, 0, 0, 0, 0, 1],
+                [1, 1, 1, 1, 1, 1],
+                [0, 0, 0, 0, 0, 1],
+                [0, 0, 0, 0, 0, 1]]))
 
-print(solution([[1, 0, 1, 1, 1],
-                [1, 0, 1, 0, 1],
-                [1, 0, 1, 1, 1],
-                [1, 1, 1, 0, 0],
-                [0, 0, 0, 0, 1]]))
+# print(solution([[1, 0, 1, 1, 1],
+#                 [1, 0, 1, 0, 1],
+#                 [1, 0, 1, 1, 1],
+#                 [1, 1, 1, 0, 1],
+#                 [0, 0, 0, 0, 1]]))
 
-print(solution([[1, 0, 1, 1, 1],
-                [1, 0, 1, 0, 1],
-                [1, 0, 1, 0, 1],
-                [1, 1, 1, 0, 1]]))
-
-print(solution([[1, 1, 1, 1, 1]]))
+# print(solution([[1, 0, 1, 1, 1],
+#                 [1, 0, 1, 0, 1],
+#                 [1, 0, 1, 1, 1],
+#                 [1, 1, 1, 0, 0],
+#                 [0, 0, 0, 0, 1]]))
+#
+# print(solution([[1, 0, 1, 1, 1],
+#                 [1, 0, 1, 0, 1],
+#                 [1, 0, 1, 0, 1],
+#                 [1, 1, 1, 0, 1]]))
+#
+# print(solution([[1, 1, 1, 1, 1]]))
 
 
 import timeit
