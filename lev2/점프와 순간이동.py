@@ -46,14 +46,26 @@ N	    result
 
 
 def solution(n):
-    ans = 0
-    while n > 0:
-        if n % 2 == 1:
-            n -= 1
-            ans += 1
-        else:
-            n /= 2
-    return ans
+    # 0.013024216833333333
+    # ans = 0
+    # while n > 0:
+    #     if n % 2 == 1:
+    #         n -= 1
+    #         ans += 1
+    #     else:
+    #         n /= 2
+    # return ans
+
+    # code refactoring
+    # 0.0069182835
+    # answer = 1
+    # while n > 1:
+    #     answer += n % 2
+    #     n = n // 2
+    # return answer
+
+    # 0.005008093000000001
+    return bin(n).count("1")
 
 
 print(solution(5))      # 2
@@ -62,3 +74,11 @@ print(solution(20))     # 2
 print(solution(19))     # 3
 print(solution(18))     # 2
 print(solution(5000))   # 5
+
+
+import timeit
+avg_time = 0.
+tests = [5, 6, 20, 19, 18, 5000]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(t), number=10000)
+print(f'avg_time: {avg_time / len(tests)}')
