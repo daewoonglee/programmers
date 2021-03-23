@@ -25,23 +25,47 @@ N	A	B	answer
 세 번째 라운드에서 1번과 2번으로 두 참가자가 붙게 되므로 3을 return 하면 됩니다.
 """
 
+# 0.015946233
+# import math
+# def match(n, a, b):
+#     div = n//2
+#     if a <= div < b:
+#         return int(math.log(n, 2))
+#     return match(div, a-div if a-div > 0 else a, b-div if b-div > 0 else b)
+#
+#
+# def solution(n,a,b):
+#     if a > b:
+#         a, b = b, a
+#     return match(n, a, b)
 
-import math
-def match(n, a, b):
-    div = n//2
-    if a <= div < b:
-        return int(math.log(n, 2))
-    return match(div, a-div if a-div > 0 else a, b-div if b-div > 0 else b)
-
-
+# code refactoring
 def solution(n,a,b):
-    if a > b:
-        a, b = b, a
-    return match(n, a, b)
+    # 0.005658992333333334
+    # return ((a-1)^(b-1)).bit_length()
 
+    # 0.010781934
+    answer = 0
+    while a != b:
+        answer += 1
+        a, b = (a+1)//2, (b+1)//2
+    return answer
 
 # print(solution(4, 1, 2))    # 1
 # print(solution(4, 1, 4))    # 2
 # print(solution(8, 4, 7))    # 3
-print(solution(16, 9, 14)) # 2
+print(solution(16, 9, 14))  # 3
+print(solution(16, 14, 9))  # 3
+print(solution(16, 12, 9))  # 3
 
+
+import timeit
+avg_time = 0.
+tests = [[4, 1, 2],
+         [4, 1, 4],
+         [8, 4, 7],
+         [16, 9, 14],
+         [16, 14, 9]]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(*t), number=10000)
+print(f'avg_time: {avg_time / len(t)}')
