@@ -52,47 +52,79 @@ E=M*C^2	    e=m*c^2	        65536
 """
 
 
-import re
-def get_pair(p, s):
-    pair = list()
-    for i in range(len(s)-1):
-        w = s[i:i+2].lower()
-        if p.match(w):
-            pair.append(w)
-    return pair
+# # 0.26161536900000004
+# import re
+# def get_pair(p, s):
+#     pair = list()
+#     for i in range(len(s)-1):
+#         w = s[i:i+2].lower()
+#         if p.match(w):
+#             pair.append(w)
+#     return pair
+#
+#
+# def solution(str1, str2):
+#     p = re.compile("[a-z]{2}")
+#     pair1 = get_pair(p, str1)
+#     pair2 = get_pair(p, str2)
+#
+#     inter_pair2 = pair2.copy()
+#     intersection = list()
+#     for p in pair1:
+#         for i in range(len(inter_pair2)):
+#             if p == inter_pair2[i]:
+#                 intersection.append(inter_pair2.pop(i))
+#                 break
+#     union = list()
+#     for p in pair1:
+#         flag = False
+#         for i in range(len(pair2)):
+#             if p == pair2[i]:
+#                 union.append(pair2.pop(i))
+#                 flag = True
+#                 break
+#         if not flag:
+#             union.append(p)
+#     union += pair2
+#     return int(len(intersection)/len(union)*65536) if union or intersection else 65536
 
 
+# code refactoring - pythonic
+# 0.2005182885
 def solution(str1, str2):
-    p = re.compile("[a-z]{2}")
-    pair1 = get_pair(p, str1)
-    pair2 = get_pair(p, str2)
-
-    inter_pair2 = pair2.copy()
-    intersection = list()
-    for p in pair1:
-        for i in range(len(inter_pair2)):
-            if p == inter_pair2[i]:
-                intersection.append(inter_pair2.pop(i))
-                break
-    union = list()
-    for p in pair1:
-        flag = False
-        for i in range(len(pair2)):
-            if p == pair2[i]:
-                union.append(pair2.pop(i))
-                flag = True
-                break
-        if not flag:
-            union.append(p)
-    union += pair2
-    return int(len(intersection)/len(union)*65536) if union or intersection else 65536
+    pair1 = [str1[i: i+2].lower() for i in range(len(str1)-1) if str1[i: i+2].isalpha()]
+    pair2 = [str2[i: i+2].lower() for i in range(len(str2)-1) if str2[i: i+2].isalpha()]
+    p1 = set(pair1)
+    p2 = set(pair2)
+    intersection = p1.intersection(p2)
+    union = p1.union(p2)
+    if not union:
+        return 65536
+    intersection_sum = sum([min(pair1.count(inter), pair2.count(inter)) for inter in intersection])
+    union_sum = sum([max(pair1.count(u), pair2.count(u)) for u in union])
+    return int((intersection_sum / union_sum) * 65536)
 
 
-# print(solution("FRANCE", "french"))             # 16384
-# print(solution("handshake", "shake hands"))     # 65536
-# print(solution("aa1+aa2", "AAAA12"))            # 43690
+# ------------------------------------
+
+# Counter 이용 방법
+# 0.2980233405
+# from collections import Counter
+# def solution(str1, str2):
+#     pair1 = [str1[i: i+2].lower() for i in range(len(str1)-1) if str1[i: i+2].isalpha()]
+#     pair2 = [str2[i: i+2].lower() for i in range(len(str2)-1) if str2[i: i+2].isalpha()]
+#     c1 = Counter(pair1)
+#     c2 = Counter(pair2)
+#     intersection = c1 & c2
+#     union = c1 | c2
+#     return int(sum(intersection.values()) / sum(union.values()) * 65536) if intersection or union else 65536
+
+
+print(solution("FRANCE", "french"))             # 16384
+print(solution("handshake", "shake hands"))     # 65536
+print(solution("aa1+aa2", "AAAA12"))            # 43690
 print(solution("E=M*C^2", "e=m*c^2"))           # 65536
-print(solution("-===", "aaa"))
+print(solution("-===", "aaa"))                  # 0
 
 
 import timeit
