@@ -37,27 +37,46 @@ cache miss일 경우 실행시간은 5이다.
 """
 
 
+# 0.1411025405
+# def solution(cacheSize, cities):
+#     if not cacheSize:
+#         return 5 * len(cities)
+#     cities = [c.lower() for c in cities]
+#     q_cities = []
+#     q_times = []
+#     run_time = 0
+#     for i, c in enumerate(cities):
+#         if c in q_cities:
+#             idx = q_cities.index(c)
+#             q_cities[idx] = c
+#             q_times[idx] = i
+#             run_time += 1
+#         else:
+#             if len(q_times) == cacheSize:
+#                 idx = q_times.index(min(q_times))
+#                 q_cities[idx] = c
+#                 q_times[idx] = i
+#             else:
+#                 q_cities.append(c)
+#                 q_times.append(i)
+#             run_time += 5
+#     return run_time
+
+
+# code refactoring 01 -> 0.09385961400000001
+from collections import deque
 def solution(cacheSize, cities):
-    if not cacheSize:
-        return 5 * len(cities)
-    cities = [c.lower() for c in cities]
-    q_cities = []
-    q_times = []
+    # 0.09679892350000001
+    queue = deque(maxlen=cacheSize)
     run_time = 0
-    for i, c in enumerate(cities):
-        if c in q_cities:
-            idx = q_cities.index(c)
-            q_cities[idx] = c
-            q_times[idx] = i
+    for c in cities:
+        c = c.lower()
+        if c in queue:
+            queue.remove(c)
+            queue.append(c)
             run_time += 1
         else:
-            if len(q_times) == cacheSize:
-                idx = q_times.index(min(q_times))
-                q_cities[idx] = c
-                q_times[idx] = i
-            else:
-                q_cities.append(c)
-                q_times.append(i)
+            queue.append(c)
             run_time += 5
     return run_time
 
@@ -65,9 +84,25 @@ def solution(cacheSize, cities):
 print(solution(3, ["Jeju", "Pangyo", "Seoul", "NewYork", "LA", "Jeju", "Pangyo", "Seoul", "NewYork", "LA"]))    # 50
 print(solution(3, ["Jeju", "Pangyo", "Seoul", "Jeju", "Pangyo", "Seoul", "Jeju", "Pangyo", "Seoul"]))   # 21
 print(solution(2, ["Jeju", "Pangyo", "Seoul", "NewYork", "LA", "SanFrancisco", "Seoul", "Rome", "Paris", "Jeju", "NewYork", "Rome"])) # 60
-print(solution(5, ["Jeju", "Pangyo", "Seoul", "NewYork", "LA", "SanFrancisco", "Seoul", "Rome", "Paris", "Jeju", "NewYork", "Rome"]	))  # 52
+print(solution(5, ["Jeju", "Pangyo", "Seoul", "NewYork", "LA", "SanFrancisco", "Seoul", "Rome", "Paris", "Jeju", "NewYork", "Rome"]))  # 52
 print(solution(2, ["Jeju", "Pangyo", "NewYork", "newyork"]))    # 16
 print(solution(0, ["Jeju", "Pangyo", "Seoul", "NewYork", "LA"]))    # 25
 print(solution(0, ["Jeju", "Jeju", "Jeju", "Jeju"]))    # 20
 print(solution(1, ["Jeju", "Jeju", "Jeju", "Jeju"]))    # 8
 print(solution(5, ["Jeju", "Jeju", "Jeju", "Jeju"]))    # 8
+
+
+import timeit
+avg_time = 0.
+tests = [[3, ["Jeju", "Pangyo", "Seoul", "NewYork", "LA", "Jeju", "Pangyo", "Seoul", "NewYork", "LA"]],
+         [3, ["Jeju", "Pangyo", "Seoul", "Jeju", "Pangyo", "Seoul", "Jeju", "Pangyo", "Seoul"]],
+         [2, ["Jeju", "Pangyo", "Seoul", "NewYork", "LA", "SanFrancisco", "Seoul", "Rome", "Paris", "Jeju", "NewYork", "Rome"]],
+         [5, ["Jeju", "Pangyo", "Seoul", "NewYork", "LA", "SanFrancisco", "Seoul", "Rome", "Paris", "Jeju", "NewYork", "Rome"]],
+         [2, ["Jeju", "Pangyo", "NewYork", "newyork"]],
+         [0, ["Jeju", "Pangyo", "Seoul", "NewYork", "LA"]],
+         [0, ["Jeju", "Jeju", "Jeju", "Jeju"]],
+         [1, ["Jeju", "Jeju", "Jeju", "Jeju"]],
+         [5, ["Jeju", "Jeju", "Jeju", "Jeju"]]]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(*t), number=10000)
+print(f'avg_time: {avg_time / len(t)}')
