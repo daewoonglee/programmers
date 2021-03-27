@@ -48,69 +48,101 @@ m	n	board	                                                        answer
 """
 
 
-def get_set_remove_list(board, row, col):
-    remove_list = []
-    for i in range(row-1, 0, -1):
+# def get_set_remove_list(board, row, col):
+#     remove_list = []
+#     for i in range(row-1, 0, -1):
+#         for j in range(col-1):
+#             if not board[i][j]:
+#                 continue
+#             elif board[i][j] == board[i-1][j] == board[i][j+1] == board[i-1][j+1]:
+#                 remove_list.append((i, j))
+#     return remove_list
+#
+#
+# def delete_block(board, rm_list):
+#     for rm in rm_list:
+#         i, j = rm
+#         # if board[i][j]:
+#         #     board[i][j] = ""
+#         #     cnt += 1
+#         # if board[i-1][j]:
+#         #     board[i-1][j] = ""
+#         #     cnt += 1
+#         # if board[i][j+1]:
+#         #     board[i][j+1] = ""
+#         #     cnt += 1
+#         # if board[i-1][j+1]:
+#         #     board[i-1][j+1] = ""
+#         #     cnt += 1
+#
+#         # code refactoring 01
+#         board[i][j] = ""
+#         board[i-1][j] = ""
+#         board[i][j+1] = ""
+#         board[i-1][j+1] = ""
+#     return board
+#
+#
+# def move_block(board, row, col):
+#     for j in range(col):
+#         for i in range(row-1, -1, -1):
+#             if not board[i][j]:
+#                 for z in range(i-1, -1, -1):
+#                     if board[z][j]:
+#                         board[i][j] = board[z][j]
+#                         board[z][j] = ""
+#                         break
+#     return board
+#
+#
+# def solution(m, n, board):
+#     # origin -> 0.2672431376666667
+#     board = [[r for r in row] for row in board]
+#     while 1:
+#         remove_list = get_set_remove_list(board, m, n)
+#         if not remove_list:
+#             break
+#         board = delete_block(board, remove_list)
+#         board = move_block(board, m, n)
+#     # code refactoring 01 -> 0.24371601033333334
+#     return sum([b.count("") for b in board])
+
+
+# code refactoring 02
+def pop_num(b, col, row):
+    remove = set()
+    for i in range(row-1):
         for j in range(col-1):
-            if not board[i][j]:
-                continue
-            elif board[i][j] == board[i-1][j] == board[i][j+1] == board[i-1][j+1]:
-                remove_list.append((i, j))
-    return remove_list
+            if b[i][j] == b[i+1][j] == b[i][j+1] == b[i+1][j+1] != '_':
+                remove |= set([(i, j), (i+1, j), (i, j+1), (i+1, j+1)])
+    for i, j in remove:
+        b[i][j] = 0
+    for i, row in enumerate(b):
+        b[i] = ['_'] * row.count(0) + [r for r in row if r]
+    return len(remove)
 
 
-def delete_block(board, rm_list):
-    cnt = 0
-    rm_list.sort()
-    for i in range(len(rm_list)-1):
-        sum1 = sum(rm_list[i])
-        sum2 = sum(rm_list[i+1])
-        if abs(sum1-sum2) == 1:
-            cnt += 2
-
-
-    for rm in rm_list:
-        i, j = rm
-        if board[i][j]:
-            board[i][j] = ""
-            cnt += 1
-        if board[i-1][j]:
-            board[i-1][j] = ""
-            cnt += 1
-        if board[i][j+1]:
-            board[i][j+1] = ""
-            cnt += 1
-        if board[i-1][j+1]:
-            board[i-1][j+1] = ""
-            cnt += 1
-    return board, cnt
-
-
-def move_block(board, row, col):
-    for j in range(col):
-        for i in range(row-1, -1, -1):
-            if not board[i][j]:
-                for z in range(i-1, -1, -1):
-                    if board[z][j]:
-                        board[i][j] = board[z][j]
-                        board[z][j] = ""
-                        break
-    return board
-
-
+# code refactoring 02 -> 0.2192780963333333
 def solution(m, n, board):
-    answer = 0
-    board = [[r for r in row] for row in board]
-    while 1:
-        remove_list = get_set_remove_list(board, m, n)
-        if not remove_list:
-            break
-        board, deleted = delete_block(board, remove_list)
-        answer += deleted
-        board = move_block(board, m, n)
-    return answer
+    count = 0
+    board = list(map(list, zip(*board)))
+    while True:
+        pop = pop_num(board, m, n)
+        if pop == 0:
+            return count
+        count += pop
 
 
-print(solution(4, 5, ["CCBDE", "AAADE", "AAABF", "CCBBF"]))
-print(solution(6, 6, ["TTTANT", "RRFACC", "RRRFCC", "TRRRAA", "TTMMMF", "TMMTTJ"]))
-print(solution(2, 2, ["TT", "TT"]))
+print(solution(4, 5, ["CCBDE", "AAADE", "AAABF", "CCBBF"]))                         # 14
+print(solution(6, 6, ["TTTANT", "RRFACC", "RRRFCC", "TRRRAA", "TTMMMF", "TMMTTJ"])) # 15
+print(solution(2, 2, ["TT", "TT"]))                                                 # 4
+
+
+import timeit
+avg_time = 0.
+tests = [[4, 5, ["CCBDE", "AAADE", "AAABF", "CCBBF"]],
+         [6, 6, ["TTTANT", "RRFACC", "RRRFCC", "TRRRAA", "TTMMMF", "TMMTTJ"]],
+         [2, 2, ["TT", "TT"]]]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(*t), number=10000)
+print(f'avg_time: {avg_time / len(t)}')
