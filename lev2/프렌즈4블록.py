@@ -50,7 +50,7 @@ m	n	board	                                                        answer
 
 def get_set_remove_list(board, row, col):
     remove_list = []
-    for i in range(row-1, 1, -1):
+    for i in range(row-1, 0, -1):
         for j in range(col-1):
             if not board[i][j]:
                 continue
@@ -61,6 +61,14 @@ def get_set_remove_list(board, row, col):
 
 def delete_block(board, rm_list):
     cnt = 0
+    rm_list.sort()
+    for i in range(len(rm_list)-1):
+        sum1 = sum(rm_list[i])
+        sum2 = sum(rm_list[i+1])
+        if abs(sum1-sum2) == 1:
+            cnt += 2
+
+
     for rm in rm_list:
         i, j = rm
         if board[i][j]:
@@ -68,13 +76,13 @@ def delete_block(board, rm_list):
             cnt += 1
         if board[i-1][j]:
             board[i-1][j] = ""
-            cnt+=1
+            cnt += 1
         if board[i][j+1]:
             board[i][j+1] = ""
-            cnt+=1
+            cnt += 1
         if board[i-1][j+1]:
             board[i-1][j+1] = ""
-            cnt+=1
+            cnt += 1
     return board, cnt
 
 
@@ -93,21 +101,16 @@ def move_block(board, row, col):
 def solution(m, n, board):
     answer = 0
     board = [[r for r in row] for row in board]
-    for b in board:
-        print(f"init: {b}")
     while 1:
         remove_list = get_set_remove_list(board, m, n)
-        print(remove_list)
         if not remove_list:
             break
         board, deleted = delete_block(board, remove_list)
         answer += deleted
         board = move_block(board, m, n)
-        for b in board:
-            print(f"init: {b}")
-        print()
     return answer
 
 
 print(solution(4, 5, ["CCBDE", "AAADE", "AAABF", "CCBBF"]))
 print(solution(6, 6, ["TTTANT", "RRFACC", "RRRFCC", "TRRRAA", "TTMMMF", "TMMTTJ"]))
+print(solution(2, 2, ["TT", "TT"]))
