@@ -56,6 +56,25 @@ record	result
 
 
 def solution(record):
+    # 0.050235355
+    # table = dict()
+    # answer_log = list()
+    # for r in record:
+    #     log = r.split()
+    #     if log[0] == "Enter":
+    #         answer_log.append(log[:-1])
+    #         table[log[1]] = log[-1]
+    #     elif log[0] == "Change":
+    #         table[log[1]] = log[-1]
+    #     else:
+    #         answer_log.append(log[:])
+    # answer = list()
+    # for log in answer_log:
+    #     name = table[log[-1]]
+    #     answer.append(name+"님이 들어왔습니다." if log[0] == "Enter" else name+"님이 나갔습니다.")
+    # return answer
+
+    # code refactoring -> 0.044656189
     table = dict()
     answer_log = list()
     for r in record:
@@ -67,14 +86,17 @@ def solution(record):
             table[log[1]] = log[-1]
         else:
             answer_log.append(log[:])
-    answer = list()
-    for log in answer_log:
-        name = table[log[-1]]
-        answer.append(name+"님이 들어왔습니다." if log[0] == "Enter" else name+"님이 나갔습니다.")
-    return answer
+    return [table[log[-1]]+"님이 들어왔습니다." if log[0] == "Enter" else table[log[-1]]+"님이 나갔습니다." for log in answer_log]
 
-print(solution(["Enter uid1234 Muzi", "Enter uid4567 Prodo","Leave uid1234","Enter uid1234 Prodo","Change uid4567 Ryan"]))
+
+print(solution(["Enter uid1234 Muzi", "Enter uid4567 Prodo", "Leave uid1234", "Enter uid1234 Prodo", "Change uid4567 Ryan"]))
 """
 ["Prodo님이 들어왔습니다.", "Ryan님이 들어왔습니다.", "Prodo님이 나갔습니다.", "Prodo님이 들어왔습니다."]
 """
 
+import timeit
+avg_time = 0.
+tests = [[["Enter uid1234 Muzi", "Enter uid4567 Prodo","Leave uid1234","Enter uid1234 Prodo","Change uid4567 Ryan"]]]
+for t in tests:
+    avg_time += timeit.timeit(lambda: solution(*t), number=10000)
+print(f'avg_time: {avg_time / len(t)}')
