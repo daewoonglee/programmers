@@ -40,22 +40,23 @@ relation	result
 """
 
 
-from itertools import combinations, chain
+from itertools import combinations
 def solution(relation):
-    N = len(relation)
     relation_t = list(map(list, zip(*relation)))
-    answer = 0
-    for i in range(1, len(relation_t)+1):
-        rm_list = list()
-        for j, c in enumerate(list(combinations(range(len(relation_t)), i))):
-            key = set(cols for cols in zip(*[relation_t[j] for j in c]))
-            if N == len(key):
-                answer += 1
-                rm_list.append([j for j in c])
-        rm_list = sorted(list(set(chain.from_iterable(rm_list))), reverse=True)
-        for rm in rm_list:
-            relation_t.pop(rm)
-    return answer
+    row, col = len(relation_t[0]), len(relation_t)
+    keys = []
+    for i in range(1, col+1):
+        for c in list(combinations(range(col), i)):
+            if row == len(set(zip(*[relation_t[j] for j in c]))):
+                keys.append(c)
+    for i in range(row):
+        dup = []
+        for j, rm in enumerate(keys[i+1:]):
+            if all(r in rm for r in keys[i]):
+                dup.append(i+j+1)
+        for d in dup[::-1]:
+            keys.pop(d)
+    return len(keys)
 
 
 print(solution([["100", "ryan", "music", "2"],
@@ -63,23 +64,34 @@ print(solution([["100", "ryan", "music", "2"],
                 ["300", "tube", "computer", "3"],
                 ["400", "con", "computer", "4"],
                 ["500", "muzi", "music", "3"],
-                ["600", "apeach", "music", "2"]]))
+                ["600", "apeach", "music", "2"]]))  # 2
 
 print(solution([["100", "ryan", "music"],
                 ["100", "apeach", "math"],
                 ["300", "tube", "computer"],
                 ["400", "con", "computer"],
                 ["500", "muzi", "music"],
-                ["600", "apeach", "music"]]))
+                ["600", "apeach", "music"]]))       # 3
 
 print(solution([["100", "ryan", "music"],
                 ["100", "apeach", "math"],
                 ["300", "tube", "computer"],
                 ["400", "con", "computer"],
                 ["500", "ryan", "music"],
-                ["100", "apeach", "music"]]))
+                ["100", "apeach", "music"]]))       # 1
 
-print(solution([["1"]]))
+print(solution([["1"]]))                            # 1
 
 print(solution([["1", "r"],
-                ["1", "s"]]))
+                ["1", "s"]]))                       # 1
+
+print(solution([["ab", "c", "aa", "aaa"],
+                ["a", "bc", "aa", "aab"],
+                ["x", "yz", "bb", "aaa"],
+                ["x", "c", "aa", "aaa"]]))          # 2
+
+print(solution([["1", "2", "1", "0"],
+                ["1", "0", "0", "0"],
+                ["0", "0", "0", "0"],
+                ["1", "1", "1", "1"],
+                ["0", "1", "0", "1"]]))             # 2
