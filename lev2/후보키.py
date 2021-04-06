@@ -49,7 +49,8 @@ def solution(relation):
         for c in list(combinations(range(col), i)):
             if row == len(set(zip(*[relation_t[j] for j in c]))):
                 keys.append(c)
-    for i in range(row):
+
+    for i in range(len(keys)):
         dup = []
         for j, rm in enumerate(keys[i+1:]):
             if all(r in rm for r in keys[i]):
@@ -59,39 +60,46 @@ def solution(relation):
     return len(keys)
 
 
-print(solution([["100", "ryan", "music", "2"],
-                ["200", "apeach", "math", "2"],
-                ["300", "tube", "computer", "3"],
-                ["400", "con", "computer", "4"],
-                ["500", "muzi", "music", "3"],
-                ["600", "apeach", "music", "2"]]))  # 2
+# print(solution([["100", "ryan", "music", "2"],
+#                 ["200", "apeach", "math", "2"],
+#                 ["300", "tube", "computer", "3"],
+#                 ["400", "con", "computer", "4"],
+#                 ["500", "muzi", "music", "3"],
+#                 ["600", "apeach", "music", "2"]]))  # 2
+#
+# print(solution([["100", "ryan", "music"],
+#                 ["100", "apeach", "math"],
+#                 ["300", "tube", "computer"],
+#                 ["400", "con", "computer"],
+#                 ["500", "muzi", "music"],
+#                 ["600", "apeach", "music"]]))       # 3
+#
+# print(solution([["100", "ryan", "music"],
+#                 ["100", "apeach", "math"],
+#                 ["300", "tube", "computer"],
+#                 ["400", "con", "computer"],
+#                 ["500", "ryan", "music"],
+#                 ["100", "apeach", "music"]]))       # 1
+#
+# print(solution([["1"]]))                            # 1
+#
+# print(solution([["1", "r"],
+#                 ["1", "s"]]))                       # 1
+#
+# print(solution([["ab", "c", "aa", "aaa"],
+#                 ["a", "bc", "aa", "aab"],
+#                 ["x", "yz", "bb", "aaa"],
+#                 ["x", "c", "aa", "aaa"]]))          # 2
+#
+# print(solution([["1", "2", "1", "0"],
+#                 ["1", "0", "0", "0"],
+#                 ["0", "0", "0", "0"],
+#                 ["1", "1", "1", "1"],
+#                 ["0", "1", "0", "1"]]))             # 2
 
-print(solution([["100", "ryan", "music"],
-                ["100", "apeach", "math"],
-                ["300", "tube", "computer"],
-                ["400", "con", "computer"],
-                ["500", "muzi", "music"],
-                ["600", "apeach", "music"]]))       # 3
-
-print(solution([["100", "ryan", "music"],
-                ["100", "apeach", "math"],
-                ["300", "tube", "computer"],
-                ["400", "con", "computer"],
-                ["500", "ryan", "music"],
-                ["100", "apeach", "music"]]))       # 1
-
-print(solution([["1"]]))                            # 1
-
-print(solution([["1", "r"],
-                ["1", "s"]]))                       # 1
-
-print(solution([["ab", "c", "aa", "aaa"],
-                ["a", "bc", "aa", "aab"],
-                ["x", "yz", "bb", "aaa"],
-                ["x", "c", "aa", "aaa"]]))          # 2
-
-print(solution([["1", "2", "1", "0"],
-                ["1", "0", "0", "0"],
-                ["0", "0", "0", "0"],
-                ["1", "1", "1", "1"],
-                ["0", "1", "0", "1"]]))             # 2
+print(solution([["1", "11", "111", "1111"],
+                ["2", "11", "111", "1111"],
+                ["3", "33", "333", "3333"],
+                ["4", "44", "444", "4444"],
+                ["5", "55", "555", "5555"],
+                ["6", "66", "666", "6666"]]))  # 1
