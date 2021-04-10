@@ -45,54 +45,40 @@ m	                musicinfos	                                                ans
 """
 
 
-from datetime import timedelta
 def solution(m, musicinfos):
-    for i, mi in enumerate(musicinfos):
-        start, end, _, _ = mi.split(",")
-        for t in zip([start], [end]):
-            t1 = t[0].split(":")
-            t2 = t[1].split(":")
-            t1 = timedelta(hours=int(t1[0]), minutes=int(t1[1]))
-            t2 = timedelta(hours=int(t2[0]), minutes=int(t2[1]))
-            musicinfos[i] += "," + str(int((t2-t1).total_seconds()/60))
-    musicinfos.sort(key=lambda x: int(x.split(",")[-1]), reverse=True)
-    print(musicinfos)
+    m = m.replace("C#", "c").replace("D#", "d").replace("F#", "f").replace("G#", "g").replace("A#", "a")
 
-    new_m = []
-    for ch in m:
-        if ch == "#":
-            new_m[-1] += "#"
-        else:
-            new_m.append(ch)
+    new_music_infos = []
+    for info in musicinfos:
+        start, end, name, sheet = info.split(",")
+        t1, t2 = start.split(":"), end.split(":")
+        hour = int(t2[0]) - int(t1[0])
+        minute = int(t2[1]) - int(t1[1])
+        t = hour * 60 + minute
+        sheet = sheet.replace("C#", "c").replace("D#", "d").replace("F#", "f").replace("G#", "g").replace("A#", "a")
+        new_music_infos.append([t, name, sheet * (t//len(sheet)) + sheet[:t%len(sheet)]])
+    new_music_infos.sort(key=lambda x: x[0], reverse=True)
+    print(f"m: {m}, info: {new_music_infos}")
 
-    for mi in musicinfos:
-        _, _, name, info, t = mi.split(",")
-        new_info = []
-        for ch in info:
-            if ch == "#":
-                new_info[-1] += "#"
-            else:
-                new_info.append(ch)
-
-        N = len(new_info)
-        for i in range(N):
-            flag = False
-            for j in range(len(new_m)):
-                if new_m[j] != new_info[(i+j) % N]:
-                    flag = True
-                    break
-            if not flag:
-                return name
+    for nmi in new_music_infos:
+        time, name, sheet = nmi
+        if m in sheet:
+            return name
     return "(None)"
 
 
-print(solution("ABCDEFG", ["13:00,13:05,WORLD,ABCDEF", "12:00,12:14,HELLO,CDEFGAB"]))         # hello
-print(solution("ABCDEFG", ["12:00,12:14,HELLO,CDEFGAB", "13:00,13:05,WORLD,ABCDEF"]))         # hello
-print(solution("CC#BCC#BCC#BCC#B", ["03:00,03:30,FOO,CC#B", "04:00,04:08,BAR,CC#BCC#BCC#B"])) # foo
+# print(solution("ABCDEFG", ["13:00,13:05,WORLD,ABCDEF", "12:00,12:14,HELLO,CDEFGAB"]))         # hello
+# print(solution("ABCDEFG", ["12:00,12:14,HELLO,CDEFGAB", "13:00,13:05,WORLD,ABCDEF"]))         # hello
+# print(solution("CC#BCC#BCC#BCC#B", ["03:00,03:30,FOO,CC#B", "04:00,04:08,BAR,CC#BCC#BCC#B"])) # foo
+# print(solution("ABC", ["12:00,12:14,HELLO,C#DEFGAB", "13:00,13:05,WORLD,ABCDEF"]))            # world
 
-print(solution("ABC", ["10:00,10:03,HELLO2,CAB", "11:00,11:04,HELLO1,ABC", "12:00,12:03,HELLO,BCA"]))
+# print(solution("ABC", ["10:00,10:03,H2,CAB", "11:00,11:04,H1,ABC", "12:00,12:03,H0,BCA"]))   # H1
+# print(solution("ABC", ["11:00,11:03,H1,ABC", "12:00,12:03,H0,BCA", "10:00,10:03,H2,CAB"]))   # H1
+# print(solution("ABC", ["10:00,10:03,H2,CAB", "12:00,12:03,H0,BCA", "11:00,11:03,H1,ABC"]))   # H1
+# print(solution("ABC", ["10:00,10:03,H2,CAB", "11:00,11:03,H1,ABC", "12:00,12:03,H0,BCA"]))   # H1
 
-print(solution("ABC", ["12:00,12:14,HELLO,C#DEFGAB", "13:00,13:05,WORLD,ABCDEF"]))            # world
-# print(solution("ABC", ["11:00,11:03,HELLO1,ABC", "12:00,12:03,HELLO,BCA", "10:00,10:03,HELLO2,CAB"]))
-# print(solution("ABC", ["10:00,10:03,HELLO2,CAB", "12:00,12:03,HELLO,BCA", "11:00,11:03,HELLO1,ABC"]))
-# print(solution("ABC", ["10:00,10:03,HELLO2,CAB", "11:00,11:03,HELLO1,ABC", "12:00,12:03,HELLO,BCA"]))
+# print(solution("AB", ["12:00,12:03,H0,ABCDE", "13:00,13:02,H1,ABCDEFG"]))            # H0
+# print(solution("BA", ["12:00,12:03,H0,ABCDE", "13:00,13:02,H1,ABCDEFG"]))            # None
+# print(solution("ABC", ["00:00,00:04,HI,ABC#ABC"]))                                   # None
+
+print(solution("AA#B", ["13:50,14:00,H0,AA#BCC#DEFF#GG#", "14:00,14:10,H1,AA#BCC#DEFF#GG#"]))
