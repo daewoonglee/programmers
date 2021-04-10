@@ -46,24 +46,57 @@ m	                musicinfos	                                                ans
 
 
 def solution(m, musicinfos):
-    m = m.replace("C#", "c").replace("D#", "d").replace("F#", "f").replace("G#", "g").replace("A#", "a")
+    # 18.384347578
+    # m = m.replace("C#", "c").replace("D#", "d").replace("F#", "f").replace("G#", "g").replace("A#", "a")
+    #
+    # new_music_infos = []
+    # for info in musicinfos:
+    #     start, end, name, sheet = info.split(",")
+    #     t1, t2 = start.split(":"), end.split(":")
+    #     hour = int(t2[0]) - int(t1[0])
+    #     minute = int(t2[1]) - int(t1[1])
+    #     t = hour * 60 + minute
+    #     sheet = sheet.replace("C#", "c").replace("D#", "d").replace("F#", "f").replace("G#", "g").replace("A#", "a")
+    #     new_music_infos.append([t, name, sheet * (t//len(sheet)) + sheet[:t%len(sheet)]])
+    # new_music_infos.sort(key=lambda x: x[0], reverse=True)
+    #
+    # for nmi in new_music_infos:
+    #     time, name, sheet = nmi
+    #     if m in sheet:
+    #         return name
+    # return "(None)"
 
-    new_music_infos = []
+    # using list version - 20.955843533
+    new_m = []
+    for ch in m:
+        if ch == "#":
+            new_m[-1] += "#"
+        else:
+            new_m.append(ch)
+
+    new_music_infos1 = []
     for info in musicinfos:
         start, end, name, sheet = info.split(",")
         t1, t2 = start.split(":"), end.split(":")
         hour = int(t2[0]) - int(t1[0])
         minute = int(t2[1]) - int(t1[1])
         t = hour * 60 + minute
-        sheet = sheet.replace("C#", "c").replace("D#", "d").replace("F#", "f").replace("G#", "g").replace("A#", "a")
-        new_music_infos.append([t, name, sheet * (t//len(sheet)) + sheet[:t%len(sheet)]])
-    new_music_infos.sort(key=lambda x: x[0], reverse=True)
-    print(f"m: {m}, info: {new_music_infos}")
 
-    for nmi in new_music_infos:
+        new_sheet = []
+        for ch in sheet:
+            if ch == "#":
+                new_sheet[-1] += "#"
+            else:
+                new_sheet.append(ch)
+        new_music_infos1.append([t, name, new_sheet * (t//len(new_sheet)) + new_sheet[:t%len(new_sheet)]])
+    new_music_infos1.sort(key=lambda x: x[0], reverse=True)
+
+    for nmi in new_music_infos1:
         time, name, sheet = nmi
-        if m in sheet:
-            return name
+        N = len(sheet)
+        for i in range(N-len(new_m)+1):
+            if new_m == sheet[i: i+len(new_m)]:
+                return name
     return "(None)"
 
 
@@ -81,4 +114,13 @@ def solution(m, musicinfos):
 # print(solution("BA", ["12:00,12:03,H0,ABCDE", "13:00,13:02,H1,ABCDEFG"]))            # None
 # print(solution("ABC", ["00:00,00:04,HI,ABC#ABC"]))                                   # None
 
-print(solution("AA#B", ["13:50,14:00,H0,AA#BCC#DEFF#GG#", "14:00,14:10,H1,AA#BCC#DEFF#GG#"]))
+print(solution("AA#B", ["13:50,14:00,H0,AA#BCC#DEFF#GG#", "14:00,14:10,H1,AA#BCC#DEFF#GG#"]))   # H0
+
+
+if __name__ == '__main__':
+    from timeit import Timer
+    t = Timer("for t in [['AA#B', ['13:50,14:00,H0,AA#BCC#DEFF#GG#', '14:00,14:10,H1,AA#BCC#DEFF#GG#']], "
+              "['AB', ['12:00,12:03,H0,ABCDE', '13:00,13:02,H1,ABCDEFG']], "
+              "['ABCDEFG', ['13:00,13:05,WORLD,ABCDEF', '12:00,12:14,HELLO,CDEFGAB']]] "
+              ": solution(*t)", "from __main__ import solution")
+    print(t.timeit())
