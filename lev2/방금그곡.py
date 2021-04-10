@@ -54,8 +54,8 @@ def solution(m, musicinfos):
             t2 = t[1].split(":")
             t1 = timedelta(hours=int(t1[0]), minutes=int(t1[1]))
             t2 = timedelta(hours=int(t2[0]), minutes=int(t2[1]))
-            musicinfos[i] += ","+str(int((t2-t1).total_seconds()/60))
-    musicinfos.sort(key=lambda x: (x.split(",")[-1], x.split(",")[0]))
+            musicinfos[i] += "," + str(int((t2-t1).total_seconds()/60))
+    musicinfos.sort(key=lambda x: int(x.split(",")[-1]), reverse=True)
     print(musicinfos)
 
     new_m = []
@@ -83,14 +83,16 @@ def solution(m, musicinfos):
                     break
             if not flag:
                 return name
-    return None
+    return "(None)"
 
 
-# print(solution("ABCDEFG", ["13:00,13:05,WORLD,ABCDEF", "12:00,12:14,HELLO,CDEFGAB"]))         # hello
-# print(solution("ABCDEFG", ["12:00,12:14,HELLO,CDEFGAB", "13:00,13:05,WORLD,ABCDEF"]))         # hello
-# print(solution("CC#BCC#BCC#BCC#B", ["03:00,03:30,FOO,CC#B", "04:00,04:08,BAR,CC#BCC#BCC#B"])) # foo
-# print(solution("ABC", ["12:00,12:14,HELLO,C#DEFGAB", "13:00,13:05,WORLD,ABCDEF"]))            # world
-print(solution("ABC", ["12:00,12:03,HELLO,BCA", "11:00,11:03,HELLO1,ABC", "10:00,10:03,HELLO2,CAB"]))
-print(solution("ABC", ["11:00,11:03,HELLO1,ABC", "12:00,12:03,HELLO,BCA", "10:00,10:03,HELLO2,CAB"]))
-print(solution("ABC", ["10:00,10:03,HELLO2,CAB", "12:00,12:03,HELLO,BCA", "11:00,11:03,HELLO1,ABC"]))
-print(solution("ABC", ["10:00,10:03,HELLO2,CAB", "11:00,11:03,HELLO1,ABC", "12:00,12:03,HELLO,BCA"]))
+print(solution("ABCDEFG", ["13:00,13:05,WORLD,ABCDEF", "12:00,12:14,HELLO,CDEFGAB"]))         # hello
+print(solution("ABCDEFG", ["12:00,12:14,HELLO,CDEFGAB", "13:00,13:05,WORLD,ABCDEF"]))         # hello
+print(solution("CC#BCC#BCC#BCC#B", ["03:00,03:30,FOO,CC#B", "04:00,04:08,BAR,CC#BCC#BCC#B"])) # foo
+
+print(solution("ABC", ["10:00,10:03,HELLO2,CAB", "11:00,11:04,HELLO1,ABC", "12:00,12:03,HELLO,BCA"]))
+
+print(solution("ABC", ["12:00,12:14,HELLO,C#DEFGAB", "13:00,13:05,WORLD,ABCDEF"]))            # world
+# print(solution("ABC", ["11:00,11:03,HELLO1,ABC", "12:00,12:03,HELLO,BCA", "10:00,10:03,HELLO2,CAB"]))
+# print(solution("ABC", ["10:00,10:03,HELLO2,CAB", "12:00,12:03,HELLO,BCA", "11:00,11:03,HELLO1,ABC"]))
+# print(solution("ABC", ["10:00,10:03,HELLO2,CAB", "11:00,11:03,HELLO1,ABC", "12:00,12:03,HELLO,BCA"]))
