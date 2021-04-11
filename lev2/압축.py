@@ -65,25 +65,44 @@ ABABABABABABABAB	        [1, 2, 27, 29, 28, 31, 30]
 
 
 def solution(msg):
-    word_dict = {v: k+1 for k, v in enumerate(*["ABCDEFGHIJKLMNOPQRSTUVWXYZ"])}
-    N = len(msg)
-    i = 0
-    j = 0
+    # 0.377002709
+    # word_dict = {v: k+1 for k, v in enumerate(*["ABCDEFGHIJKLMNOPQRSTUVWXYZ"])}
+    # N = len(msg)
+    # i, j = 0, 0
+    # output = []
+    # while j-1 != N:
+    #     i = j
+    #     while j <= N:
+    #         if msg[i: j+1] not in word_dict:
+    #             word_dict[msg[i: j+1]] = len(word_dict)+1
+    #             output.append(word_dict[msg[i: j]])
+    #             break
+    #         j += 1
+    # output.append(word_dict[msg[i:j+1]])
+    # return output
+
+    # code refactoring 01 - 1.856905423
+    # 비효율적인 비교 방법이지만 생각해보지 못한 방법이라 기재
     output = []
-    while j-1 != N:
-        i = j
-        while j <= N:
-            # print(f"N: {N}, i: {i}, j: {j}, msg: {msg[i: j+1]}")
-            if msg[i: j+1] not in word_dict:
-                word_dict[msg[i: j+1]] = len(word_dict)+1
-                output.append(word_dict[msg[i: j]])
-                break
-            j += 1
-    # print(f"i: {i}, j: {j}, msg: {msg[i:j+1]}")
-    output.append(word_dict[msg[i:j+1]])
+    msg += '_'
+    word_dict = list('_ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+    while len(msg) > 1:
+        i = 0
+        while msg[:-i] not in word_dict:
+            i += 1
+        output += [word_dict.index(msg[:-i])]
+        word_dict += [msg[:-i+1]]
+        msg = msg[-i:]
     return output
 
 
 print(solution("KAKAO"))                    # [11, 1, 27, 15]
-print(solution("TOBEORNOTTOBEORTOBEORNOT")) # [20, 15, 2, 5, 15, 18, 14, 15, 20, 27, 29, 31, 36, 30, 32, 34]
-print(solution("ABABABABABABABAB"))         # [1, 2, 27, 29, 28, 31, 30]
+# print(solution("TOBEORNOTTOBEORTOBEORNOT")) # [20, 15, 2, 5, 15, 18, 14, 15, 20, 27, 29, 31, 36, 30, 32, 34]
+# print(solution("ABABABABABABABAB"))         # [1, 2, 27, 29, 28, 31, 30]
+
+
+if __name__ == '__main__':
+    from timeit import Timer
+    query = ["KAKAO", "TOBEORNOTTOBEORTOBEORNOT", "ABABABABABABABAB"]
+    t = Timer(f"for t in {query}: solution(t)", "from __main__ import solution")
+    print(t.timeit(number=10000))
