@@ -30,7 +30,10 @@ def solution(n):
     row, col = divmod(n, 2)
     ans = 0
     while row >= 0:
-        ans += factorial(row+col) // factorial(row) // factorial(col+row-row)
+        m = 1
+        for i in range(row):
+            m *= row+col-i
+        ans += m // factorial(row)
         row -= 1
         col += 2
     return ans % N
@@ -39,3 +42,10 @@ def solution(n):
 print(solution(4))
 print(solution(5))
 print(solution(7))
+
+
+if __name__ == '__main__':
+    from timeit import Timer
+    query = [4, 5, 7]
+    t = Timer(f"for t in {query}: solution(t)", "from __main__ import solution")
+    print(t.timeit(number=10000))
