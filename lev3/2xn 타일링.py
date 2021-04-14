@@ -24,13 +24,13 @@ n	result
 다음과 같이 5가지 방법이 있다.
 """
 
-
+from math import factorial
 def solution(n):
     N = 1000000007
     row, col = divmod(n, 2)
     ans = 0
     while row >= 0:
-        ans += (row*col+1)
+        ans += factorial(row+col) // factorial(row) // factorial(col+row-row)
         row -= 1
         col += 2
     return ans % N
