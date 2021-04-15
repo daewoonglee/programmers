@@ -26,19 +26,34 @@ n	result
 
 from math import factorial
 def solution(n):
+    # 테스트 통과하지만 효율성 통과 X - 0.101247703
+    # N = 1000000007
+    # row, col = divmod(n, 2)
+    # ans = 0
+    # while row >= 0:
+    #     m = 1
+    #     for i in range(row):
+    #         m *= row+col-i
+    #     ans += m // factorial(row)
+    #     if ans >= N:
+    #         ans %= N
+    #     row -= 1
+    #     col += 2
+    # return ans
+
+    # 0.043514741999999995
+    if n == 1:
+        return 1
     N = 1000000007
-    row, col = divmod(n, 2)
-    ans = 0
-    while row >= 0:
-        m = 1
-        for i in range(row):
-            m *= row+col-i
-        ans += m // factorial(row)
-        row -= 1
-        col += 2
-    return ans % N
+    fibo = [1, 2]
+    for _ in range(n-2):
+        fibo[0], fibo[1] = fibo[1], (fibo[0]+fibo[1]) % N
+    return fibo[1]
 
 
+print(solution(1))
+print(solution(2))
+print(solution(3))
 print(solution(4))
 print(solution(5))
 print(solution(7))
@@ -46,6 +61,6 @@ print(solution(7))
 
 if __name__ == '__main__':
     from timeit import Timer
-    query = [4, 5, 7]
+    query = [1, 2, 3, 4, 5, 7]
     t = Timer(f"for t in {query}: solution(t)", "from __main__ import solution")
     print(t.timeit(number=10000))
