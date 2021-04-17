@@ -25,27 +25,41 @@ image1.png
 
 
 def solution(n, computers):
+    # 0.32934670499999996
+    # ans = 0
+    # stack = []
+    # visited = []
+    # idx = 0
+    # while len(visited) != n:
+    #     for j, c in enumerate(computers[idx]):
+    #         if idx != j and c:
+    #             if j not in visited:
+    #                 if not stack or j not in stack:
+    #                     stack.append(j)
+    #     visited.append(idx)
+    #     if not stack:
+    #         ans += 1
+    #         for i in range(n):
+    #             if i not in visited:
+    #                 idx = i
+    #                 break
+    #     else:
+    #         idx = stack.pop(0)
+    # return ans
+
+    # code refactoring - 0.224537
+    def visit(idx, visited, computers):
+        visited[idx] = 1
+        for j, com in enumerate(computers[idx]):
+            if not visited[j] and com:
+                visit(j, visited, computers)
+
+    visited = [0] * n
     ans = 0
-    stack = []
-    visited = []
-    idx = 0
-    while len(visited) != n:
-        for j, c in enumerate(computers[idx]):
-            if idx != j and c:
-                if j not in visited:
-                    if not stack or j not in stack:
-                        stack.append(j)
-        visited.append(idx)
-        # print(f"set idx: {idx}, stack: {stack}, visited: {visited}")
-        if not stack:
+    for i in range(n):
+        if not visited[i]:
+            visit(i, visited, computers)
             ans += 1
-            for i in range(n):
-                if i not in visited:
-                    idx = i
-                    break
-        else:
-            idx = stack.pop(0)
-        # print(f"after idx: {idx}, stack: {stack}, visited: {visited}")
     return ans
 
 
@@ -57,3 +71,16 @@ def solution(n, computers):
 # print(solution(5, [[1, 1, 0, 0, 1], [1, 1, 0, 0, 1], [0, 0, 1, 1, 0], [0, 0, 1, 1, 1], [1, 1, 0, 1, 1]]))   # 1
 # print(solution(5, [[1, 1, 0, 0, 1], [1, 1, 0, 0, 1], [0, 0, 1, 1, 0], [0, 0, 1, 1, 0], [1, 1, 0, 0, 1]]))   # 2
 print(solution(5, [[1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]]))   # 1
+
+
+if __name__ == '__main__':
+    from timeit import Timer
+    query = [[3, [[1, 1, 0], [1, 1, 0], [0, 0, 1]]],
+             [3, [[1, 1, 0], [1, 1, 1], [0, 1, 1]]],
+             [5, [[1, 1, 0, 0, 0], [1, 1, 0, 0, 0], [0, 0, 1, 1, 0], [0, 0, 1, 1, 0], [0, 0, 0, 0, 1]]],
+             [5, [[1, 1, 0, 0, 0], [1, 1, 0, 0, 1], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 1, 0, 0, 1]]],
+             [3, [[1, 1, 1], [1, 1, 1], [1, 1, 1]]],
+             [5, [[1, 1, 0, 0, 1], [1, 1, 0, 0, 1], [0, 0, 1, 1, 0], [0, 0, 1, 1, 1], [1, 1, 0, 1, 1]]],
+             [5, [[1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]]]]
+    t = Timer(f"for t in {query}: solution(*t)", "from __main__ import solution")
+    print(t.timeit(number=10000))
