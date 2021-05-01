@@ -31,33 +31,73 @@ N	number	return
 
 
 def solution(N, number):
+    # 0.163945341
+    # if N == number:
+    #     return 1
+    # global_stack = [set([int(str(N)*(i+1))]) for i in range(8)]
+    # for i in range(1, 8):
+    #     for j in range(i):
+    #         # print(f"before i: {i}, stack: {global_stack[i]}, j: {j}, stack: {global_stack[j]}")
+    #         for n1 in global_stack[j]:
+    #             for n2 in global_stack[i-j-1]:
+    #                 # print(f"n1: {n1}, n2: {n2}")
+    #                 global_stack[i].add(n1 + n2)
+    #                 global_stack[i].add(n1 - n2)
+    #                 global_stack[i].add(n1 * n2)
+    #                 if n2 != 0:
+    #                     global_stack[i].add(n1 // n2)
+    #         # print(f"after i: {i}, stack: {global_stack[i]}, j: {j}, stack: {global_stack[j]}")
+    #         if number in global_stack[i]:
+    #             return i+1
+    # return -1
+
+    # code refactoring - 0.12164454999999999
     if N == number:
         return 1
-    global_stack = [set([int(str(N)*(i+1))]) for i in range(8)]
+    stack = [{N}]
     for i in range(1, 8):
-        for j in range(i):
-            print(f"before i: {i}, stack: {global_stack[i]}, j: {j}, stack: {global_stack[j]}")
-            for n1 in global_stack[j]:
-                for n2 in global_stack[i-j-1]:
-                    print(f"n1: {n1}, n2: {n2}")
-                    global_stack[i].add(n1 + n2)
-                    global_stack[i].add(n1 - n2)
-                    global_stack[i].add(n1 * n2)
+        nums = set([int(str(N)*(i+1))])
+        for j in range(i//2+1):
+            # print(f"before i: {i}, j: {j}, nums: {nums}")
+            for n1 in stack[j]:
+                for n2 in stack[i-j-1]:
+                    nums.add(n1 + n2)
+                    nums.add(n1 * n2)
+                    nums.add(n1 - n2)
+                    nums.add(n2 - n1)
                     if n2 != 0:
-                        global_stack[i].add(n1 // n2)
-            print(f"after i: {i}, stack: {global_stack[i]}, j: {j}, stack: {global_stack[j]}")
-            if number in global_stack[i]:
+                        nums.add(n1 // n2)
+                    if n1 != 0:
+                        nums.add(n2 // n1)
+            # print(f"after i: {i}, j: {j}, nums: {nums}")
+            if number in nums:
                 return i+1
+        stack.append(nums)
+        # print()
     return -1
 
 
-print(solution(5, 5))
-# print(solution(5, 12))      # 4
-# print(solution(4, 12))      # 3
-# print(solution(3, 12))      # 3
-# print(solution(3, 3))       # 1
-# print(solution(2, 11))      # 3
-# print(solution(2, 12))      # 4
-# print(solution(1, 12))      # 3
-# print(solution(5, 31168))   # -1
-print(solution(5, 7))    # 4
+print(solution(5, 5))       # 1
+print(solution(5, 12))      # 4
+print(solution(4, 12))      # 3
+print(solution(3, 12))      # 3
+print(solution(2, 11))      # 3
+print(solution(2, 12))      # 4
+print(solution(1, 12))      # 3
+print(solution(5, 31168))   # -1
+print(solution(5, 7))       # 4
+
+
+if __name__ == '__main__':
+    from timeit import Timer
+    query = [[5, 5],
+             [5, 12],
+             [4, 12],
+             [3, 12],
+             [2, 11],
+             [2, 12],
+             [1, 12],
+             [5, 31168],
+             [5, 7]]
+    t = Timer(f"for t in {query}: solution(*t)", "from __main__ import solution")
+    print(t.timeit(number=10))
