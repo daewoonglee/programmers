@@ -25,30 +25,16 @@ image1.png
 """
 
 
-def is_exist(x, y, stack, cnt):
-    for i, s in enumerate(stack):
-        if (s[0], s[1]) == (x, y):
-            s[2] += cnt
-            return True, stack
-    return False, stack
-
-
 def solution(m, n, puddles):
-    stack = [[0, 0, 1, 1]]
-    cnt = 0
-    dist = 0
-    while stack:
-        x, y, cnt, dist = stack.pop(0)
-        if x+1 < n and [y+1, x+1] not in puddles:
-            flag, stack = is_exist(x+1, y, stack, cnt)
-            if not flag:
-                stack.append([x+1, y, cnt, dist+1])
-        if y+1 < m and [y+1, x+1] not in puddles:
-            flag, stack = is_exist(x, y+1, stack, cnt)
-            if not flag:
-                stack.append([x, y+1, cnt, dist+1])
-        # print(f"stack: {stack}")
-    return cnt % 1000000007 if dist == m+n-1 else 0
+    maps = [[0] * (m+1) for _ in range(n+1)]
+    maps[1][1] = 1
+    for j in range(1, n+1):
+        for i in range(1, m+1):
+            if i == 1 and j == 1:
+                continue
+            if [i, j] not in puddles:
+                maps[j][i] = maps[j-1][i] + maps[j][i-1]
+    return maps[-1][-1] % 1000000007
 
 
 # print(solution(4, 2, [[]]))                 # 4
