@@ -26,15 +26,29 @@ image1.png
 
 
 def solution(m, n, puddles):
-    maps = [[0] * (m+1) for _ in range(n+1)]
-    maps[1][1] = 1
-    for j in range(1, n+1):
-        for i in range(1, m+1):
-            if i == 1 and j == 1:
-                continue
-            if [i, j] not in puddles:
-                maps[j][i] = maps[j-1][i] + maps[j][i-1]
-    return maps[-1][-1] % 1000000007
+    # 0.49920211
+    # maps = [[0] * (m+1) for _ in range(n+1)]
+    # maps[1][1] = 1
+    # for j in range(1, n+1):
+    #     for i in range(1, m+1):
+    #         if i == 1 and j == 1:
+    #             continue
+    #         if [i, j] not in puddles:
+    #             maps[j][i] = maps[j-1][i] + maps[j][i-1]
+    # return maps[-1][-1] % 1000000007
+
+    # code refactoring - 0.64103409
+    info = dict([((2, 1), 1), ((1, 2), 1)])
+    for puddle in puddles:
+        info[tuple(puddle)] = 0
+
+    def func(m, n):
+        if m < 1 or n < 1:
+            return 0
+        if (m, n) in info:
+            return info[(m, n)]
+        return info.setdefault((m, n), func(m - 1, n) + func(m, n - 1))
+    return func(m, n) % 1000000007
 
 
 # print(solution(4, 2, [[]]))                 # 4
@@ -47,3 +61,19 @@ def solution(m, n, puddles):
 # print(solution(5, 3, [[]]))                 # 15
 print(solution(5, 4, [[]]))                 # 35
 print(solution(5, 4, [[1, 2], [1, 3]]))     # 20
+
+
+if __name__ == '__main__':
+    from timeit import Timer
+    query = [[4, 2, [[]]],
+             [4, 2, [[2, 1]]],
+             [4, 2, [[1, 2]]],
+             [4, 2, [[2, 1], [1, 2]]],
+             [4, 3, [[2, 2]]],
+             [3, 3, [[]]],
+             [4, 3, [[]]],
+             [5, 3, [[]]],
+             [5, 4, [[]]],
+             [5, 4, [[1, 2], [1, 3]]]]
+    t = Timer(f"for t in {query}: solution(*t)", "from __main__ import solution")
+    print(t.timeit(number=10000))
