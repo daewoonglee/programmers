@@ -28,10 +28,7 @@ image1.png
 def is_exist(x, y, stack, cnt):
     for i, s in enumerate(stack):
         if (s[0], s[1]) == (x, y):
-            if s[2] != cnt:
-                s[2] += cnt
-            else:
-                s[2] += 1
+            s[2] += cnt
             return True, stack
     return False, stack
 
@@ -42,23 +39,25 @@ def solution(m, n, puddles):
     dist = 0
     while stack:
         x, y, cnt, dist = stack.pop(0)
-        if x+1 < n and [x+1, y] not in puddles:
+        if x+1 < n and [y+1, x+1] not in puddles:
             flag, stack = is_exist(x+1, y, stack, cnt)
             if not flag:
                 stack.append([x+1, y, cnt, dist+1])
-        if y+1 < m and [x, y+1] not in puddles:
+        if y+1 < m and [y+1, x+1] not in puddles:
             flag, stack = is_exist(x, y+1, stack, cnt)
             if not flag:
                 stack.append([x, y+1, cnt, dist+1])
-        print(f"stack: {stack}")
+        # print(f"stack: {stack}")
     return cnt % 1000000007 if dist == m+n-1 else 0
 
 
-# print(solution(4, 2, [[]]))
-# print(solution(4, 2, [[1, 0]]))
-# print(solution(4, 2, [[0, 1]]))
-# print(solution(4, 2, [[1, 0], [0, 2]]))
-# print(solution(4, 3, [[2, 2]]))
-# print(solution(4, 3, [[]]))
-# print(solution(5, 3, [[]]))
-print(solution(5, 4, [[0, 1], [0, 2]]))
+# print(solution(4, 2, [[]]))                 # 4
+# print(solution(4, 2, [[2, 1]]))             # 1
+# print(solution(4, 2, [[1, 2]]))             # 3
+# print(solution(4, 2, [[2, 1], [1, 2]]))     # 0
+# print(solution(4, 3, [[2, 2]]))             # 4
+# print(solution(3, 3, [[]]))                 # 6
+# print(solution(4, 3, [[]]))                 # 10
+# print(solution(5, 3, [[]]))                 # 15
+print(solution(5, 4, [[]]))                 # 35
+print(solution(5, 4, [[1, 2], [1, 3]]))     # 20
