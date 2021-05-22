@@ -33,19 +33,23 @@ def solution(tickets):
             airports[t[0]] = list()
         airports[t[0]].append(t[1])
     for k in airports:
-        airports[k].sort(reverse=True)
+        airports[k].sort(reverse=False)
+    pointer = {k: 0 for k in airports}
 
-    def dfs(airports, answer, cnt, N):
+    def dfs(airports, answer, pointer, cnt, N):
         if cnt == N:
             return True, answer
-        idx = -1
         k = answer[-1]
         if k in airports:
-            airport = airports[k]
+            idx = pointer[k]
+            if airports[k][idx] in answer:
+                pointer[airports[k][idx]] += 1
             while 1:
-                flag, ans = dfs(airports, answer + [airport[idx]], cnt+1, N)
-                idx -= 1
-                if len(airport) >= 2 and not flag:
+                flag, ans = dfs(airports, answer + [airports[k][idx]], pointer, cnt+1, N)
+                if len(airports[k]) >= 2 and not flag:
+                    temp = airports[k][idx]
+                    airports[k][idx] = airports[k][idx+1]
+                    airports[k][idx+1] = temp
                     continue
                 elif flag:
                     break
@@ -55,12 +59,12 @@ def solution(tickets):
         return False, answer[:-1]
 
     N = len(tickets)+1
-    _, path = dfs(airports, ["ICN"], 1, N)
+    _, path = dfs(airports, ["ICN"], pointer, 1, N)
     return path
 
 
 # print(solution([["ICN", "JFK"], ["HND", "IAD"], ["JFK", "HND"]]))   # ["ICN", "JFK", "HND", "IAD"]
-print(solution([["ICN", "SFO"], ["ICN", "ATL"], ["SFO", "ATL"], ["ATL", "ICN"], ["ATL","SFO"]]))    # ["ICN", "ATL", "ICN", "SFO", "ATL", "SFO"]
+# print(solution([["ICN", "SFO"], ["ICN", "ATL"], ["SFO", "ATL"], ["ATL", "ICN"], ["ATL","SFO"]]))    # ["ICN", "ATL", "ICN", "SFO", "ATL", "SFO"]
 # print(solution([["ICN", "AAA"], ["AAA", "BBB"], ["AAA", "CCC"], ["BBB", "DDD"], ["CCC", "AAA"], ["DDD", "CCC"]])) # ['ICN', 'AAA', 'BBB', 'DDD', 'CCC', 'AAA', 'CCC']
 # print(solution([["ICN", "AAA"], ["ICN", "AAA"], ["ICN", "AAA"], ["AAA", "ICN"], ["AAA", "ICN"]])) # ['ICN', 'AAA', 'ICN', 'AAA', 'ICN', 'AAA']
-print(solution([["ICN", "AAA"], ["AAA", "BBB"], ["AAA", "CCC"], ["BBB", "DDD"], ["CCC", "AAA"]]))
+print(solution([["ICN", "AAA"], ["AAA", "BBB"], ["AAA", "CCC"], ["BBB", "DDD"], ["CCC", "AAA"]]))   # ['ICN', 'AAA', 'CCC', 'AAA', 'BBB', 'DDD']
