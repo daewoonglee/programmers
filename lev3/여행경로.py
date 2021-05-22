@@ -27,41 +27,50 @@ tickets	                                                                        
 
 
 def solution(tickets):
-    airports = {}
+    paths = {}
     for t in tickets:
-        if t[0] not in airports:
-            airports[t[0]] = list()
-        airports[t[0]].append(t[1])
-    for k in airports:
-        airports[k].sort(reverse=False)
-    pointer = {k: 0 for k in airports}
+        if t[0] not in paths:
+            paths[t[0]] = list()
+        paths[t[0]].append(t[1])
+    for k in paths:
+        paths[k].sort(reverse=True)
+    # pointer = {k: 0 for k in paths}
+    #
+    # def dfs(paths, answer, pointer, cnt, N):
+    #     if cnt == N:
+    #         return True, answer
+    #     k = answer[-1]
+    #     if k in paths:
+    #         idx = pointer[k]
+    #         if paths[k][idx] in answer:
+    #             pointer[paths[k][idx]] += 1
+    #         while 1:
+    #             flag, ans = dfs(paths, answer + [paths[k][idx]], pointer, cnt+1, N)
+    #             if len(paths[k]) >= 2 and not flag:
+    #                 temp = paths[k][idx]
+    #                 paths[k][idx] = paths[k][idx+1]
+    #                 paths[k][idx+1] = temp
+    #             elif flag:
+    #                 break
+    #             else:
+    #                 return False, answer[:-1]
+    #         return True, ans
+    #     return False, answer[:-1]
+    #
+    # N = len(tickets)+1
+    # _, path = dfs(paths, ["ICN"], pointer, 1, N)
+    # return path
 
-    def dfs(airports, answer, pointer, cnt, N):
-        if cnt == N:
-            return True, answer
-        k = answer[-1]
-        if k in airports:
-            idx = pointer[k]
-            if airports[k][idx] in answer:
-                pointer[airports[k][idx]] += 1
-            while 1:
-                flag, ans = dfs(airports, answer + [airports[k][idx]], pointer, cnt+1, N)
-                if len(airports[k]) >= 2 and not flag:
-                    temp = airports[k][idx]
-                    airports[k][idx] = airports[k][idx+1]
-                    airports[k][idx+1] = temp
-                    continue
-                elif flag:
-                    break
-                else:
-                    return False, answer[:-1]
-            return True, ans
-        return False, answer[:-1]
-
-    N = len(tickets)+1
-    _, path = dfs(airports, ["ICN"], pointer, 1, N)
-    return path
-
+    # 접근 방법 참고
+    stack = ["ICN"]
+    answer = []
+    while stack:
+        top = stack[-1]
+        if top not in paths or not paths[top]:
+            answer.append(stack.pop())
+        else:
+            stack.append(paths[top].pop())
+    return answer[::-1]
 
 # print(solution([["ICN", "JFK"], ["HND", "IAD"], ["JFK", "HND"]]))   # ["ICN", "JFK", "HND", "IAD"]
 # print(solution([["ICN", "SFO"], ["ICN", "ATL"], ["SFO", "ATL"], ["ATL", "ICN"], ["ATL","SFO"]]))    # ["ICN", "ATL", "ICN", "SFO", "ATL", "SFO"]
