@@ -26,32 +26,22 @@ image.png
 """
 
 
-def visited(graphs, visited_list, k=0, move=0):
-    visited_list[k] = 0
-    if not sum(visited_list):
-        return move
-
-    min_idx = 101
-    for i, node in enumerate(graphs[k]):
-        if node and min_idx > node:
-            min_idx = i
-
-    print(f"graphs: {graphs}")
-    print(f"k: {k}, min: {min_idx}, graph: {graphs[min_idx]}, move: {move}\n")
-    move += graphs[k][min_idx]
-    graphs[k][min_idx] = 0
-    graphs[min_idx][k] = 0
-    return visited(graphs, visited_list, min_idx, move)
-
-
 def solution(n, costs):
-    graphs = {i: [0 for _ in range(n)] for i in range(n)}
-    for cost in costs:
-        i, j, c = cost
-        graphs[i][j] = c
-        graphs[j][i] = c
-    visited_list = [1 for _ in range(n)]
-    return visited(graphs, visited_list)
+    costs.sort(key=lambda x: x[-1])
+    print(f"costs: {costs}")
+    ans = 0
+    paths = []
+    i = 0
+    while len(paths) != n-1:
+        if costs[i][:2] not in paths:
+            print(f"c: {costs[i]}")
+            paths.append(costs[i][:2])
+            ans += costs[i][-1]
+        i += 1
+    return ans
 
 
-print(solution(4, [[0, 1, 1], [0, 2, 2], [1, 2, 5], [1, 3, 1], [2, 3, 8]]))
+# print(solution(4, [[0, 1, 1], [0, 2, 2], [1, 2, 5], [1, 3, 1], [2, 3, 8]]))
+# print(solution(5, [[0, 1, 3], [0, 2, 3], [0, 4, 1], [1, 2, 2], [1, 3, 2], [1, 4, 3], [2, 3, 3], [3, 4, 2]]))
+# print(solution(4, [[0, 1, 1], [0, 2, 1], [0, 3, 1], [1, 2, 2], [2, 3, 2]]))
+print(solution(5, [[1, 2, 3], [3, 4, 2], [0, 1, 1], [0, 2, 1], [0, 3, 1], [0, 4, 1], [2, 3, 3]]))
