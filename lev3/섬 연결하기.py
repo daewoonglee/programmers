@@ -27,21 +27,26 @@ image.png
 
 
 def solution(n, costs):
-    costs.sort(key=lambda x: x[-1])
-    print(f"costs: {costs}")
+    costs.sort(key=lambda x: x[-1], reverse=True)
     ans = 0
-    paths = []
-    i = 0
-    while len(paths) != n-1:
-        if costs[i][:2] not in paths:
-            print(f"c: {costs[i]}")
-            paths.append(costs[i][:2])
-            ans += costs[i][-1]
-        i += 1
+    paths = set([costs[-1][0]])
+    while len(paths) != n:
+        for i in range(len(costs)-1, -1, -1):
+            cost = costs[i]
+            if cost[0] in paths and cost[1] in paths:
+                continue
+            if cost[0] in paths or cost[1] in paths:
+                paths.update(cost[:2])
+                ans += cost[-1]
+                costs.pop(i)
+                break
     return ans
 
 
-# print(solution(4, [[0, 1, 1], [0, 2, 2], [1, 2, 5], [1, 3, 1], [2, 3, 8]]))
-# print(solution(5, [[0, 1, 3], [0, 2, 3], [0, 4, 1], [1, 2, 2], [1, 3, 2], [1, 4, 3], [2, 3, 3], [3, 4, 2]]))
-# print(solution(4, [[0, 1, 1], [0, 2, 1], [0, 3, 1], [1, 2, 2], [2, 3, 2]]))
-print(solution(5, [[1, 2, 3], [3, 4, 2], [0, 1, 1], [0, 2, 1], [0, 3, 1], [0, 4, 1], [2, 3, 3]]))
+# print(solution(4, [[0, 1, 1], [0, 2, 2], [1, 2, 5], [1, 3, 1], [2, 3, 8]])) # 4
+# print(solution(4, [[0, 1, 1], [0, 2, 1], [0, 3, 1], [1, 2, 2], [2, 3, 2]])) # 3
+# print(solution(5, [[1, 2, 3], [3, 4, 2], [0, 1, 1], [0, 2, 1], [0, 3, 1], [0, 4, 1], [2, 3, 3]]))   # 4
+# print(solution(4, [[0, 1, 1], [0, 2, 1], [1, 2, 1], [1, 3, 2], [2, 3, 3]])) # 4
+# print(solution(5, [[0, 1, 1], [0, 2, 1], [1, 2, 1], [1, 3, 3], [3, 4, 1]])) # 6
+print(solution(5, [[0, 1, 3], [0, 2, 3], [0, 4, 1], [1, 2, 2], [1, 3, 2], [1, 4, 3], [2, 3, 3], [3, 4, 2]]))    # 7
+print(solution(4, [[0, 1, 1], [2, 3, 3], [1, 3, 2], [1, 2, 1], [0, 2, 1]])) # 4
