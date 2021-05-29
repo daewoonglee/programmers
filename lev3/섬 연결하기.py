@@ -27,19 +27,41 @@ image.png
 
 
 def solution(n, costs):
-    costs.sort(key=lambda x: x[-1], reverse=True)
+    # 0.335299591
+    # costs.sort(key=lambda x: x[-1], reverse=True)
+    # ans = 0
+    # paths = set([costs[-1][0]])
+    # while len(paths) != n:
+    #     for i in range(len(costs)-1, -1, -1):
+    #         cost = costs[i]
+    #         if cost[0] in paths and cost[1] in paths:
+    #             continue
+    #         if cost[0] in paths or cost[1] in paths:
+    #             paths.update(cost[:2])
+    #             ans += cost[-1]
+    #             costs.pop(i)
+    #             break
+    # return ans
+
+    # code refactoring - 0.29347300800000004
     ans = 0
-    paths = set([costs[-1][0]])
-    while len(paths) != n:
-        for i in range(len(costs)-1, -1, -1):
-            cost = costs[i]
-            if cost[0] in paths and cost[1] in paths:
-                continue
-            if cost[0] in paths or cost[1] in paths:
-                paths.update(cost[:2])
-                ans += cost[-1]
-                costs.pop(i)
-                break
+    paths = 0
+    cycle = {i: i for i in range(n)}
+    costs.sort(key=lambda x: x[-1])
+    for cost in costs:
+        if cost[0] > cost[1]:
+            cost[0], cost[1] = cost[1], cost[0]
+        if cycle[cost[0]] == cycle[cost[1]]:
+            continue
+        ans += cost[-1]
+        paths += 1
+        past = cycle[cost[1]]
+        cycle[cost[1]] = cycle[cost[0]]
+        for k, v in cycle.items():
+            if v == past:
+                cycle[k] = cycle[cost[0]]
+        if paths == n-1:
+            break
     return ans
 
 
@@ -48,5 +70,19 @@ def solution(n, costs):
 # print(solution(5, [[1, 2, 3], [3, 4, 2], [0, 1, 1], [0, 2, 1], [0, 3, 1], [0, 4, 1], [2, 3, 3]]))   # 4
 # print(solution(4, [[0, 1, 1], [0, 2, 1], [1, 2, 1], [1, 3, 2], [2, 3, 3]])) # 4
 # print(solution(5, [[0, 1, 1], [0, 2, 1], [1, 2, 1], [1, 3, 3], [3, 4, 1]])) # 6
-print(solution(5, [[0, 1, 3], [0, 2, 3], [0, 4, 1], [1, 2, 2], [1, 3, 2], [1, 4, 3], [2, 3, 3], [3, 4, 2]]))    # 7
-print(solution(4, [[0, 1, 1], [2, 3, 3], [1, 3, 2], [1, 2, 1], [0, 2, 1]])) # 4
+# print(solution(5, [[0, 1, 3], [0, 2, 3], [0, 4, 1], [1, 2, 2], [1, 3, 2], [1, 4, 3], [2, 3, 2], [3, 4, 2]]))    # 7
+# print(solution(4, [[0, 1, 1], [2, 3, 3], [1, 3, 2], [1, 2, 1], [0, 2, 1]])) # 4
+print(solution(4, [[0, 1, 5], [1, 2, 3], [2, 3, 3], [1, 3, 2], [0, 3, 4]])) # 9
+
+
+if __name__ == '__main__':
+    from timeit import Timer
+    query = [[4, [[0, 1, 1], [0, 2, 2], [1, 2, 5], [1, 3, 1], [2, 3, 8]]],
+             [4, [[0, 1, 1], [0, 2, 1], [0, 3, 1], [1, 2, 2], [2, 3, 2]]],
+             [5, [[1, 2, 3], [3, 4, 2], [0, 1, 1], [0, 2, 1], [0, 3, 1], [0, 4, 1], [2, 3, 3]]],
+             [4, [[0, 1, 1], [0, 2, 1], [1, 2, 1], [1, 3, 2], [2, 3, 3]]],
+             [5, [[0, 1, 1], [0, 2, 1], [1, 2, 1], [1, 3, 3], [3, 4, 1]]],
+             [5, [[0, 1, 3], [0, 2, 3], [0, 4, 1], [1, 2, 2], [1, 3, 2], [1, 4, 3], [2, 3, 3], [3, 4, 2]]],
+             [4, [[0, 1, 1], [2, 3, 3], [1, 3, 2], [1, 2, 1], [0, 2, 1]]]]
+    t = Timer(f"for t in {query}: solution(*t)", "from __main__ import solution")
+    print(t.timeit(number=10000))
