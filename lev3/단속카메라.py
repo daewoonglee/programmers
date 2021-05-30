@@ -22,22 +22,53 @@ routes	                                    return
 
 
 def solution(routes):
-    routes.sort(key=lambda x: x[0])
-    print(routes)
-    start, end = routes[0]
+    # 0.068917424
+    # routes.sort(key=lambda x: x[0])
+    # start, end = routes[0]
+    # ans = 1
+    # for route in routes[1:]:
+    #     if not start <= route[0] <= end:
+    #         ans += 1
+    #         start, end = route
+    #     if start < route[0]:
+    #         start = route[0]
+    #     if end > route[1]:
+    #         end = route[1]
+    # return ans
+
+    # code refactoring 01 - 0.05102672
+    # routes.sort(key=lambda x: x[1])
+    # ans = 1
+    # end = routes[0][1]
+    # for route in routes[1:]:
+    #     if end < route[0]:
+    #         ans += 1
+    #         end = route[1]
+    # return ans
+
+    # code refactoring 02 - 0.05274352400000001
+    routes.sort(key=lambda x: x[0], reverse=True)
     ans = 1
+    end = routes[0][0]
     for route in routes[1:]:
-        if not start <= route[0] <= end:
-            print(f"start: {start}, end: {end}, route: {route}")
-            ans += 1
-            start, end = route
-        if start < route[0]:
-            start = route[0]
         if end > route[1]:
-            end = route[1]
+            end = route[0]
+        else:
+            ans += 1
     return ans
 
 
-# print(solution([[-20, 15], [-14, -5], [-18, -13], [-5, -3]]))
-# print(solution([[-20, -19], [-14, -5], [-18, -13], [-5, -3]]))
-print(solution([[-20, 15], [-14, -5], [-18, -13]]))
+# print(solution([[-20, 15], [-14, -5], [-18, -13], [-5, -3]]))   # 2
+print(solution([[-20, -19], [-14, -5], [-18, -13], [-5, -3]]))  # 3
+# print(solution([[-20, 15], [-14, -5], [-18, -13]]))             # 1
+# print(solution([[-18, -14], [-14, -10], [-10, -5]]))            # 2
+
+
+if __name__ == '__main__':
+    from timeit import Timer
+    query = [[[-20, 15], [-14, -5], [-18, -13], [-5, -3]],
+             [[-20, -19], [-14, -5], [-18, -13], [-5, -3]],
+             [[-20, 15], [-14, -5], [-18, -13]],
+             [[-18, -14], [-14, -10], [-10, -5]]]
+    t = Timer(f"for t in {query}: solution(t)", "from __main__ import solution")
+    print(t.timeit(number=10000))
