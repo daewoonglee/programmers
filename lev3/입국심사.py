@@ -31,19 +31,43 @@ n	times	return
 
 
 def solution(n, times):
-    times.sort()
-    run_times = [0 for _ in times]
-    next_times = [t for t in times]
-    for _ in range(n):
-        idx = next_times.index(min(next_times))
-        run_times[idx] = next_times[idx]
-        next_times[idx] += times[idx]
-    print(run_times)
-    return max(run_times)
+    # time limited - 2.4755566300000003
+    # times.sort()
+    # run_times = [0 for _ in times]
+    # next_times = [t for t in times]
+    # for _ in range(n):
+    #     idx = next_times.index(min(next_times))
+    #     run_times[idx] = next_times[idx]
+    #     next_times[idx] += times[idx]
+    # # print(run_times)
+    # return max(run_times)
+
+    # 0.514366909
+    min_time, max_time = 0, max(times) * n
+    ans = max_time
+    while min_time <= max_time:
+        mid_time = (min_time + max_time) // 2
+        person = sum([mid_time // t for t in times])
+        if person >= n:
+            max_time = mid_time - 1
+            ans = mid_time
+        elif person < n:
+            min_time = mid_time + 1
+    return ans
 
 
-# print(solution(6, [7, 10]))     # 28
-# print(solution(10, [7, 10, 5])) # 25
-# print(solution(6, [1, 10]))     # 6
-print(solution(6, [100, 1, 1]))     # 6
+print(solution(6, [7, 10]))         # 28
+print(solution(10, [7, 10, 5]))     # 25
+print(solution(6, [1, 10]))         # 6
+print(solution(6, [100, 1, 1]))     # 3
+print(solution(100, [1 for _ in range(100)]))     # 1
 
+
+if __name__ == '__main__':
+    from timeit import Timer
+    query = [[6, [7, 10]],
+             [10, [7, 10, 5]],
+             [6, [100, 1, 1]],
+             [100, [1 for _ in range(100)]]]
+    t = Timer(f"for t in {query}: solution(*t)", "from __main__ import solution")
+    print(t.timeit(number=10000))
