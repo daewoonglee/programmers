@@ -37,6 +37,7 @@ pop 장르는 3,100회 재생되었으며, pop 노래는 다음과 같습니다.
 
 
 def solution(genres, plays):
+    # 0.12811908500000002
     info = {}
     for i, gp in enumerate(zip(genres, plays)):
         g, p = gp
@@ -44,17 +45,17 @@ def solution(genres, plays):
             info[g] = {"S": 0}
         info[g]["S"] += p
         info[g][i] = p
-    # print(f"info: {info}")
-    keys = sorted(info, key=lambda x: -info[x]['S'])
-    # print(f"keys: {keys}")
-    ans = []
-    for k in keys:
-        # print(f"list: {list(info[k].items())[1:]}")
-        # print(f"sorted: {sorted(list(info[k].items())[1:], key=lambda x: (-x[1], x[0]))}")
-        for v in sorted(list(info[k].items())[1:], key=lambda x: (-x[1], x[0]))[:2]:
-            ans.append(v[0])
-    return ans
+    return [v[0] for k in sorted(info, key=lambda x: -info[x]['S']) for v in sorted(list(info[k].items())[1:],
+                                                                                    key=lambda x: (-x[1], x[0]))[:2]]
 
 
 print(solution(["classic", "pop", "classic", "classic", "pop"], [500, 600, 150, 800, 2500]))
 print(solution(["classic", "pop", "classic", "classic", "pop"], [500, 600, 500, 500, 2500]))
+
+
+if __name__ == '__main__':
+    from timeit import Timer
+    query = [[["classic", "pop", "classic", "classic", "pop"], [500, 600, 150, 800, 2500]],
+             [["classic", "pop", "classic", "classic", "pop"], [500, 600, 500, 500, 2500]]]
+    t = Timer(f"for t in {query}: solution(*t)", "from __main__ import solution")
+    print(t.timeit(number=10000))
