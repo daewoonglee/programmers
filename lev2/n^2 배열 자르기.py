@@ -1,10 +1,10 @@
 def solution(n, left, right):
-    # 0.22997682099230587
-    q, d = left // n, left % n
-    ans = [q+1]*(q+1) + [i+1 for i in range(d+q+1,n)] if q > d else [i+1 for i in range(d, n)]
-    for i in range(q+1, right//n+1):
-        ans.extend([i+1]*i + [j+1 for j in range(i,n)])
-    return ans[:right-left+1]
+    # 0.22567024896852672
+    ans = []
+    for i in range(left, right+1):
+        q, d = i//n, i%n
+        ans.append(max(q, d)+1)
+    return ans
 
 
 print(solution(3,2,5))
