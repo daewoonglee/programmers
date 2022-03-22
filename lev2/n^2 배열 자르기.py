@@ -1,11 +1,10 @@
 def solution(n, left, right):
-    # 0.48373288102447987
-    arr = []
-    q = right // n + 1
-    for i in range(n):
-        arr.extend([i+1]*i + [j+1 for j in range(i,n)])
-        if i >= q: break
-    return arr[left: right+1]
+    # 0.22997682099230587
+    q, d = left // n, left % n
+    ans = [q+1]*(q+1) + [i+1 for i in range(d+q+1,n)] if q > d else [i+1 for i in range(d, n)]
+    for i in range(q+1, right//n+1):
+        ans.extend([i+1]*i + [j+1 for j in range(i,n)])
+    return ans[:right-left+1]
 
 
 print(solution(3,2,5))
