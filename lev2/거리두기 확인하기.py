@@ -22,7 +22,7 @@ def solution(places):
                     ans.append(0)
                     break
             elif x1 < x2:
-                if abs(x2-x1) < 2 and (abs(y2-y1) == 1 and place[x1][y2] in fail or place[x2][y1] in fail):
+                if abs(x2-x1) <= 2 and (abs(y2-y1) == 1 and place[x1][y2] in fail or place[x1+1][y1] in fail):
                     ans.append(0)
                     break
         else: ans.append(1)
@@ -33,5 +33,6 @@ def solution(places):
 
 # print(solution([["XXXXX", "XXXXX", "XXXXP", "XXXXP", "XXXXP"]])) # 0
 # print(solution([["XXXXX", "XXXXX", "XXPPO", "XXXXX", "XXXXX"]])) # 0
-print(solution([["OOPOO", "OOOPO", "OOOOP", "OOOOO", "OOOOO"]])) # 0
+# print(solution([["OOPOO", "OOOPO", "OOOOP", "OOOOO", "OOOOO"]])) # 0
+print(solution([["PXOOO", "OOOOO", "PXOOO", "OOOOO", "OOOPO"]])) # 0
 
