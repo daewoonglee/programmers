@@ -8,9 +8,13 @@ def solution(n, info):
         while stack:
             arrows, idx, lion_score, appeach_score, li = stack.pop()
             if arrows == 0:
-                if lion_score > appeach_score and (lion_score - appeach_score) > global_diff:
-                    global_diff = (lion_score - appeach_score)
-                    global_ans = li[:]
+                if lion_score > appeach_score:
+                    score_diff = lion_score - appeach_score
+                    if score_diff < global_diff: continue
+                    elif score_diff > global_diff:
+                        global_diff = score_diff
+                        global_ans.clear()
+                    global_ans.append(li[:])
             else:
                 if arrows < 0 or (arrows == n and len(li)-idx < arrows): continue
                 if idx == len(li)-1:
@@ -25,8 +29,7 @@ def solution(n, info):
     global global_ans
     scores = [i for i in range(10, -1, -1)]
     shoot([[n, 0, 0, sum([scores[i] for i, s in enumerate(info) if s]), [0]*11]])
-    return global_ans if global_ans else [-1]
-
+    return sorted(global_ans, key=lambda x: list(reversed(x)))[-1] if global_ans else [-1]
 
 # print(solution(5, [2,1,1,1,0,0,0,0,0,0,0])) # [0,2,2,0,1,0,0,0,0,0,0]
 print(solution(10, [0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 3])) # [1,1,1,1,1,1,1,1,0,0,2]
