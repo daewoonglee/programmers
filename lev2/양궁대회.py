@@ -16,8 +16,9 @@ def solution(n, info):
                         global_ans.clear()
                     global_ans.append(li[:])
             else:
-                if arrows < 0 or (arrows == n and len(li)-idx < arrows): continue
-                if idx == len(li)-1:
+                # 1.498255436308682
+                if arrows < 0 or (not lion_score and len(li)-idx < arrows): continue
+                elif idx == len(li)-1:
                     li[-1] = arrows
                     stack.append([0, len(li)-1, lion_score, appeach_score, li])
                 else:
@@ -31,6 +32,14 @@ def solution(n, info):
     shoot([[n, 0, 0, sum([scores[i] for i, s in enumerate(info) if s]), [0]*11]])
     return sorted(global_ans, key=lambda x: list(reversed(x)))[-1] if global_ans else [-1]
 
+
 # print(solution(5, [2,1,1,1,0,0,0,0,0,0,0])) # [0,2,2,0,1,0,0,0,0,0,0]
 print(solution(10, [0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 3])) # [1,1,1,1,1,1,1,1,0,0,2]
+
+
+if __name__ == "__main__":
+    from timeit import Timer
+    query = [[5, [2,1,1,1,0,0,0,0,0,0,0]], [10, [0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 3]]]
+    t = Timer(f"for t in {query}: solution(*t)", "from __main__ import solution")
+    print(t.timeit(number=1000))
 
