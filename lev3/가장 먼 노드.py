@@ -2,63 +2,61 @@ from collections import deque
 
 
 def solution(n, edge):
+    # 0.229496118
+    # visited = [0 for _ in range(n)]
+    # info = {}
+    # for v in edge:
+    #     if v[0] not in info:
+    #         info[v[0]] = []
+    #     if v[1] not in info:
+    #         info[v[1]] = []
+    #     info[v[0]].append(v[1])
+    #     info[v[1]].append(v[0])
+    #
+    # q = deque(info[1])
+    # visited[0] = 1
+    # ans = 0
+    # while len(q):
+    #     N = len(q)
+    #     ans = q.copy()
+    #     for _ in range(N):
+    #         node = q.popleft()
+    #         if visited[node-1]: continue
+    #         visited[node-1] = 1
+    #         for v in info[node]:
+    #             if not visited[v-1] and v not in q:
+    #                 q.append(v)
+    #
+    # return len(set(ans))
+
+    # code refactoring - 0.198095528
     visited = [0 for _ in range(n)]
-    vertex = sorted([[e[1], e[0]] if e[0] > e[1] else [*e] for e in edge])
-    info = {}
-    for v in vertex:
-        if v[0] not in info:
-            info[v[0]] = []
-        info[v[0]].append(v[1])
-        if v[0] == 1: continue
-        if v[1] not in info:
-            info[v[1]] = []
-        info[v[1]].append(v[0])
-    print(f"info {info}")
-    print(f"vertex: {vertex}")
-    print(f"visited: {visited}")
+    depth = [0 for _ in range(n)]
+    info = [[] for _ in range(n)]
+    for (a, b) in edge:
+        info[a-1].append(b-1)
+        info[b-1].append(a-1)
 
-    q = deque()
-    for v in info[1]:
-        q.append(v)
-    print(f"init q: {q}")
-    ans = 0
-    depth = 1
+    q = deque([0])
+    visited[0] = 1
     while len(q):
-        N = len(q)
-        ans = q.copy()
-        for _ in range(N):
-            node = q.popleft()
-            if visited[node-1]: continue
-            visited[node-1] = 1
-            if node in info:
-                for v in info[node]:
-                    if not visited[v-1] and v not in q:
-                        q.append(v)
-
-        depth += 1
-        print(f"node: {node}, visited: {visited}, q: {q}")
-    print(f"depth: {depth}")
-    print(f"ans: {ans}")
-    return len(set(ans))
+        node = q.popleft()
+        for n in info[node]:
+            if visited[n]: continue
+            visited[n] = 1
+            depth[n] = depth[node] + 1
+            q.append(n)
+    depth.sort()
+    return depth.count(depth[-1])
 
 
 # print(solution(6, [[3, 6], [4, 3], [3, 2], [1, 3], [1, 2], [2, 4], [5, 2]]))
 # print(solution(6, [[3, 6], [4, 3], [3, 2], [1, 3], [2, 1], [2, 4], [5, 2]]))
 print(solution(6, [[2, 1], [1, 3], [3, 2], [4, 6], [4, 5], [2, 5]]))
 
-#         1
-#       /   \
-#      2  -  3
-#    /
-#   5  -  4  -  6
 
-#         1
-#       /   \
-#      2  -  3
-#    /   \  /  \
-#   5     4     6
-
-# vertex 정렬 -> 1번 노드부터 탐색하기 위해
-# bfs 방식으로 1번 노드에 연결된 간선을 queue에 저장
-# queue를 돌면서 depth를 +1 씩 진행
-# 마지막 depth에 해당하는 노드들의 수를 리턴
+if __name__ == "__main__":
+    from timeit import Timer
+    query = [[6, [[3, 6], [4, 3], [3, 2], [1, 3], [1, 2], [2, 4], [5, 2]]], [6, [[3, 6], [4, 3], [3, 2], [1, 3], [2, 1], [2, 4], [5, 2]]], [6, [[2, 1], [1, 3], [3, 2], [4, 6], [4, 5], [2, 5]]]]
+    t = Timer(f"for t in {query}: solution(*t)", "from __main__ import solution")
+    print(t.timeit(number=10000))
