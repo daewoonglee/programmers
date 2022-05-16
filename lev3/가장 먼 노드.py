@@ -9,6 +9,10 @@ def solution(n, edge):
         if v[0] not in info:
             info[v[0]] = []
         info[v[0]].append(v[1])
+        if v[0] == 1: continue
+        if v[1] not in info:
+            info[v[1]] = []
+        info[v[1]].append(v[0])
     print(f"info {info}")
     print(f"vertex: {vertex}")
     print(f"visited: {visited}")
@@ -40,7 +44,13 @@ def solution(n, edge):
 
 # print(solution(6, [[3, 6], [4, 3], [3, 2], [1, 3], [1, 2], [2, 4], [5, 2]]))
 # print(solution(6, [[3, 6], [4, 3], [3, 2], [1, 3], [2, 1], [2, 4], [5, 2]]))
-print(solution(5, [[1, 2], [1, 3], [3, 4]]))
+print(solution(6, [[2, 1], [1, 3], [3, 2], [4, 6], [4, 5], [2, 5]]))
+
+#         1
+#       /   \
+#      2  -  3
+#    /
+#   5  -  4  -  6
 
 #         1
 #       /   \
