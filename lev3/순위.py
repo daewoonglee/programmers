@@ -33,9 +33,9 @@ mmmmmmmm
 
 def solution(n, results):
     def win_search(k, visited, res=0):
+        res += 1
+        visited[k-1] = 1
         if k in win:
-            res += 1
-            visited[k-1] = 1
             for node in win[k]:
                 if visited[node-1]: continue
                 res = win_search(node, visited, res)
@@ -49,7 +49,7 @@ def solution(n, results):
                 if visited[node-1]: continue
                 res = loose_search(node, visited, res)
         return res
-
+# 1 -> 2 -> 3, n=3
     win, loose = {}, {}
     for r in results:
         w, l = r
@@ -62,15 +62,13 @@ def solution(n, results):
     ans = 0
     for i in range(1, n+1):
         win_nodes, loose_nodes = 0, 0
-        # 자기를 바라보는 엣지 (자기가 패배)
-        # 나를 이미 승리한 상대를 제외하고 날 이긴 상대가 패배한 상대가 있는가?
         loose_nodes += loose_search(i, [0 for _ in range(n)])
-        # 내가 승리한 상대에 대해 그 상대가 이긴 상대가 있는가?
         win_nodes += win_search(i, [0 for _ in range(n)])
         print(f"i: {i}, win: {win_nodes}, loose: {loose_nodes}")
-        if win_nodes + loose_nodes == n: ans += 1
+        if win_nodes + loose_nodes == n+1: ans += 1
     return ans
 
 
 # print(solution(5, [[4, 3], [4, 2], [3, 2], [1, 2], [2, 5]]))
-print(solution(5, [[1, 2], [2, 3], [3, 4], [4, 5]]))
+# print(solution(5, [[1, 2], [2, 3], [3, 4], [4, 5]]))
+print(solution(6, [[1, 2], [2, 3], [3, 4], [4, 5], [4,6]]))
