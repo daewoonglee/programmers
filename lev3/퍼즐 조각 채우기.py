@@ -1,4 +1,13 @@
 def get_coords(board, n):
+    def trans_coord(coord):
+        coord.sort(key=lambda x: [x[0], x[1]])
+        min_x = coord[0][0]
+        min_y = min([c[1] for c in coord])
+        t_coord = []
+        for c in coord:
+            t_coord.append((c[0]-min_x, c[1]-min_y))
+        return t_coord
+
     def dfs(x, y):
         c = []
         stack = [(x, y)]
@@ -16,31 +25,47 @@ def get_coords(board, n):
     N = len(board)
     coords = []
     maps = [[not n if r else n for r in row] for row in board]
-    # maps = [[1 if r else 0 for r in row] for row in board]
     for i in range(N):
         for j in range(N):
             if maps[i][j] == 0:
-                coords.append(dfs(i, j))
+                coords.append(trans_coord(dfs(i, j)))
     return coords
+
+
+def is_match(gc, tc, m, idx):
+    def rotate(coord):
+        r_coord = []
+        for c in coord:
+            x, y = c
+            r_coord.append()
+        return r_coord
+
+    if m[idx]: return False
+    for i in range(4):
+        for g, t in zip(gc, tc):
+            if g != t: break
+        else:
+            m[idx] = 1
+            return True
+        tc = rotate(tc)
 
 
 def solution(game_board, table):
     g_coords = get_coords(game_board, 0)
-    for gc in g_coords:
-        print(gc)
-    print()
     t_coords = get_coords(table, 1)
-    for tc in t_coords:
-        print(tc)
-    print()
+
+    matching = [0 for _ in t_coords]
+    ans = 0
+    for g_coord in g_coords:
+        for i, t_coord in enumerate(t_coords):
+            if is_match(g_coord, t_coord, matching, i):
+                ans += len(g_coord)
+                break
+    return ans
 
 """
-퍼즐 형상에 대한 1차원 좌표값 변환 함수 작성 O
-
 구현 필요 요소
-1. 좌표값을 (0,0)으로 고정한 뒤 비교 좌표값을 상하좌우 회전하며 같은지 매칭 
-    1-1. 매칭이 된다면 그에 상응하는 퍼즐 크기를 정답 변수에 추가 & 매칭된 비교군의 퍼즐 좌표값 제거 (중복 비교 없애기 위해)
-    1-2. 매칭이 안된다면 비교군 중 아직 비교하지 않은 퍼즐에 대해 상하좌우 반복 비교
+1. 비교 좌표값을 상하좌우 회전하며 같은지 매칭
 """
 
 print(solution([[1,1,0,0,1,0],[0,0,1,0,1,0],[0,1,1,0,0,1],[1,1,0,1,1,1],[1,0,0,0,1,0],[0,1,1,1,0,0]],
