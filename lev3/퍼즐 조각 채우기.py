@@ -44,25 +44,24 @@ def is_match(gp, tp, m, idx):
 
     # print(f"m: {m}")
     if m[idx] or len(gp) != len(tp): return False
-    for i in range(3):
+    for i in range(4):
         for g, t in zip(gp, tp):
             if g != t: break
         else:
             m[idx] = 1
             return True
         tp = rotate(tp)
-        # print(f"rot: {tp}")
 
 
 def solution(game_board, table):
     game_puzzles = get_puzzles(game_board, 0)
     table_puzzles = get_puzzles(table, 1)
 
-    # print(f"table_puzzles: {table_puzzles}")
+    print(f"table_puzzles: {table_puzzles}")
     matching = [0 for _ in table_puzzles]
     ans = 0
     for game_puzzle in game_puzzles:
-        # print(f"gp: {game_puzzle}")
+        print(f"gp: {game_puzzle}")
         for i, table_puzzle in enumerate(table_puzzles):
             # print(f"i: {i}, tp: {table_puzzle}")
             if is_match(game_puzzle, table_puzzle, matching, i):
@@ -73,5 +72,17 @@ def solution(game_board, table):
     return ans
 
 
-print(solution([[1,1,0,0,1,0],[0,0,1,0,1,0],[0,1,1,0,0,1],[1,1,0,1,1,1],[1,0,0,0,1,0],[0,1,1,1,0,0]],
-               [[1,0,0,1,1,0],[1,0,1,0,1,0],[0,1,1,0,1,1],[0,0,1,0,0,0],[1,1,0,1,1,0],[0,1,0,0,0,0]])) # 14
+# print(solution([[1,1,0,0,1,0],[0,0,1,0,1,0],[0,1,1,0,0,1],[1,1,0,1,1,1],[1,0,0,0,1,0],[0,1,1,1,0,0]],
+#                [[1,0,0,1,1,0],[1,0,1,0,1,0],[0,1,1,0,1,1],[0,0,1,0,0,0],[1,1,0,1,1,0],[0,1,0,0,0,0]])) # 14
+#
+# print(solution([[0,0,0],[0,0,0],[0,0,0]],
+#                [[1,1,1],[1,1,1],[1,1,1]])) # 9
+
+print(solution([[0,0,0,0],
+                [0,0,0,1],
+                [0,0,0,0],
+                [0,0,0,0]],
+               [[1,1,1,1],
+                [1,1,1,1],
+                [1,1,1,1],
+                [1,1,0,1]])) # 1
