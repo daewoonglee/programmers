@@ -1,4 +1,3 @@
-"""
 def get_puzzles(board, n):
     def trans_coord(puzzle_coords):
         puzzle_coords.sort(key=lambda x: [x[0], x[1]])
@@ -57,7 +56,6 @@ def solution(game_board, table):
                 ans += len(game_puzzle)
                 break
     return ans
-"""
 
 
 print(solution([[1,1,0,0,1,0],[0,0,1,0,1,0],[0,1,1,0,0,1],[1,1,0,1,1,1],[1,0,0,0,1,0],[0,1,1,1,0,0]],
