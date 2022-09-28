@@ -29,6 +29,6 @@ print(solution(4)) # 2
             왼아: for y in range(n-i): mat[i+y][j+y]=1 왼쪽 부분에 대한 해당 [i][j]에 대한 중복처리 발생 (해결방안 필요)
             오위: for y in range(n-i): mat[i-y][j+y]=1 # 1개 더 돌듯 (해결방안 필요)
             오아: for y in range(n-i): mat[i+y][j+y]=1
-            
+        
             사선 처리할 때 공통점이 있어보임 여기에 대한 처리 필요
 """
