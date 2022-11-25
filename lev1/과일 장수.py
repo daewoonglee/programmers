@@ -1,10 +1,6 @@
 def solution(k, m, score):
-    score.sort()
-    ans = 0
-    for i in range(1, len(score)//m+1):
-        if i == 0: i += 1
-        ans += min(score[i: i*m]) * m
-    return ans
+    score.sort(reverse=True)
+    return sum([score[i] * m for i in range(m - 1, len(score), m)])
 
 
 print(solution(3,4,[1, 2, 3, 1, 2, 3, 1]))
