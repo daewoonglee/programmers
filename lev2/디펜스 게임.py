@@ -1,20 +1,22 @@
-def solution(n, k, enemy):
-    invincibility = sorted(enemy[:k])
-    while n > 0 and k < len(enemy):
-        if enemy[k] > invincibility[0]:
-            n -= invincibility[0]
-            invincibility[0] = enemy[k]
-            invincibility.sort()
-        else:
-            n -= enemy[k]
-        k += 1
+import heapq
 
-    if k > len(enemy):
-        return len(enemy)
-    if n >= 0:
-        return k
-    else:
-        return k-1
+
+def solution(n, k, enemy):
+    invincibility = enemy[:k]
+    heapq.heapify(invincibility)
+    ans = k
+    for e in enemy[k:]:
+        if e > invincibility[0]:
+            n -= invincibility[0]
+            heapq.heappop(invincibility)
+            heapq.heappush(invincibility, e)
+        else:
+            n -= e
+
+        if n < 0:
+            break
+        ans += 1
+    return ans if k < len(enemy) else len(enemy)
 
 
 print(solution(7, 3, [4, 2, 4, 5, 3, 3, 1])) # 5
