@@ -1,23 +1,33 @@
 import pandas as pd
+from functools import reduce
 
 
 def solution(data, col, row_begin, row_end):
-    df = pd.DataFrame(data, columns=[str(i) for i in range(len(data[0]))])
-    df.sort_values(by=[str(col-1), "0"], ascending=[True, False], ignore_index=True, inplace=True)
+    # # 1.038903825
+    # df = pd.DataFrame(data, columns=[str(i) for i in range(len(data[0]))])
+    # df.sort_values(by=[str(col-1), "0"], ascending=[True, False], ignore_index=True, inplace=True)
+    #
+    # ans = 0
+    # for i in range(row_begin, row_end+1):
+    #     # print(f"i: {i}, df[i]: {df.iloc[i]}, sum: {sum([v%(i+1) for v in df.iloc[i]])}")
+    #     ans ^= sum([v % i for v in df.iloc[i-1]])
+    # return ans
 
-    ans = 0
-    for i in range(row_begin, row_end+1):
-        # print(f"i: {i}, df[i]: {df.iloc[i]}, sum: {sum([v%(i+1) for v in df.iloc[i]])}")
-        ans ^= sum([v % i for v in df.iloc[i-1]])
-    return ans
-
-"""
-1. 입력된 data에서 col 열에 해당 값 기준으로 오름차순 정렬
-    1-1. 동일한 값이 존재하면 1번째 값(기본키)을 기준으로 내림차순 정렬
-2. row_begin <= i <= row_end 구간에서 해당 행 값 기준으로 mod 계산
-3. 각 행마다 계산된 mod 값을 합침
-4. 합쳐진 값들에 대해 xor 연산 계산
-"""
+    # code refactoring - # 0.013904737
+    data.sort(key=lambda x: (x[col-1], -x[0]))
+    return reduce(lambda x, y : x ^ y,
+                  [sum([v % i for v in data[i - 1]]) for i in range(row_begin, row_end + 1)])
 
 
 print(solution([[2,2,6],[1,5,10],[4,2,9],[3,8,3]], 2, 2, 3)) # 4
+
+
+if __name__ == "__main__":
+    from timeit import Timer
+    query = [
+        [[[2,2,6],[1,5,10],[4,2,9],[3,8,3]], 2, 2, 3],
+        [[[1,2,3] for _ in range(1000)], 2, 400, 900],
+        [[[1,2,3] for _ in range(1000)], 2, 1, 900]
+    ]
+    t = Timer(f"for t in {query}: solution(*t)", "from __main__ import solution")
+    print(t.timeit(number=10))
