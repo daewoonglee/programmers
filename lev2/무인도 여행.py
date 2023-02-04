@@ -60,7 +60,7 @@ def solution(maps):
 
 print(solution(["X591X","X1X5X","X231X", "1XXX1"])) # [1,1,27]
 print(solution(["X591XX", "X1X511", "X231XX", "1XXX1X"])) # [1,1,29]
-print(solution(["X5XXX1", "X1X511", "X23XXX", "1XXX1X"])) # [1,1,8,11]
+# print(solution(["X5XXX1", "X1X511", "X23XXX", "1XXX1X"])) # [1,1,8,11]
 # print(solution(["XXX","XXX","XXX"])) # [-1]
 
 
