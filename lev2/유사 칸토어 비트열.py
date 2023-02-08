@@ -1,63 +1,64 @@
+import math
 def solution(n, l, r):
-    # bit = "11011"
-    # for _ in range(n - 1):
-    #     bit = bit * 2 + "0" * len(bit) + bit * 2
-    # return bit[l - 1: r].count("1")
+    # def cnt_cantor(N, remainder):
+    #     plus = [0, 1, 2, 2, 3]
+    #     cnt = 0
+    #     while N > 1:
+    #         bit = 4**N // 4
+    #         length = 5**(N-1)
+    #         quotient, remainder = divmod(remainder, length)
+    #
+    #         # # 1.765711215
+    #         # cnt += bit * len([q for q in range(0, quotient) if q != 2])
+    #
+    #         # code refactoring - 1.199981254
+    #         cnt += bit * quotient if quotient <= 2 else bit * (quotient-1) # q=2면 00000 구간이라서 -1로 해당 카운트 제외
+    #         # print(f"q: {quotient}, r: {remainder}, len: {length}, bit: {bit}, cnt: {cnt}")
+    #         N -= 1
+    #
+    #         # 00000 구간인 경우이면 그 이후 계산X
+    #         if quotient == 2:
+    #             break
+    #     else:
+    #         cnt += plus[remainder]
+    #
+    #     return cnt
+    #
+    # if n == 1:
+    #     return "11011"[l-1:r].count("1")
+    #
+    # L = cnt_cantor(n, l-1)
+    # R = cnt_cantor(n, r)
+    #
+    # return R - L
 
-    def cnt_cantor(N, d):
-        plus = [0, 1, 2, 2, 3]
-        cnt = 0
-        while N > 1:
-            bit = 4**N // 4
-            length = 5**(N-1)
-            q, d = divmod(d, length)
+    # code refactoring - 0.619151372
+    # 5^n 전체 범위에 대한 1의 개수 : 4^n
+    def sol(x):
+        if x <= 2:
+            return x
+        elif x <= 5:
+            return x - 1
 
-            cnt += bit * len([i for i in range(0, q) if i != 2])
-            print(f"whille loop n: {N}, bit: {bit}, len: {length}, q: {q}, d: {d}, cnt: {cnt}")
-            N -= 1
+        base = int(math.log(x) // math.log(5))
+        bit = 4 ** base
+        length = 5 ** base
+        quotient = x // length
+        remainder = x % length
 
-            if q == 2: break
-        else:
-            cnt += plus[d]
+        ans = bit * quotient if quotient <= 2 else bit * (quotient-1)
+        # print(f"base: {base}, q: {quotient}, r: {remainder}, ans: {ans}")
 
-        return cnt
+        if quotient == 2:
+            return ans
 
-    if n == 1:
-        return "11011"[l-1:r].count("1")
+        return ans + sol(remainder)
 
-    L = cnt_cantor(n, l-1)
-    print("-------")
-    R = cnt_cantor(n, r)
-    print(f"L: {L}, R: {R}\n")
+    L = sol(l - 1)
+    R = sol(r)
+    # print(f"R: {R}, L: {L}")
 
     return R - L
-
-"""
--풀이 방안-
-L <= cantor <= R 범위 값을 구하려고하면 예외 상황이 너무 많이 발생
-    > L,R이 같은 그룹(1/1/0/1/1)인 경우엔 L<=cantor<=R
-    >       다른 그룹인 경우 
-            > 다른 그룹 내 서브에서 같은 그룹인 경우 등 (실제 같은 그룹인게 아닌 가르키는 그룹 인덱스가 같음)
-            
-0<=cantor<=R - 0<=cantor<=L 로 하면 위 예외상황을 모두 무시할 수 있음 
-단, 00000 00000 00000 00000 00000 구간에 들어간 경우 판단 필요, 어떻게 처리?
-------------------------------------------------------------------------
-1 2 3 4 5  6 7 8 9 10   11 12 13 14 15   16 17 18 19 20   21 22 23 24 25 (1-base)
-1 1 0 1 1  1 1 0 1  1    0  0  0  0  0    1  1  0  1  1    1  1  0  1  1
-
-1 2 3 4 5  6 7 8 9 10   11 12 13 14 15   16 17 18 19 20   21 22 23 24 25 (1-base)
-1 1 0 1 1  1 1 0 1  1    0  0  0  0  0    1  1  0  1  1    1  1  0  1  1
-
-1 2 3 4 5  6 7 8 9 60   61 62 63 64 65   16 17 18 19 20   21 22 23 24 25 (1-base)
-0 0 0 0 0  0 0 0 0  0    0  0  0  0  0    0  0  0  0  0    0  0  0  0  0
-
-n   bit                 total   len
-1   1/1/0/1/1           4       5
-2   4/4/0/4/4           16      25
-3   16/16/0/16/16       64      125
-4   64/64/0/64/64       256     625
-5   256/256/0/256/256   1024    3125
-"""
 
 
 # print(solution(1, 2, 5)) # 3
@@ -78,14 +79,25 @@ n   bit                 total   len
 # print(solution(3, 1, 125)) # 64
 # print(solution(3, 4, 99)) # 45
 # print(solution(3, 4, 100)) # 46
-# print(solution(3, 20, 25)) # 5
+print(solution(3, 20, 25)) # 5
 
 # print(solution(4, 1, 64)) # 32
 # print(solution(4, 1, 125)) # 64
 # print(solution(4, 4, 600)) # 238
 # print(solution(4, 500, 600)) # 49
 
-print(solution(5, 1, 256)) # 128
+# print(solution(5, 1, 256)) # 128
 # print(solution(5, 1, 625)) # 256
 
 # print(solution(20, 4, 19)) # 9
+
+
+if __name__ == "__main__":
+    from timeit import Timer
+    query = [
+        [1,2,5], [2,1,1],[2,3,3],[2,1,5],[2,6,8],[2,6,20],[2,6,25],[2,10,19],[2,3,14],[2,17,24],[2,10,24],
+        [3,1,16],[3,1,25],[3,1,125],[3,4,99],[3,4,100],[3,20,25],[4,50,64],[4,100,125],[4,4,600],[4,500,600],
+        [5,1,256],[5,1,625],[20,4,19],[20,400,5**19], [20,5**10, 5**19]
+    ]
+    t = Timer(f"for t in {query}: solution(*t)", "from __main__ import solution")
+    print(t.timeit(number=10000))
