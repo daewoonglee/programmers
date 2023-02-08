@@ -4,49 +4,49 @@ def solution(n, l, r):
     #     bit = bit * 2 + "0" * len(bit) + bit * 2
     # return bit[l - 1: r].count("1")
 
-    def get_bit(N, d, t):
-        total = 0
-        while N > 2:
+    def cnt_cantor(N, d):
+        idx = [4, 1, 2, 2, 3]
+        cnt = 0
+        print(f"start: {d}")
+        while N > 1:
+            bit = 4**N // 4
+            length = 5**(N-1)
+            q, d = divmod(d, length)
+
+            cnt += bit * len([i for i in range(0, q) if i != 2])
+            print(f"whille loop n: {N}, bit: {bit}, len: {length}, q: {q}, d: {d}, cnt: {cnt}")
             N -= 1
-            b = 4**N // 4
-            LEN = 5**(N-1)
-            q, d = divmod(d, LEN)
 
-            if t == 'r':
-                total += b * len([i for i in range(0, q) if i != 2])
-            else:
-                total += b * len([i for i in range(q+1, 5) if i != 2])
-
-            print(f"whille loop n: {N}, bit: {b}, len: {LEN}, {t}q: {q}, {t}d: {d}, total{t}: {total}")
-
-        if t == 'l':
-            print(f"new {t}: {cantor[ld-1:].count('1')}, totalL: {total + cantor[ld-1:].count('1')}")
+        """
+        L: 1 2 3 4 0 -> 1 2 2 3 4
+        R: 1 2 3 4 0 -> 1 2 2 3 4
+        """
+        if q == 0 and d == 0:
+            return cnt
+        elif q != 2:
+            return cnt + idx[d]
         else:
-            print(f"new {t}: {4 - cantor[rd:].count('1')}, totalR: {total + 4 - cantor[rd:].count('1')}")
-        return total + cantor[d-1:].count('1') if t == "l" else total + 4 - cantor[d:].count('1')
+            return cnt
 
-    cantor = "11011"
-    if n == 1: return cantor[l-1:r].count("1")
+    if n == 1:
+        return "11011"[l-1:r].count("1")
 
-    bit = 4**n // 4
-    length = 5**(n-1)
+    L = cnt_cantor(n, l-1)
+    print("-------")
+    R = cnt_cantor(n, r)
+    print(f"L: {L}, R: {R}\n")
 
-    print(f"n: {n}, bit: {bit}, len: {length}")
-    lq, ld = divmod(l, length)
-    if lq > 0 and l % 5 == 0: lq -= 1
-    rq, rd = divmod(r, length)
-    print(f"l: {l, lq, ld}, lcan: {cantor[ld:]} r: {r, rq, rd}, rcan: {cantor[:rd+1]}")
-
-    ans = bit * len([i for i in range(lq+1, rq) if i != 2])
-
-    totalL = get_bit(n, ld, 'l') if lq != 2 else 0
-    totalR = get_bit(n, rd, 'r') if rq != 2 else 0
-
-    print(f"ans: {ans}, L: {totalL}, R: {totalR}")
-
-    return ans + totalL + totalR
+    return R - L
 
 """
+-풀이 방안-
+L <= cantor <= R 범위 값을 구하려고하면 예외 상황이 너무 많이 발생
+    > L,R이 같은 그룹(1/1/0/1/1)인 경우엔 L<=cantor<=R
+    >       다른 그룹인 경우 
+            > 다른 그룹 내 서브에서 같은 그룹인 경우 등 (실제 같은 그룹인게 아닌 가르키는 그룹 인덱스가 같음)
+            
+0<=cantor<=R - 0<=cantor<=L 로 하면 위 예외상황을 모두 무시할 수 있음 
+------------------------------------------------------------------------
 1 2 3 4 5  6 7 8 9 10   11 12 13 14 15   16 17 18 19 20   21 22 23 24 25 (1-base)
 1 1 0 1 1  1 1 0 1  1    0  0  0  0  0    1  1  0  1  1    1  1  0  1  1
 
@@ -61,18 +61,27 @@ n   bit                 total   len
 
 # print(solution(1, 2, 5)) # 3
 
+print(solution(2, 1, 1)) # 1
+# print(solution(2, 3, 3)) # 0
+# print(solution(2, 1, 5)) # 4
 # print(solution(2, 4, 8)) # 4
-# print(solution(2, 4, 20)) # 10
-# print(solution(2, 4, 25)) # 14
+print(solution(2, 4, 20)) # 10
+print(solution(2, 4, 25)) # 14
 # print(solution(2, 4, 19)) # 9
 # print(solution(2, 3, 14)) # 6
 # print(solution(2, 17, 24)) # 6
 # print(solution(2, 10, 24)) # 8
 
+# print(solution(3, 1, 25)) # 16
+# print(solution(3, 1, 125)) # 64
 # print(solution(3, 4, 99)) # 45
 # print(solution(3, 4, 100)) # 46
-print(solution(3, 20, 25)) # 5
+# print(solution(3, 20, 25)) # 5
+
+# print(solution(4, 1, 125)) # 64
 # print(solution(4, 4, 600)) # 238
 # print(solution(4, 500, 600)) # 49
+
 # print(solution(5, 1, 256)) # 128
+
 # print(solution(20, 4, 19)) # 9
