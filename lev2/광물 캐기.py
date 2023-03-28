@@ -21,7 +21,7 @@ def solution(picks, minerals):
         ans = 25 * 50
         while q:
             picks_list, total, idx = q.popleft()
-            print(f"p: {picks_list}, total: {total}, idx: {idx}")
+            # print(f"p: {picks_list}, total: {total}, idx: {idx}")
             if (idx > N or sum(picks_list) <= 0) and ans > total:
                 ans = total
             else:
@@ -37,34 +37,54 @@ def solution(picks, minerals):
                         picks_list[i] += 1
         return ans
 
+    # 1.789838713
     N = len(minerals)
     dig = {
         0: {"diamond": 1, "iron": 1, "stone": 1},
         1: {"diamond": 5, "iron": 1, "stone": 1},
         2: {"diamond": 25, "iron": 5, "stone": 1}
     }
-    picks = remove_picks(picks)
-    ans = bfs(deque([[picks, 0, 0]]))
-    return ans
+    # picks = remove_picks(picks)
+    # ans = bfs(deque([[picks, 0, 0]]))
+    # return ans
+
+    # 1.285036748
+    def solve(picks, minerals, fatigue):
+        if sum(picks) == 0 or len(minerals) == 0:
+            return fatigue
+        result = [float('inf')]
+        for i, v in enumerate(dig.values()):
+            if picks[i] > 0:
+                picks[i] -= 1
+                result.append(
+                    solve(picks, minerals[5:], fatigue + sum(v[mineral] for mineral in minerals[:5]))
+                )
+                picks[i] += 1
+        return min(result)
+    return solve(picks, minerals, 0)
 
 
-"""
-모든 구간에서 5 구간씩 탐색하며 picks에서 사용할 수 있는 곡괭이로 경우의 수 계산
-이를 반복 picks is null or minerals null
-최소 점수 반환
-
-        dia     iron    stone
-dia     1       1       1
-iron    5       1       1
-stone   25      5       1
-"""
-
-
-# print(solution([1, 3, 2], ["diamond", "diamond", "diamond", "iron", "iron", "diamond", "iron", "stone"])) #12
-# print(solution([0, 1, 1], ["diamond", "diamond", "diamond", "diamond", "diamond", "iron", "iron", "iron", "iron", "iron", "diamond"])) #50
-# print(solution([1, 2, 3], ["diamond", "iron", "stone", "iron", "iron", "diamond", "diamond", "iron", "stone", "stone", "stone", "stone"])) #16
-# print(solution([0, 1, 1], ["diamond", "iron", "iron", "iron", "iron", "diamond", "diamond", "stone", "stone", "stone"])) #58
-# print(solution([0, 1, 3], ["stone", "stone", "stone", "stone", "iron", "iron", "iron"])) # 11
-# print(solution([0, 1, 0], ["stone", "stone", "stone", "stone", "stone"])) # 5
-# print(solution([0, 1, 5], ["stone"]*50)) # 155 diamond(1)*5 + iron(5)*25 + stone(4)*125, 30
+print(solution([1, 3, 2], ["diamond", "diamond", "diamond", "iron", "iron", "diamond", "iron", "stone"])) #12
+print(solution([0, 1, 1], ["diamond", "diamond", "diamond", "diamond", "diamond", "iron", "iron", "iron", "iron", "iron", "diamond"])) #50
+print(solution([1, 2, 3], ["diamond", "iron", "stone", "iron", "iron", "diamond", "diamond", "iron", "stone", "stone", "stone", "stone"])) #16
+print(solution([0, 1, 1], ["diamond", "iron", "iron", "iron", "iron", "diamond", "diamond", "stone", "stone", "stone"])) #58
+print(solution([0, 1, 3], ["stone", "stone", "stone", "stone", "iron", "iron", "iron"])) # 11
+print(solution([0, 1, 0], ["stone", "stone", "stone", "stone", "stone"])) # 5
+print(solution([0, 1, 5], ["stone"]*50)) # 30
 print(solution([1, 1, 0], ["iron", "iron", "diamond", "iron", "stone", "diamond", "diamond", "diamond"])) # 12
+
+
+if __name__ == "__main__":
+    from timeit import Timer
+    query = [
+        [[1, 3, 2], ["diamond", "diamond", "diamond", "iron", "iron", "diamond", "iron", "stone"]],
+        [[0, 1, 1], ["diamond", "diamond", "diamond", "diamond", "diamond", "iron", "iron", "iron", "iron", "iron", "diamond"]],
+        [[1, 2, 3], ["diamond", "iron", "stone", "iron", "iron", "diamond", "diamond", "iron", "stone", "stone", "stone", "stone"]],
+        [[0, 1, 1], ["diamond", "iron", "iron", "iron", "iron", "diamond", "diamond", "stone", "stone", "stone"]],
+        [[0, 1, 3], ["stone", "stone", "stone", "stone", "iron", "iron", "iron"]],
+        [[0, 1, 0], ["stone", "stone", "stone", "stone", "stone"]],
+        [[0, 1, 5], ["stone"]*50],
+        [[1, 1, 0], ["iron", "iron", "diamond", "iron", "stone", "diamond", "diamond", "diamond"]]
+    ]
+    t = Timer(f"for t in {query}: solution(*t)", "from __main__ import solution")
+    print(t.timeit(number=10000))
