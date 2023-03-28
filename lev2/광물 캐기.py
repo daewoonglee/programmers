@@ -17,18 +17,18 @@ def solution(picks, minerals):
         return picks_list
 
     def bfs(q):
+        mineral_types = 3
         ans = 25 * 50
         while q:
             picks_list, total, idx = q.popleft()
-            # print(f"p: {picks_list}, total: {total}, idx: {idx}")
+            print(f"p: {picks_list}, total: {total}, idx: {idx}")
             if (idx > N or sum(picks_list) <= 0) and ans > total:
                 ans = total
             else:
-                mineral_sum = [0] * 3 # diamond, iron, stone
-                mineral_sum[0] = 5
+                mineral_sum = [0] * mineral_types # diamond, iron, stone
                 for mineral in minerals[idx: idx+5]:
-                    mineral_sum[1] += dig[1][mineral]
-                    mineral_sum[2] += dig[2][mineral]
+                    for i in range(mineral_types):
+                        mineral_sum[i] += dig[i][mineral]
 
                 for i, pick in enumerate(picks_list):
                     if pick > 0:
@@ -66,4 +66,5 @@ stone   25      5       1
 # print(solution([0, 1, 1], ["diamond", "iron", "iron", "iron", "iron", "diamond", "diamond", "stone", "stone", "stone"])) #58
 # print(solution([0, 1, 3], ["stone", "stone", "stone", "stone", "iron", "iron", "iron"])) # 11
 # print(solution([0, 1, 0], ["stone", "stone", "stone", "stone", "stone"])) # 5
-print(solution([0, 1, 5], ["stone"]*50)) # 155 diamond(1)*5 + iron(5)*25 + stone(4)*125, 30
+# print(solution([0, 1, 5], ["stone"]*50)) # 155 diamond(1)*5 + iron(5)*25 + stone(4)*125, 30
+print(solution([1, 1, 0], ["iron", "iron", "diamond", "iron", "stone", "diamond", "diamond", "diamond"])) # 12
