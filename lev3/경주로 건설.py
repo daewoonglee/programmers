@@ -1,0 +1,58 @@
+from collections import deque
+
+
+def solution(board):
+    def bfs(x, y):
+        search = deque([[x, y, None]])
+        for i in range(4):
+            cost_map[x][y][i] = 0
+
+        while search:
+            x, y, d = search.popleft()
+            print(f"x: {x}, y: {y}, d: {d}")
+            if x == N and y == N:
+                continue
+
+            for z, (mx, my) in enumerate(move):
+                nx, ny = x+mx, y+my
+                if 0 <= nx <= N and 0 <= ny <= N and not visited_map[nx][ny][z]:
+                    if d in [0, 1]: # R, L
+                        move_cost = 100 if z in [0, 1] else 600
+                    elif d in [2, 3]: # U, D
+                        move_cost = 100 if z in [2, 3] else 600
+                    else:
+                        move_cost = 100
+
+                    if cost_map[nx][ny][z] > cost_map[x][y][d]+move_cost if d is not None else 100:
+                        search.append([nx, ny, z])
+                        cost_map[nx][ny][z] = min(cost_map[nx][ny][z], cost_map[x][y][d]+move_cost if d is not None else 100)
+
+        # for cm in cost_map:
+        #     print(cm)
+
+    N = len(board)-1
+    move = [[0,1], [0,-1], [1,0], [-1,0]] # R L D U
+    visited_map = [[[0 for _ in range(len(move))] if r == 0 else [1 for _ in range(len(move))] for r in row] for row in board]
+    cost_map = [[[float("inf")] * len(move) for _ in row] for row in board]
+    bfs(0, 0)
+
+    return min(cost_map[N][N][i] for i in range(len(move)))
+
+
+"""
+dfs 길찾기, 출발점에서 도착점 경로는 항상 가능하도록 주어짐
+
+1. 경로 탐색하며 board에 이동 비용 저장하는 방식으로 진행
+2. (0,0)에서 벽이 아닌 갈 수 있는 경로 탐색 (직선 +1)
+    2-1. 이동할 방향에 있는 비용과 지금 비용을 계산하여 더 작은 값으로 갱신
+3. (x,y)에서 벽이 아닌 갈 수 있는 경로 탐색
+    3-1. if 이전 방향과 앞으로 나아갈 방향이 같은 경우 직선+1
+         else 이전 방향과 앞으로 나아갈 방향이 다른 경우 직선+1 & 코너+1
+    3-2. 이동할 방향에 있는 비용과 지금 비용을 계산하여 더 작은 값으로 갱신
+4. loop 모두 탐색 시, (n-1,n-1) 값 반환
+"""
+
+# print(solution([[0,0,0],[0,0,0],[0,0,0]])) #900
+print(solution([[0,0,0,0,0,0,0,1],[0,0,0,0,0,0,0,0],[0,0,0,0,0,1,0,0],[0,0,0,0,1,0,0,0],[0,0,0,1,0,0,0,1],[0,0,1,0,0,0,1,0],[0,1,0,0,0,1,0,0],[1,0,0,0,0,0,0,0]])) #3800
+# print(solution([[0,0,1,0],[0,0,0,0],[0,1,0,1],[1,0,0,0]])) #2100
+# print(solution([[0,0,0,0,0,0],[0,1,1,1,1,0],[0,0,1,0,0,0],[1,0,0,1,0,1],[0,1,0,0,0,1],[0,0,0,0,0,0]])) #3200
