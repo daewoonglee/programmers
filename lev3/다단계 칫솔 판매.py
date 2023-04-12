@@ -1,16 +1,15 @@
 import math
+import sys
+sys.setrecursionlimit(11000) # 재귀 한도 증진
 
 
 def solution(enroll, referral, seller, amount):
     def dfs(k):
-        if k not in seller_graph:
-            return []
-
         interests = []
         for name in seller_graph[k]:
-            profit_interests = dfs(name)
+            profit_interests = dfs(name) if name in seller_graph else []
             if name in seller_dict:
-                profit_interests.extend(seller_dict[name])
+                profit_interests.extend(seller_dict[name]) # 판매원 수익금 + 자신 수익금
             for pi in profit_interests:
                 if pi >= 10:
                     interest = math.floor(pi*0.1)
@@ -25,7 +24,6 @@ def solution(enroll, referral, seller, amount):
             seller_graph[r] = list()
         seller_graph[r].append(e)
 
-    # 중복된 seller 더하기
     seller_dict = dict()
     for k, v in zip(seller, amount):
         if k not in seller_dict:
@@ -65,8 +63,14 @@ jaimie -> tod
 # print(solution(["john", "mary", "edward", "sam", "emily", "jaimie", "tod", "young", "a"],
 #                ["-", "john", "mary", "edward", "sam", "emily", "jaimie", "tod", "young"],
 #                ["young", "a", "john", "a", "tod", "emily", "mary", "a"],
-#                [12, 1, 4, 1, 2, 5, 10, 2]))
+#                [12, 1, 4, 1, 2, 5, 10, 2])) # [450, 900, 5, 45, 453, 29, 292, 1116, 360]
+# print(solution(["john", "mary", "emily", "tod", "edward"],
+#                ["-", "john", "john", "mary", "mary"],
+#                ["mary", "tod", "edward", "mary"],
+#                [1,1,1,1])) # [20, 198, 0, 90, 90]
 print(solution(["john", "mary", "emily", "tod", "edward"],
                ["-", "john", "john", "mary", "mary"],
-               ["mary", "tod", "edward", "mary"],
-               [1,1,1,1]))
+               ["tod"]*100000,
+               [1]*100000)) # [100000, 900000, 0, 9000000, 0]
+
+
