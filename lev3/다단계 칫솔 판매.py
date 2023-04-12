@@ -10,7 +10,7 @@ def solution(enroll, referral, seller, amount):
         for name in seller_graph[k]:
             profit_interests = dfs(name)
             if name in seller_dict:
-                profit_interests.append(seller_dict[name])
+                profit_interests.extend(seller_dict[name])
             for pi in profit_interests:
                 if pi >= 10:
                     interest = math.floor(pi*0.1)
@@ -29,8 +29,8 @@ def solution(enroll, referral, seller, amount):
     seller_dict = dict()
     for k, v in zip(seller, amount):
         if k not in seller_dict:
-            seller_dict[k] = 0
-        seller_dict[k] += v*100
+            seller_dict[k] = []
+        seller_dict[k].append(v*100)
 
     ans = {k: 0 for k in enroll}
     dfs("-")
@@ -62,7 +62,11 @@ jaimie -> tod
 #                ["-", "-", "mary", "edward", "mary", "mary", "jaimie", "edward", "tod"],
 #                ["young", "a", "john", "a", "tod", "emily", "mary", "a"],
 #                [12, 1, 4, 1, 2, 5, 10, 2])) #[360, 958, 108, 0, 450, 22, 216, 1080, 360]
-print(solution(["john", "mary", "edward", "sam", "emily", "jaimie", "tod", "young", "a"],
-               ["-", "john", "mary", "edward", "sam", "emily", "jaimie", "tod", "young"],
-               ["young", "a", "john", "a", "tod", "emily", "mary", "a"],
-               [12, 1, 4, 1, 2, 5, 10, 2]))
+# print(solution(["john", "mary", "edward", "sam", "emily", "jaimie", "tod", "young", "a"],
+#                ["-", "john", "mary", "edward", "sam", "emily", "jaimie", "tod", "young"],
+#                ["young", "a", "john", "a", "tod", "emily", "mary", "a"],
+#                [12, 1, 4, 1, 2, 5, 10, 2]))
+print(solution(["john", "mary", "emily", "tod", "edward"],
+               ["-", "john", "john", "mary", "mary"],
+               ["mary", "tod", "edward", "mary"],
+               [1,1,1,1]))
