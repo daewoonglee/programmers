@@ -4,34 +4,51 @@ sys.setrecursionlimit(11000) # 재귀 한도 증진
 
 
 def solution(enroll, referral, seller, amount):
-    def dfs(k):
-        interests = []
-        for name in seller_graph[k]:
-            profit_interests = dfs(name) if name in seller_graph else []
-            if name in seller_dict:
-                profit_interests.extend(seller_dict[name]) # 판매원 수익금 + 자신 수익금
-            for pi in profit_interests:
-                if pi >= 10:
-                    interest = math.floor(pi*0.1)
-                    pi -= interest
-                    interests.append(interest)
-                ans[name] += pi
-        return interests
+    # # 0.886790635
+    # def dfs(k):
+    #     interests = []
+    #     for name in seller_graph[k]:
+    #         profit_interests = dfs(name) if name in seller_graph else []
+    #         if name in seller_dict:
+    #             profit_interests.extend(seller_dict[name]) # 판매원 수익금 + 자신 수익금
+    #         for pi in profit_interests:
+    #             if pi >= 10:
+    #                 interest = math.floor(pi*0.1)
+    #                 pi -= interest
+    #                 interests.append(interest)
+    #             ans[name] += pi
+    #     return interests
+    #
+    # seller_graph = {}
+    # for e, r in zip(enroll, referral):
+    #     if r not in seller_graph:
+    #         seller_graph[r] = list()
+    #     seller_graph[r].append(e)
+    #
+    # seller_dict = dict()
+    # for k, v in zip(seller, amount):
+    #     if k not in seller_dict:
+    #         seller_dict[k] = []
+    #     seller_dict[k].append(v*100)
+    #
+    # ans = {k: 0 for k in enroll}
+    # dfs("-")
+    # return list(ans.values())
 
-    seller_graph = {}
-    for e, r in zip(enroll, referral):
-        if r not in seller_graph:
-            seller_graph[r] = list()
-        seller_graph[r].append(e)
+    # code refactoring - 0.5752408160000001
+    ans = {e: 0 for e in enroll}
+    graph = {e: r for e, r in zip(enroll, referral)}
+    for s, a in zip(seller, amount):
+        profit = a*100
+        interest = profit//10
+        ans[s] += profit-interest
+        x = graph[s]
 
-    seller_dict = dict()
-    for k, v in zip(seller, amount):
-        if k not in seller_dict:
-            seller_dict[k] = []
-        seller_dict[k].append(v*100)
+        while x != "-" and interest != 0:
+            ans[x] += interest-interest//10
+            interest //= 10
+            x = graph[x]
 
-    ans = {k: 0 for k in enroll}
-    dfs("-")
     return list(ans.values())
 
 
@@ -72,5 +89,19 @@ print(solution(["john", "mary", "emily", "tod", "edward"],
                ["-", "john", "john", "mary", "mary"],
                ["tod"]*100000,
                [1]*100000)) # [100000, 900000, 0, 9000000, 0]
+
+
+if __name__ == "__main__":
+    from timeit import Timer
+    query = [
+        [["john", "mary", "edward", "sam", "emily", "jaimie", "tod", "young"],["-", "-", "mary", "edward", "mary", "mary", "jaimie", "edward"],["young", "john", "tod", "emily", "mary"],[12, 4, 2, 5, 10]],
+        [["john", "mary", "edward", "sam", "emily", "jaimie", "tod", "young"],["-", "-", "mary", "edward", "mary", "mary", "jaimie", "edward"],["sam", "emily", "jaimie", "edward"],[2, 3, 5, 4]],
+        [["john", "mary", "edward", "sam", "emily", "jaimie", "tod", "young", "a"],["-", "-", "mary", "edward", "mary", "mary", "jaimie", "edward", "tod"],["young", "a", "john", "a", "tod", "emily", "mary", "a"],[12, 1, 4, 1, 2, 5, 10, 2]],
+        [["john", "mary", "edward", "sam", "emily", "jaimie", "tod", "young", "a"],["-", "john", "mary", "edward", "sam", "emily", "jaimie", "tod", "young"],["young", "a", "john", "a", "tod", "emily", "mary", "a"],[12, 1, 4, 1, 2, 5, 10, 2]],
+        [["john", "mary", "emily", "tod", "edward"],["-", "john", "john", "mary", "mary"],["mary", "tod", "edward", "mary"],[1,1,1,1]],
+        [["john", "mary", "emily", "tod", "edward"],["-", "john", "john", "mary", "mary"],["tod"]*100000,[1]*100000]
+    ]
+    t = Timer(f"for t in {query}: solution(*t)", "from __main__ import solution")
+    print(t.timeit(number=10))
 
 
