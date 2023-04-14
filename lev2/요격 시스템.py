@@ -3,15 +3,16 @@ def solution(targets):
     targets.sort()
     while targets:
         s, e = targets.pop()
-        while targets and set(range(targets[-1][0], targets[-1][1])) & set(range(s, e)):
+        while targets and targets[-1][0] <= s < targets[-1][1]:
             targets.pop()
         ans += 1
     return ans
 
-"""
-(s,e) 구간에서 s와 e는 포격 불가
 
-[1,4],[3,7],[4,5],[4,8],[5,12],[10,14],[11,13],
+"""
+(s,e) 구간에서 s와 e는 포격 불가 -> (s,e-1)로 계산
+
+[1,4],[3,7],[4,5],[4,8],[5,12],[10,14],[11,13]
 
 targets의 최소 교집합 구간을 찾아야 함 
 1. targets 정렬
