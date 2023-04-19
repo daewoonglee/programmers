@@ -1,11 +1,24 @@
+from math import sqrt, ceil, floor
+
+
 def solution(r1, r2):
     ans = 0
-    for x in range(r2):
-        for y in range(r2):
-            if r1**2 <= x**2+y**2 <= r2**2:
-                ans += 1
-    ans += 2 # (r2,0), (0,r2) 추가
-    return (ans-(r2-r1+1))*4
+    r1_square = r1*r1
+    r2_square = r2*r2
+
+    # # 0.9326737469999999
+    # for i in range(1, r2+1):
+    #     x1 = 0 if r1_square - i*i <= 0 else ceil(sqrt(r1_square-i*i))
+    #     x2 = floor(sqrt(r2_square-i*i))
+    #     ans += (x2-x1+1)
+    # return ans * 4
+
+    # code refactoring - 0.73335442
+    for i in range(r1):
+        ans += int(sqrt(r2_square - i*i)) - int(sqrt(r1_square - i*i - 1))
+    for i in range(r1, r2):
+        ans += int(sqrt(r2_square - i*i))
+    return ans * 4
 
 
 """
@@ -23,6 +36,15 @@ def solution(r1, r2):
 # print(solution(2, 5)) # 72
 # print(solution(2, 6)) # 104
 # print(solution(6, 7)) # 40
-print(solution(5, 6)) # 44
-print(solution(5, 7)) # 80
+# print(solution(5, 6)) # 44
+# print(solution(5, 7)) # 80
+print(solution(5, 10)) # 248
 
+
+if __name__ == "__main__":
+    from timeit import Timer
+    query = [
+        [2,3],[1,3],[2,4],[3,4],[2,5],[2,6],[6,7],[5,6],[5,7],[5,10],[1,10000],[9999,10000]
+    ]
+    t = Timer(f"for t in {query}: solution(*t)", "from __main__ import solution")
+    print(t.timeit(number=100))
