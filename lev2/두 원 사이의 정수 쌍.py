@@ -1,22 +1,11 @@
 def solution(r1, r2):
-    def cnt_coords(r):
-        total = r_square = r*r
-        for x in range(r-1, -1, -1):
-            cnt = 0
-            y = r-1
-            while r_square < x**2 + y**2:
-                cnt += 1
-                y -= 1
-            if cnt == 0:
-                break
-            total -= cnt
-        return total
-
-    # r2-r1+1 = 1사분면에 해당하는 좌표 수, 4사분면에 대해 모두 카운트하여 *4하면 중복 계산
-    # 중복 계산을 없애고자 1사분면에 해당하는 좌표를 제외하고 *4 진행
-    print(cnt_coords(r2))
-    print(cnt_coords(r1))
-    return (cnt_coords(r2)+2-cnt_coords(r1)-(r2-r1+1))*4
+    ans = 0
+    for x in range(r2):
+        for y in range(r2):
+            if r1**2 <= x**2+y**2 <= r2**2:
+                ans += 1
+    ans += 2 # (r2,0), (0,r2) 추가
+    return (ans-(r2-r1+1))*4
 
 
 """
@@ -33,6 +22,8 @@ def solution(r1, r2):
 # print(solution(3, 4)) # 24
 # print(solution(2, 5)) # 72
 # print(solution(2, 6)) # 104
-print(solution(6, 7)) # 40
-
+# print(solution(6, 7)) # 40
+# print(solution(5, 10)) # 248
+print(solution(5, 6)) # 36
+print(solution(5, 7)) # 72
 
