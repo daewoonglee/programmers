@@ -23,7 +23,6 @@ def solution(r1, r2):
 # print(solution(2, 5)) # 72
 # print(solution(2, 6)) # 104
 # print(solution(6, 7)) # 40
-# print(solution(5, 10)) # 248
-print(solution(5, 6)) # 36
-print(solution(5, 7)) # 72
+print(solution(5, 6)) # 44
+print(solution(5, 7)) # 80
 
