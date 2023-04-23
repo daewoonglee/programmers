@@ -1,3 +1,7 @@
+import sys
+sys.setrecursionlimit(2000)
+
+
 class Node(object):
     def __init__(self, x, y, v):
         self.x = x
