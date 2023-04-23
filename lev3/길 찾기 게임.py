@@ -3,9 +3,8 @@ sys.setrecursionlimit(2000)
 
 
 class Node(object):
-    def __init__(self, x, y, v):
+    def __init__(self, x, v):
         self.x = x
-        self.y = y
         self.val = v
         self.left = None
         self.right = None
@@ -18,22 +17,21 @@ def solution(nodeinfo):
             node_info_val.append([*node, i+1])
         node_info_val.sort(key=lambda x: (x[1], x[0]), reverse=True) # y, x 순으로 정렬
 
-        root = Node(*node_info_val[0])
-        for i in range(1, len(node_info_val)): # root에 해당하는 0번 인덱스 스킵
+        root = Node(node_info_val[0][0], node_info_val[0][2])
+        for x, _, v in node_info_val[1:]: # root에 해당하는 0번 인덱스 스킵
             t = root
-            n = Node(*node_info_val[i])
             while 1:
-                if t.x < n.x:
+                if t.x < x:
                     if t.right:
                         t = t.right
                     else:
-                        t.right = n
+                        t.right = Node(x, v)
                         break
                 else:
                     if t.left:
                         t = t.left
                     else:
-                        t.left = n
+                        t.left = Node(x, v)
                         break
 
         return root
@@ -49,11 +47,13 @@ def solution(nodeinfo):
         if not prefix:
             print_list.append(node.val)
 
+    # 3.168009737 -> 2.841783852
     root_tree = init_tree()
     pre_order, post_order = [], []
     print_node(root_tree, pre_order, prefix=True)
     print_node(root_tree, post_order, prefix=False)
     return [pre_order, post_order]
+
 
 """
 1+2+4+8+16 = 31
@@ -84,3 +84,15 @@ node level에 맞는 1차원 배열 생성 (2**0 + ... + 2**(n-1))
 
 
 print(solution([[5,3],[11,5],[13,3],[3,5],[6,1],[1,3],[8,6],[7,2],[2,2]])) #[[7,4,6,9,1,8,5,2,3],[9,6,5,8,1,4,3,2,7]]
+
+
+if __name__ == "__main__":
+    from timeit import Timer
+    query = [
+        [[5,3],[11,5],[13,3],[3,5],[6,1],[1,3],[8,6],[7,2],[2,2]],
+        [[5,3]],
+        [[i,i] for i in range(500)],
+        [[i,500-i] for i in range(500)]
+    ]
+    t = Timer(f"for t in {query}: solution(t)", "from __main__ import solution")
+    print(t.timeit(number=100))
