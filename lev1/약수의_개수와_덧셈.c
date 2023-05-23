@@ -4,9 +4,6 @@
 #include <math.h>
 #include <time.h>
 
-int sum_natural_number(int x){
-    return (x * (x + 1) / 2);
-}
 
 int sum_square_number(int x){
     return (x * (x + 1) * (2 * x + 1) / 6);
@@ -29,9 +26,8 @@ int solution(int left, int right) {
     // }
     // return ans;
     
-    // code refactoring - 0.001346
-    int ans = 0;
-    ans += sum_natural_number(right) - sum_natural_number(left - 1);
+    // code refactoring - 0.001346 -> 0.000599 (약 55% 성능 증진)
+    int ans = (right-left+1)*(left+right)/2; // sum left to right
     ans -= 2 * (sum_square_number(sqrt(right)) - sum_square_number(sqrt(left - 1)));
     return ans;
 }
