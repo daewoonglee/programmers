@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 
 void ternary(int n, int* n3, int *idx){
     int base = 3;
@@ -13,35 +14,39 @@ void ternary(int n, int* n3, int *idx){
 }
 
 int solution(int n) {
-    int N = 0;
-    int* n3 = (int*)malloc(sizeof(int)*17);
-    ternary(n, n3, &N);
+    // // 0.020568
+    // int N = 0;
+    // int* n3 = (int*)malloc(sizeof(int)*17);
+    // ternary(n, n3, &N);
 
-    int multi = N-1;
+    // int ans = 0;
+    // for(int i=0; i<N; i++)
+    //     ans += ((int)pow(3, N-i-1)*n3[i]);
+    // free(n3);
+    // return ans;
+
+    // code refactoring - 0.005917
     int ans = 0;
-    for(int i=0; i<N; i++){
-        ans += ((int)pow(3, multi)*n3[i]);
-        multi -= 1;
+    while (n != 0){
+        int remain = n % 3;
+        ans *= 3;
+        ans += remain;
+        n /= 3;
     }
-    free(n3);
     return ans;
 }
 
-/*
-3   45
-3   15  0
-3    5  0
-    1   2
-
-    1 2 0 0
-    1*3^3 + 2*3^2 + 0*3^1 + 0*3^0 -> 45
-    0 0 2 1
-    0*3^3 + 0*3^2 + 2*3^1 + 1*3^0 -> 7
-*/
-
 
 int main(){
-    printf("%d\n", solution(45)); //7
-    printf("%d\n", solution(125)); //229
+    clock_t tic = clock();
+    for (int i=0; i<10000; i++){
+        solution(45);
+        solution(125);
+        solution(10000003);
+        solution(100000000);
+        solution(4123123);
+    }
+    clock_t toc = clock();
+    printf("running time: %f\n", (double)(toc-tic) / CLOCKS_PER_SEC);
     return 0;
 }
