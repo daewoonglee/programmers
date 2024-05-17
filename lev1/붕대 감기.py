@@ -1,23 +1,36 @@
 def solution(bandage, health, attacks):
-    attack_seq = [0] * (attacks[-1][0] + 1)
-    for i, damage in attacks:
-        attack_seq[i] = damage
+    # attack_seq = [0] * (attacks[-1][0] + 1)
+    # for i, damage in attacks:
+    #     attack_seq[i] = damage
+    #
+    # hp = health
+    # heal = 0
+    # for i in range(attacks[-1][0]+1):
+    #     if attack_seq[i]:
+    #         if hp - attack_seq[i] <= 0:
+    #             return -1
+    #         hp -= attack_seq[i]
+    #         heal = 0
+    #     else:
+    #         heal += 1
+    #         hp = hp+bandage[1] if hp+bandage[1] < health else health
+    #         if heal == bandage[0]:
+    #             hp = hp+bandage[-1] if hp+bandage[-1] < health else health
+    #             heal = 0
+    # return hp
 
+    # code refactoring
     hp = health
-    heal = 0
-    for i in range(attacks[-1][0]+1):
-        if attack_seq[i]:
-            if hp - attack_seq[i] <= 0:
-                return -1
-            hp -= attack_seq[i]
-            heal = 0
-        else:
-            heal += 1
-            hp = hp+bandage[1] if hp+bandage[1] < health else health
-            if heal == bandage[0]:
-                hp = hp+bandage[-1] if hp+bandage[-1] < health else health
-                heal = 0
+    cur_idx = 1
+    for attack_idx, attack in attacks:
+        seq_idx = attack_idx - cur_idx
+        hp += (seq_idx // bandage[0]) * bandage[2] + seq_idx * bandage[1]
+        hp = hp if hp < health else health
+        hp -= attack
+        if hp <= 0: return -1
+        cur_idx = attack_idx+1
     return hp
+    
 
 
 # print(solution([5, 1, 5], 30, [[2, 10], [9, 15], [10, 5], [11, 5]])) # 5
