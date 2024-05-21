@@ -11,7 +11,6 @@ def solution(land):
                     xy.append([nx, ny])
                     land[nx][ny] = [-1, oil_id]
                     oil += 1
-
         for x, y in log_xy:
             land[x][y] = [oil, oil_id]
 
@@ -29,22 +28,26 @@ def solution(land):
     for j in range(M):
         local_oil = []
         for i in range(N):
-            if isinstance(land[i][j], list) and (not local_oil or land[i][j][-1] != local_oil[-1][-1]):
+            if isinstance(land[i][j], list) and (not local_oil or all([1 if land[i][j][-1] != loc_oil[-1] else 0 for loc_oil in local_oil])):
                 local_oil.append(land[i][j])
         sum_oil = sum([oil for oil, _ in local_oil]) if local_oil else 0
         max_oil = sum_oil if sum_oil > max_oil else max_oil
     return max_oil
 
 
-print(solution([[0, 0, 0, 1, 1, 1, 0, 0], [0, 0, 0, 0, 1, 1, 0, 0], [1, 1, 0, 0, 0, 1, 1, 0], [1, 1, 1, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 1, 1]])) # 9
-print(solution([[1, 0, 1, 0, 1, 1], [1, 0, 1, 0, 0, 0], [1, 0, 1, 0, 0, 1], [1, 0, 0, 1, 0, 0], [1, 0, 0, 1, 0, 1], [1, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1]])) # 16
-print(solution([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])) # 0
-print(solution([[1]])) # 1
-print(solution([[0, 0, 0, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0, 1], [1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 1, 1]])) # 22
+# print(solution([[0, 0, 0, 1, 1, 1, 0, 0], [0, 0, 0, 0, 1, 1, 0, 0], [1, 1, 0, 0, 0, 1, 1, 0], [1, 1, 1, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 1, 1]])) # 9
+# print(solution([[1, 0, 1, 0, 1, 1], [1, 0, 1, 0, 0, 0], [1, 0, 1, 0, 0, 1], [1, 0, 0, 1, 0, 0], [1, 0, 0, 1, 0, 1], [1, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1]])) # 16
+# print(solution([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])) # 0
+# print(solution([[1]])) # 1
+# print(solution([[0]])) # 0
+# print(solution([[0, 0, 0, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0, 1], [1, 1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 1, 1]])) # 22
+# print(solution([[1, 0, 1, 0, 1, 1], [1, 0, 1, 0, 0, 1], [1, 0, 1, 1, 1, 1], [0, 1, 1, 0, 0, 1], [1, 1, 1, 0, 1, 1]])) # 20
+# print(solution([[1, 0, 0, 0, 1], [1, 0, 0, 0, 1], [1, 0, 0, 0, 1], [1, 1, 1, 1, 1], [1, 0, 0, 0, 0], [1, 1, 1, 1, 1]])) # 17
+print(solution([[1,1,1,1], [1,0,0,0], [1,0,1,0], [1,0,0,0],[1,1,1,1]])) # 12
 """
-[0, 0, 0, 1, 1, 1, 1, 1],
-[0, 0, 0, 0, 0, 0, 0, 1],
-[1, 1, 1, 1, 1, 1, 1, 1],
-[1, 1, 1, 0, 0, 0, 0, 0],
-[1, 1, 1, 0, 0, 0, 1, 1]]
+1 1 1 1 
+1 0 0 0
+1 0 1 0
+1 0 0 0
+1 1 1 1
 """
