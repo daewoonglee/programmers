@@ -1,32 +1,26 @@
 def solution(friends, gifts):
     N = len(friends)
     friend_idx = {f: i for i, f in enumerate(friends)}
-    log = [[0]*N for _ in friends]
+    gift_log = [[0]*N for _ in friends]
     for gift_row in gifts:
         friend1, friend2 = gift_row.split()
-        log[friend_idx[friend1]][friend_idx[friend2]] += 1
-    print(f"log: {log}")
+        gift_log[friend_idx[friend1]][friend_idx[friend2]] += 1
+    print(f"gift_log: {gift_log}")
 
-    gift_index = [0] * N
-    for j in range(N):
-        give = sum(log[j])
-        take = sum([l[j] for l in log])
-        gift_index[j] = give-take
+    gift_index = [sum(gift_log[j]) - sum([l[j] for l in gift_log]) for j in range(N)]
     print(f"gift index: {gift_index}")
 
     ans = [0] * N
     for i in range(N):
         for j in range(i+1, N):
-            friend1, friend2 = log[i][j], log[j][i]
-            if friend1 == friend2:
+            gift_cnt1, gift_cnt2 = gift_log[i][j], gift_log[j][i]
+            if gift_cnt1 == gift_cnt2:
                 if gift_index[i] > gift_index[j]:
                     ans[i] += 1
                 elif gift_index[i] < gift_index[j]:
                     ans[j] += 1
-            elif friend1 > friend2:
-                ans[i] += 1
             else:
-                ans[j] += 1
+                ans[i if gift_cnt1 > gift_cnt2 else j] += 1
     print(f"ans: {ans}")
     return max(ans)
 
