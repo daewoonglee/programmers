@@ -39,18 +39,23 @@ int solution(const char* friends[], size_t friends_len, const char* gifts[], siz
         gift_index[i] = row_sum - col_sum;
     }
     
-    int ans = 0;
+    // 루프 속도를 줄임
+    int ans_arr[friends_len];
+    memset(ans_arr, 0, sizeof(int)*friends_len);
     for (int i=0; i<friends_len; i++){
-        int tmp = 0;
-        for (int j=0; j<friends_len; j++){
+        for (int j=i+1; j<friends_len; j++){
             int gift_cnt1 = gift_log[i][j];
             int gift_cnt2 = gift_log[j][i];
-            if (i == j) continue;
-            if (gift_cnt1 > gift_cnt2) tmp++;
-            else if (gift_cnt1 == gift_cnt2 && gift_index[i] > gift_index[j]) tmp++;
+            if (gift_cnt1 == gift_cnt2){
+                if (gift_index[i] > gift_index[j]) ans_arr[i]++;
+                else if (gift_index[i] < gift_index[j]) ans_arr[j]++;
+            }
+            else ans_arr[gift_cnt1 > gift_cnt2 ? i : j]++;
         }
-        ans = ans < tmp ? tmp : ans;
     }
+    int ans = 0;
+    for (int i=0; i<friends_len; i++)
+        ans = ans < ans_arr[i] ? ans_arr[i] : ans;
     return ans;
 }
 
