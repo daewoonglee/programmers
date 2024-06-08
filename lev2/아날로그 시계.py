@@ -11,7 +11,7 @@ def solution(h1, m1, s1, h2, m2, s2):
     print(f"h1: {h1}, m1: {m1}, s1: {s1}")
 
     ans = 0
-    pre_sec, pre_min, pre_hour = s1, m1, h1
+    pre_sec, pre_min, pre_hour = s1 if s1 != 0 else 60, m1, h1
     for sec in range(hms2-hms1+1):
         s = (s1 + sec)  # 1초씩 증가
         m = (m1 + s / 60)  # 1초 증가할 때 0.x분 증가
@@ -38,4 +38,5 @@ def solution(h1, m1, s1, h2, m2, s2):
 # print(solution(11, 59, 30, 12, 0, 0)) # 1
 # print(solution(11, 58, 59, 11, 59, 0)) # 1
 # print(solution(1, 5, 5, 1, 5, 6)) # 2
-print(solution(0, 0, 0, 23, 59, 59)) # 2852
+# print(solution(0, 0, 0, 23, 59, 59)) # 2852
+print(solution(1, 5, 0, 1, 5, 59))
