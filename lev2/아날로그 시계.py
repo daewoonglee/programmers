@@ -1,3 +1,4 @@
+
 def solution(h1, m1, s1, h2, m2, s2):
     def time2sec(h, m, s):
         seconds = h*3600 + m*60 + s
@@ -8,29 +9,32 @@ def solution(h1, m1, s1, h2, m2, s2):
     h2, m2, s2 = map(int, [h2, m2, s2])
     hms1 = time2sec(h1, m1, s1)
     hms2 = time2sec(h2, m2, s2)
-    print(f"h1: {h1}, m1: {m1}, s1: {s1}")
 
     ans = 0
-    pre_sec, pre_min, pre_hour = s1 if s1 != 0 else 60, m1, h1
-    for sec in range(hms2-hms1+1):
-        s = (s1 + sec)  # 1초씩 증가
-        m = (m1 + s / 60)  # 1초 증가할 때 0.x분 증가
-        h = (h1 + m / 60) % 12 * 5 # 1초 증가할 때 0.x시간 증가
+    if hms1 == 0 * 3600 or hms1 == 12 * 3600:
+        ans += 1
 
-        s %= 60 # 정각 지나는 경우
-        m %= 60 # 정각 지나는 경우
+    for sec in range(hms2-hms1):
+        cur_h = ((h1 + ((m1 + (s1 + sec) / 60)) / 60) % 12 * 5) % 60  # 1초 증가할 때 0.x시간 증가
+        cur_m = (m1 + (s1 + sec) / 60) % 60 # 1초 증가할 때 0.x분 증가
+        cur_s = (s1 + sec) % 60 # 1초씩 증가
 
-        if m == h: ans += 1 # 시/분침이 겹치는 경우
-        else:
-            if pre_sec < m <= (s if s != 0 else 60): ans += 1
-            if pre_sec < h <= (s if s != 0 else 60): ans += 1
-            if pre_min == pre_hour: ans -= 2 # 시/분침이 겹친 상태에서 시작한 경우, 위 if문 2개가 참이라서
-        print(f"sec: {sec}, h: {h}, m: {m}, s: {s}, ans: {ans}")
-        pre_sec = s
-        pre_min = m
-        pre_hour = h
+        next_s = (s1 + sec+1)  # 1초씩 증가
+        next_m = (m1 + next_s / 60)  # 1초 증가할 때 0.x분 증가
+        next_h = (h1 + next_m / 60) % 12 * 5 # 1초 증가할 때 0.x시간 증가
+
+        next_s = next_s % 60 if next_s % 60 != 0 else 60
+        next_m = next_m % 60 if next_m % 60 != 0 else 60
+        next_h = next_h if next_h % 60 != 0 else 60
+
+        if cur_s < cur_h and next_s >= next_h: ans += 1
+        if cur_s < cur_m and next_s >= next_m: ans += 1
+        if next_s == next_m == next_h: ans -= 1
+        print(f"sec: {sec}, next h: {next_h}, m: {next_m}, s: {next_s}, cur h: {cur_h}, m: {cur_m}, s: {cur_s}, ans: {ans}")
 
     return ans
+
+
 
 # print(solution(0, 5, 30, 0, 7, 0)) # 2
 # print(solution(12, 0, 0, 12, 0, 30)) # 1
@@ -39,4 +43,11 @@ def solution(h1, m1, s1, h2, m2, s2):
 # print(solution(11, 58, 59, 11, 59, 0)) # 1
 # print(solution(1, 5, 5, 1, 5, 6)) # 2
 # print(solution(0, 0, 0, 23, 59, 59)) # 2852
-print(solution(1, 5, 0, 1, 5, 59))
+# print(solution(1, 5, 0, 1, 5, 59)) # 2
+#                                                                                       분침특이케이스     (시분초 겹치는순간)     시침 특이케이스
+#                                                                      시간*60분*2,         59m-0m          00시, 12시        11-12, 23-0시
+# print(solution(0, 0, 0, 1, 0, 0)) # 119         120                 -1              -1              0              118
+# print(solution(0, 0, 0, 0, 1, 0)) # 1           2                   0               -1              0
+# print(solution(1, 0, 0, 2, 0, 0)) # 119         120                 -1              -0              -0              119
+# print(solution(11, 0, 0, 12, 0, 0)) # 118       120                 -1              -1              -1              117
+print(solution(11, 0, 0, 11, 59, 59)) # 117     118             X               X                   X           -> 59초가 돌면서 시/분침 만나는지 확인
