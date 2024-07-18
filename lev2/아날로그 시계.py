@@ -15,13 +15,17 @@ def solution(h1, m1, s1, h2, m2, s2):
         ans += 1
 
     for sec in range(hms2-hms1):
-        cur_h = ((h1 + ((m1 + (s1 + sec) / 60)) / 60) % 12 * 5) % 60  # 1초 증가할 때 0.x시간 증가
-        cur_m = (m1 + (s1 + sec) / 60) % 60 # 1초 증가할 때 0.x분 증가
-        cur_s = (s1 + sec) % 60 # 1초씩 증가
+        cur_s = s1 + sec  # 1초씩 증가
+        cur_m = (m1 + cur_s / 60)  # 1초 증가할 때 0.x분 증가
+        cur_h = (h1 + cur_m / 60) % 12 * 5  # 1초 증가할 때 0.x시간 증가
 
-        next_s = (s1 + sec+1)  # 1초씩 증가
-        next_m = (m1 + next_s / 60)  # 1초 증가할 때 0.x분 증가
-        next_h = (h1 + next_m / 60) % 12 * 5 # 1초 증가할 때 0.x시간 증가
+        cur_s = cur_s % 60
+        cur_m = cur_m % 60
+        cur_h = cur_h % 60
+
+        next_s = (s1 + sec+1) # 1초씩 증가
+        next_m = (m1 + (s1 + sec+1) / 60)  # 1초 증가할 때 0.x분 증가
+        next_h = (h1 + next_m / 60) % 12 * 5  # 1초 증가할 때 0.x시간 증가
 
         next_s = next_s % 60 if next_s % 60 != 0 else 60
         next_m = next_m % 60 if next_m % 60 != 0 else 60
@@ -39,7 +43,7 @@ def solution(h1, m1, s1, h2, m2, s2):
 # print(solution(0, 5, 30, 0, 7, 0)) # 2
 # print(solution(12, 0, 0, 12, 0, 30)) # 1
 # print(solution(0, 6, 1, 0, 6, 6)) # 0
-# print(solution(11, 59, 30, 12, 0, 0)) # 1
+print(solution(11, 59, 30, 12, 0, 0)) # 1
 # print(solution(11, 58, 59, 11, 59, 0)) # 1
 # print(solution(1, 5, 5, 1, 5, 6)) # 2
 # print(solution(0, 0, 0, 23, 59, 59)) # 2852
@@ -50,4 +54,4 @@ def solution(h1, m1, s1, h2, m2, s2):
 # print(solution(0, 0, 0, 0, 1, 0)) # 1           2                   0               -1              0
 # print(solution(1, 0, 0, 2, 0, 0)) # 119         120                 -1              -0              -0              119
 # print(solution(11, 0, 0, 12, 0, 0)) # 118       120                 -1              -1              -1              117
-print(solution(11, 0, 0, 11, 59, 59)) # 117     118             X               X                   X           -> 59초가 돌면서 시/분침 만나는지 확인
+# print(solution(11, 0, 0, 11, 59, 59)) # 117     118             X               X                   X           -> 59초가 돌면서 시/분침 만나는지 확인
