@@ -1,3 +1,7 @@
+import sys
+sys.setrecursionlimit(500000)
+
+
 def solution(edges):
     """
     도넛: 정점 n, 간선 n
@@ -29,15 +33,18 @@ def solution(edges):
         edge_flag[a].append(False)
     print(edge_dict)
 
-    # 무관하나 정점 서치
-    random_node_key = max(edge_dict, key=lambda k: len(edge_dict[k]))
-    print(random_node_key)
+    # 무관한 정점 서치
+    max_len = max(len(v) for v in edge_dict.values())
+    max_keys = [k for k, v in edge_dict.items() if len(v) == max_len]
+    all_max_values = {val for k in max_keys for val in edge_dict[k]}
+    random_node_key = [k for k in max_keys if k not in all_max_values][0]
+    # print(random_node_key)
 
     # 무관한 정점에서 edge dfs로 방문, 무관한 정점은 edge가 가장 많은 노드
     ans = [random_node_key, 0, 0, 0]
     for n in edge_dict[random_node_key]:
         node, edge = dfs(n, [], 0)
-        # print(f"n: {n}, node cnt: {node}, edge cnt: {edge}")
+        print(f"n: {n}, node cnt: {node}, edge cnt: {edge}")
         if len(node) == edge: ans[1] += 1 # 도넛
         elif len(node)-1 == edge: ans[2] += 1 # 막대
         else: ans[3] += 1 # 8자
@@ -52,6 +59,7 @@ print(solution([[1,4], [3,2],[4,3],[5,4],[6,5],[4,6],[2,4],
                 [17,18],[18,19],[19,20],[20,21], [1,21],
                 [22,24],[24,26],[26,27],[27,29],[29,30],[30,28],[28,26],[26,25],[25,23],[23,22], [1,30],
                 [36,31],[31,32],[32,33],[33,34],[34,35],[35,36], [1,36]])) # [2, 1, 0, 0]
-print(solution([[2, 1], [1, 3], [2, 4], [4, 5], [2, 6], [6, 7]]))
+print(solution([[3,4],[4,5],[5,6],[6,4],[4,2],[2,3],[1,4],
+                [1,7],[7,8],[8,9],[9,8],[8,7]]))
 
 
