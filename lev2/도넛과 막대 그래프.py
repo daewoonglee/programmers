@@ -27,11 +27,15 @@ def solution(edges):
             edge_flag[a] = []
         edge_dict[a].append(b)
         edge_flag[a].append(False)
-    # print(edge_dict)
+    print(edge_dict)
 
-    # 무관한 정점에서 edge dfs로 방문
-    ans = [edges[0][0], 0, 0, 0]
-    for n in edge_dict[edges[0][0]]:
+    # 무관하나 정점 서치
+    random_node_key = max(edge_dict, key=lambda k: len(edge_dict[k]))
+    print(random_node_key)
+
+    # 무관한 정점에서 edge dfs로 방문, 무관한 정점은 edge가 가장 많은 노드
+    ans = [random_node_key, 0, 0, 0]
+    for n in edge_dict[random_node_key]:
         node, edge = dfs(n, [], 0)
         # print(f"n: {n}, node cnt: {node}, edge cnt: {edge}")
         if len(node) == edge: ans[1] += 1 # 도넛
