@@ -61,14 +61,10 @@ def solution(edges):
 
     # 노드 번호를 리스트 index로 선언
     inout_edges = [[0, 0] for _ in range(N + 1)] # inout: [노드에 들어온 간선 수, 노드에서 나간 간선 수]
-    graph = [[] for _ in range(N + 1)]  # edge_dict 대체
 
     for _, [a, b] in enumerate(edges):
-        graph[a].append(b)
         inout_edges[b][0] += 1
         inout_edges[a][1] += 1
-
-    print(f"graph: {graph}")
     print(f"inout: {inout_edges}")
 
     for i, (in_edge, out_edge) in enumerate(inout_edges):
