@@ -74,7 +74,7 @@ def solution(edges):
                 total_out_edges = out_edge
         else:
             if out_edge == 0: ans[2] += 1 # 막대
-            if out_edge == 2: ans[3] += 1 # 8자
+            elif out_edge == 2: ans[3] += 1 # 8자
 
     ans[1] = total_out_edges - (ans[2]+ans[3])
     return ans
