@@ -1,40 +1,28 @@
 import sys
 sys.setrecursionlimit(500000)
+from collections import deque
 
 
 def solution(n, roads, sources, destination):
-    def bfs(queue, depth):
-        next_queue = []
-        # 방문한 노드 갱신
-        for cur_node in queue:
-            visited[cur_node] = 1
-            lookup_table[cur_node] = depth
-
-        # 방문할 노드 탐색
-        for cur_node in queue:
-            for next_node in road_dict[cur_node]:
-                if not visited[next_node]:
-                    next_queue.append(next_node)
-
-        if next_queue:
-            bfs(next_queue, depth+1)
+    def bfs(queue):
+        if not queue: return
+        cur_node = queue.popleft()
+        depth = lookup_table[cur_node]
+        for next_node in road_path[cur_node]:
+            if lookup_table[next_node] == -1:
+                lookup_table[next_node] = depth+1
+                queue.append(next_node)
+        bfs(queue)
 
     # node 별 edge 연결
-    road_dict = dict()
+    road_path = [[] for _ in range(n+1)]
     for a, b in roads:
-        if a not in road_dict:
-            road_dict[a] = list()
-        if b not in road_dict:
-            road_dict[b] = list()
-        road_dict[a].append(b)
-        road_dict[b].append(a)
+        road_path[a].append(b)
+        road_path[b].append(a)
 
-    # 0 indexing 맞추기 위해서 n+1
-    lookup_table = [-1]*(n+1)
-    visited = [0]*(n+1)
+    lookup_table = [-1]*(n+1) # 0 indexing 맞추기 위해서 n+1
     lookup_table[destination] = 0 # 자기자신 0
-    visited[destination] = 1
-    bfs(road_dict[destination], 1)
+    bfs(deque([destination]))
 
     return [lookup_table[source] for source in sources]
 
