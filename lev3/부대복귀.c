@@ -10,8 +10,7 @@ typedef struct Queue{
 } queue;
 
 bool is_empty(queue* q){
-    if (q->front == q->rear) return true;
-    else return false;
+    return (q->front == q->rear) ? true : false;
 }
 
 void push(queue *q, int x){
@@ -30,6 +29,7 @@ int* solution(int n, int** roads, size_t roads_rows, size_t roads_cols, int sour
     int* lookup_table = (int*)malloc(sizeof(int)*(n+1));
     for (int i=0; i<n+1; i++)
         lookup_table[i] = -1;
+        
     int** road_path = (int**)malloc(sizeof(int*)*(n+1));
     for (int i=0; i<n+1; i++)
         road_path[i] = (int*)calloc(n+1, sizeof(int));
@@ -40,7 +40,7 @@ int* solution(int n, int** roads, size_t roads_rows, size_t roads_cols, int sour
 
     lookup_table[destination] = 0;
     queue *q = (queue*)malloc(sizeof(queue));
-    q->queue = (int*)calloc(n+1, sizeof(int));
+    q->queue = (int*)calloc(n, sizeof(int));
     q->size = n;
     q->front=0;
     q->rear=0;
@@ -60,9 +60,10 @@ int* solution(int n, int** roads, size_t roads_rows, size_t roads_cols, int sour
     for (int i=0; i<sources_len; i++)
         ans[i] = lookup_table[sources[i]];
     
+    free(q->queue);
     free(q);
     free(lookup_table);
-    for (int i=0; i<roads_rows; i++)
+    for (int i=0; i<n+1; i++)
         free(road_path[i]);
     free(road_path);
     return ans;
