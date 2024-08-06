@@ -17,17 +17,18 @@ void init_queue(queue *q, int size){
 }
 
 bool is_empty(queue* q){
-    return (q->front == q->rear) ? true : false;
+    if (q->front == q->rear) return true;
+    else return false;
 }
 
 void push(queue *q, int x){
     q->queue[q->rear] = x;
-    q->rear = (q->rear+1) % q->size;
+    q->rear = (q->rear+1) % (q->size);
 }
 
 int pop(queue *q){
     int x = q->queue[q->front];
-    q->front = (q->front+1) % q->size;
+    q->front = (q->front+1) % (q->size);
     return x;
 }
 
@@ -35,14 +36,17 @@ void free_queue(queue *q){
     free(q->queue);
 }
 
+// roads_rows는 2차원 배열 roads의 행 길이, roads_cols는 2차원 배열 roads의 열 길이입니다.
+// sources_len은 배열 sources의 길이입니다.
 int* solution(int n, int** roads, size_t roads_rows, size_t roads_cols, int sources[], size_t sources_len, int destination) {
+    // return 값은 malloc 등 동적 할당을 사용해주세요. 할당 길이는 상황에 맞게 변경해주세요.
     int* ans = (int*)malloc(sizeof(int)*sources_len);
     int* lookup_table = (int*)malloc(sizeof(int)*(n+1));
     for (int i=0; i<n+1; i++)
         lookup_table[i] = -1;
         
     int** road_path = (int**)malloc(sizeof(int*)*(n+1));
-    int* col_cnt = (int*)calloc(n+1, sizeof(int)); // 동적 col size 계산
+    int* col_cnt = (int*)calloc(n+1, sizeof(int)); // 동적 col size 계산 변수
     for (int i=0; i<roads_rows; i++){
         col_cnt[roads[i][0]]++;
         col_cnt[roads[i][1]]++;
@@ -112,5 +116,3 @@ int main(){
     free(arr);
     free(res);
 }
-
-
