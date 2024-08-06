@@ -9,6 +9,13 @@ typedef struct Queue{
     int size;
 } queue;
 
+void init_queue(queue *q, int size){
+    q->queue = (int*)malloc(sizeof(int)*size);
+    q->front = 0;
+    q->rear = 0;
+    q->size = size;
+}
+
 bool is_empty(queue* q){
     return (q->front == q->rear) ? true : false;
 }
@@ -24,6 +31,10 @@ int pop(queue *q){
     return x;
 }
 
+void free_queue(queue *q){
+    free(q->queue);
+}
+
 int* solution(int n, int** roads, size_t roads_rows, size_t roads_cols, int sources[], size_t sources_len, int destination) {
     int* ans = (int*)malloc(sizeof(int)*sources_len);
     int* lookup_table = (int*)malloc(sizeof(int)*(n+1));
@@ -31,38 +42,45 @@ int* solution(int n, int** roads, size_t roads_rows, size_t roads_cols, int sour
         lookup_table[i] = -1;
         
     int** road_path = (int**)malloc(sizeof(int*)*(n+1));
-    for (int i=0; i<n+1; i++)
-        road_path[i] = (int*)calloc(n+1, sizeof(int));
+    int* col_cnt = (int*)calloc(n+1, sizeof(int)); // 동적 col size 계산
     for (int i=0; i<roads_rows; i++){
-        road_path[roads[i][0]][i]=roads[i][1];
-        road_path[roads[i][1]][i]=roads[i][0];
+        col_cnt[roads[i][0]]++;
+        col_cnt[roads[i][1]]++;
+    }
+    
+    for (int i=0; i<n+1; i++){
+        road_path[i] = (int*)calloc(col_cnt[i], sizeof(int));
+        col_cnt[i] = 0; // 동적 indexing 목적으로 0 초기화
+    }
+    for (int i=0; i<roads_rows; i++){
+        int a = roads[i][0];
+        int b = roads[i][1];
+        road_path[a][col_cnt[a]++]=b; // 동적으로 indexing하여 값 할당
+        road_path[b][col_cnt[b]++]=a; // 동적으로 indexing하여 값 할당
     }
 
     lookup_table[destination] = 0;
-    queue *q = (queue*)malloc(sizeof(queue));
-    q->queue = (int*)calloc(n, sizeof(int));
-    q->size = n;
-    q->front=0;
-    q->rear=0;
-    push(q, destination);
+    queue q;
+    init_queue(&q, n+1);
+    push(&q, destination);
 
-    while (!is_empty(q)){
-        int cur_node = pop(q);
+    while (!is_empty(&q)){
+        int cur_node = pop(&q);
         int depth = lookup_table[cur_node];
-        for (int i=0; i<n+1; i++){
+        for (int i=0; i<col_cnt[cur_node]; i++){
             int next_node = road_path[cur_node][i];
             if (lookup_table[next_node] == -1 & next_node != 0){
                 lookup_table[next_node] = depth+1;
-                push(q, next_node);
+                push(&q, next_node);
             }
         }
     }
     for (int i=0; i<sources_len; i++)
         ans[i] = lookup_table[sources[i]];
     
-    free(q->queue);
-    free(q);
+    free_queue(&q);
     free(lookup_table);
+    free(col_cnt);
     for (int i=0; i<n+1; i++)
         free(road_path[i]);
     free(road_path);
