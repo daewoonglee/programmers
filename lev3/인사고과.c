@@ -2,35 +2,59 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+int asc_des(const void *pa, const void *pb){
+    const int* a = *(const int**)pa;
+    const int* b = *(const int**)pb;
+
+    if (a[0] == b[0]){
+        if (a[1] > b[1])
+            return 1;
+        else if (a[1]==b[1]) 
+            return 0;
+        else
+            return -1;
+    }
+    else if (a[0] < b[0]){
+        return 1;
+    }
+    return -1;
+}
+
 // scores_rows는 2차원 배열 scores의 행 길이, scores_cols는 2차원 배열 scores의 열 길이입니다.
 int solution(int** scores, size_t scores_rows, size_t scores_cols) {
     int target1 = scores[0][0];
     int target2 = scores[0][1];
     int target = target1 + target2;
 
-    for (int i=0; i<scores_rows; i++){
-        for (int j=i+1; j<scores_rows; j++){
-            if (scores[i][0] < scores[j][0]){
-                int temp[2] = {scores[i][0], scores[i][1]};
-                for (int z=0; z<2; z++){
-                    scores[i][z] = scores[j][z];
-                    scores[j][z] = temp[z];
-                }
-            }
-        }
-    }
+    qsort(scores, scores_rows, sizeof(scores[0]), asc_des);
 
-    for (int i=0; i<scores_rows; i++){
-        for (int j=i+1; j<scores_rows; j++){
-            if (scores[i][1] > scores[j][1]){
-                int temp[2] = {scores[i][0], scores[i][1]};
-                for (int z=0; z<2; z++){
-                    scores[i][z] = scores[j][z];
-                    scores[j][z] = temp[z];
-                }
-            }
-        }
-    }
+    for (int i=0; i<scores_rows; i++)
+        printf("(%d, %d) ", scores[i][0], scores[i][1]);
+    printf("\n");
+
+    // for (int i=0; i<scores_rows; i++){
+    //     for (int j=i+1; j<scores_rows; j++){
+    //         if (scores[i][0] < scores[j][0]){
+    //             int temp[2] = {scores[i][0], scores[i][1]};
+    //             for (int z=0; z<2; z++){
+    //                 scores[i][z] = scores[j][z];
+    //                 scores[j][z] = temp[z];
+    //             }
+    //         }
+    //     }
+    // }
+
+    // for (int i=0; i<scores_rows; i++){
+    //     for (int j=i+1; j<scores_rows; j++){
+    //         if (scores[i][0] <= scores[j][0] & scores[i][1] > scores[j][1]){
+    //             int temp[2] = {scores[i][0], scores[i][1]};
+    //             for (int z=0; z<2; z++){
+    //                 scores[i][z] = scores[j][z];
+    //                 scores[j][z] = temp[z];
+    //             }
+    //         }
+    //     }
+    // }
 
     int ans = 1;
     int max_b = 0;
@@ -52,7 +76,9 @@ int main(){
     // int values[][2] = {{2,2},{1,4},{3,2},{3,2},{2,1}}; // 4
     // int values[][2] = {{2,2},{2,4},{2,2},{2,3},{2,1},{2,2}}; // 3
     // int values[][2] = {{0,3},{1,2},{1,2},{1,2},{1,1},{1,2},{1,2}}; // 1
-    int values[][2] = {{0,0},{1,2},{2,1},{1,1},{1,2},{1,2}}; // -1
+    // int values[][2] = {{0,0},{1,2},{2,1},{1,1},{1,2},{1,2}}; // -1
+    int values[][2] = {{1,1},{4,0},{0,4},{1,3},{2,1},{3,1},{1,2},{0,3},{1,2},{0,0},{0,0},{2,0}}; // 9
+    // int values[][2] = {{1,1},{4,0},{0,4},{1,2},{0,3},{2,2},{2,0},{0,2}}; // -1
     
     int rows = sizeof(values) / sizeof(values[0]);
 
