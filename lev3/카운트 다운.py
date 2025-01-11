@@ -1,42 +1,34 @@
-import sys
-sys.setrecursionlimit(10000)
-
 
 def solution(target):
+    def update_dp(t_num, add_shot):
+        add_dart, add_single_bull = DP[add_shot]
+        dart, single_bull = DP[t_num - add_shot]
+        if add_dart + dart < DP[t_num][0]:
+            DP[t_num] = [add_dart + dart, add_single_bull + single_bull]
+        elif add_dart + dart == DP[t_num][0] and add_single_bull + single_bull > DP[t_num][1]:
+            DP[t_num][1] = add_single_bull + single_bull
 
-    def countdown(s, sb, t):
-        nonlocal dart_cnt, single_bull
-        if dart_cnt < s: return
-        if t == 0:
-            if dart_cnt == s:
-                if single_bull < sb:
-                    single_bull = sb
-            else:
-                dart_cnt = s
-                single_bull = sb
-            return
+    def countdown(target_num):
+        dart_li = list(range(1, 21)) + [50]
+        for t in range(21, target_num+1):
+            for n in dart_li:
+                if n != 50:
+                    for k in range(1, 4): # single, double, triple
+                        if t > n*k:
+                            update_dp(t, n*k)
+                else:
+                    if t > n:
+                        update_dp(t, n)
 
-        range_li = [20, 19, 18, 17, 50, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
-        for n in range_li:
-            # print(f"n: {n}, dart_cnt: {dart_cnt}, singlenbull: {single_bull}, target: {t}")
-            if n != 50:
-                if n * 3 <= t:
-                    countdown(s+1, sb, t - n*3)
-                elif n * 2 <= t:
-                    countdown(s+1, sb, t - n*2)
-                elif n <= t:
-                    countdown(s+1, sb+1, t - n)
-            elif n <= t:
-                countdown(s+1, sb+1, t - n)
+    DP = [[100000, 0] for _ in range(100001)]  # 숫자=배열인덱스로 맞춤
+    for i in range(21):
+        DP[i] = [1, 1]
+        DP[i * 2] = [1, 0]
+        DP[i * 3] = [1, 0]
+    DP[50] = [1, 1]
 
-    dart_cnt, single_bull = target, 0
-    if target > 310:
-        shot = (target-310) // 60 + 1
-        target -= 60*shot
-    else:
-        shot = 0
-    countdown(shot, 0, target)
-    return [dart_cnt, single_bull]
+    countdown(target)
+    return [DP[target][0], DP[target][1]]
 
 
 # print(solution(21)) # [1,0]
@@ -58,5 +50,5 @@ def solution(target):
 # print(solution(147)) # [3,1]
 # print(solution(191)) # [4,2]
 print(solution(310)) # [6,5] <-
-# print(solution(247)) # [5,3] // 57, 50,50,50, 40
-# print(solution(547)) # [10,5] // 57, 50,50,50, 40, 60,60,60,60
+print(solution(247)) # [5,3] // 57, 50,50,50, 40
+print(solution(547)) # [10,5] // 57, 50,50,50, 40, 60,60,60,60
