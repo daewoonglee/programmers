@@ -20,7 +20,13 @@ def solution(target):
                     if t > n:
                         update_dp(t, n)
 
-    DP = [[100000, 0] for _ in range(100001)]  # 숫자=배열인덱스로 맞춤
+    MAX_NUM = 310
+    shot = 0
+    if target > MAX_NUM: # 310 이하로 target을 맞춰서 최적의 수 구함 / 311 이상일 때는 반드시 60을 쓰는게 더 나은 경우를 가짐
+        shot = (target - MAX_NUM) // 60 +1
+        target -= 60*shot
+
+    DP = [[100000, 0] for _ in range(MAX_NUM+1)]  # 숫자=배열인덱스로 맞춤
     for i in range(21):
         DP[i] = [1, 1]
         DP[i * 2] = [1, 0]
@@ -28,12 +34,12 @@ def solution(target):
     DP[50] = [1, 1]
 
     countdown(target)
-    return [DP[target][0], DP[target][1]]
+    return [DP[target][0] + shot, DP[target][1]]
 
 
 # print(solution(21)) # [1,0]
 # print(solution(58)) # [2,2]
-# print(solution(100000)) # [1667, 2]
+print(solution(100000)) # [1667, 2]
 # print(solution(1)) # [1,1]
 # print(solution(35)) #[2,2]
 # print(solution(49)) #[2,1]
@@ -49,6 +55,6 @@ def solution(target):
 # print(solution(160)) # [3,2]
 # print(solution(147)) # [3,1]
 # print(solution(191)) # [4,2]
-print(solution(310)) # [6,5] <-
-print(solution(247)) # [5,3] // 57, 50,50,50, 40
+# print(solution(310)) # [6,5] <-
+# print(solution(247)) # [5,3] // 57, 50,50,50, 40
 print(solution(547)) # [10,5] // 57, 50,50,50, 40, 60,60,60,60
