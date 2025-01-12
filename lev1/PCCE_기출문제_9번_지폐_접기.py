@@ -1,7 +1,10 @@
 def solution(wallet, bill):
     ans = 0
-    while not ((bill[0] <= wallet[0] and bill[1] <= wallet[1]) or (bill[0] <= wallet[1] and bill[1] <= wallet[0])):
-        bill[1 if bill[0] < bill[1] else 0] //= 2
+    wallet.sort()
+    bill.sort()
+    while not (bill[0] <= wallet[0] and bill[1] <= wallet[1]):
+        bill[1] //= 2
+        bill.sort()
         ans += 1
     return ans
 
