@@ -1,37 +1,24 @@
 def solution(board, skill):
-    # # 효율성 (0/7)
-    # for s in skill:
-    #     t, x1, y1, x2, y2, d = s
-    #     d = d if t == 2 else -d
-    #     row = x2 - x1 + 1
-    #     col = y2 - y1 + 1
-    #     for i in range(row*col):
-    #         x, y = x1+i//col, y1+i%col
-    #         board[x][y] += d
-    #
-    # ans = 0
-    # for row in board:
-    #     for r in row:
-    #         if r > 0:
-    #             ans += 1
-    # return ans
-
-    # 효율성 (0/7)
     N, M = len(board), len(board[0])
-    prefix_sum_li = [0] * (N * M)
+    imos = [[0] * (M+1) for _ in range(N+1)]
     for s in skill:
         t, x1, y1, x2, y2, d = s
         d = d if t == 2 else -d
-        row = x2 - x1 + 1
-        col = y2 - y1 + 1
-        for i in range(row*col):
-            prefix_sum_li[(x1+i//col) * M + y1+i%col] += d
+        imos[x1][y1] += d
+        imos[x1][y2+1] += -d
+        imos[x2+1][y1] += -d
+        imos[x2+1][y2+1] += d
+
+    for x in range(N):
+        for y in range(M):
+            imos[x][y+1] += imos[x][y]
 
     ans = 0
-    for i, n in enumerate(prefix_sum_li):
-        x, y = i // M, i % M
-        if board[x][y] + n > 0:
-            ans += 1
+    for y in range(M):
+        for x in range(N):
+            imos[x+1][y] += imos[x][y]
+            if board[x][y] + imos[x][y] > 0:
+                ans += 1
     return ans
 
 
