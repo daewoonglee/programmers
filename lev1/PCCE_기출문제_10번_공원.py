@@ -1,20 +1,21 @@
 def solution(mats, park):
-    def is_empty(mat_x, mat_y, mat_size):
-        for i in range(mat_size):
-            for j in range(mat_size):
-                if park[mat_x + i][mat_y + j] != "-1":
-                    return False
-        return True
-
     ans = -1
     N, M = len(park), len(park[0])
+    dp_mats = [[0] * M for _ in range(N)]
+    max_mat = 0
     for x in range(N):
         for y in range(M):
             if park[x][y] == "-1":
-                for m in mats:
-                    if x+m <= N and y+m <= M:
-                        if is_empty(x, y, m) and ans < m:
-                            ans = m
+                dp_mats[x][y] = 1
+                if x>0 and y>0:
+                    dp_mats[x][y] = min(dp_mats[x - 1][y], dp_mats[x][y - 1], dp_mats[x - 1][y - 1]) + 1
+                    max_mat = max_mat if max_mat > dp_mats[x][y] else dp_mats[x][y]
+            else:
+                dp_mats[x][y] = 0
+
+    for m in mats:
+        if ans < m <= max_mat:
+            ans = m
     return ans
 
 
