@@ -1,24 +1,16 @@
 def solution(diffs, times, limit):
-    left = 1
-    right = max(diffs)
-    ans = []
-    while left < right:
-        level = (right + left) // 2
-        pre_time = 0
+    left, right = 1, max(diffs)
+    while left <= right:
+        level = (left + right) >> 1
         play_time = 0
         for i, d in enumerate(diffs):
-            cur_time = times[i]
-            play_time += (cur_time + pre_time) * (d-level) + cur_time if d > level else cur_time
-            pre_time = cur_time
+            play_time += (times[i-1] + times[i]) * (d-level) + times[i] if d > level else times[i]
 
         if play_time <= limit:
-            ans.append(level)
-            right = level
+            right = level-1
         else:
-            if left == level:
-                break
-            left = level
-    return min(ans) if ans else right
+            left = level+1
+    return left
 
 
 # print(solution([1, 5, 3], [2, 4, 7], 30)) # 3
