@@ -1,41 +1,25 @@
-import math
-
-
 def solution(diffs, times, limit):
-    level = 0
-    play_time = 0
-    pre_time = 0
-    temp = 0
-    for i, d in enumerate(diffs):
-        cur_time = times[i]
-        play_time += (cur_time + pre_time) * (d - level) + cur_time if d > level else cur_time
-        temp += (cur_time + pre_time) * (d-level-1) + cur_time if d > level else cur_time
-        pre_time = cur_time
-    step = play_time - temp
-
-    min_diffs = [0] + sorted(diffs)
-    idx = 1
-    print(f"min: {min_diffs}, ")
-    print(f"level: {level}, puzzle play_time: {play_time}, step: {step}, temp: {temp}, value: {play_time - step * (min_diffs[idx] - level)}")
-
-    # giant step
-    while not play_time - step * (min_diffs[idx] - min_diffs[idx-1]) <= limit:
-        play_time -= (min_diffs[idx]-min_diffs[idx-1])*step
-        level = min_diffs[idx]+1
+    left = 0
+    right = max(diffs)
+    ans = []
+    while left < right:
+        level = left + (right - left) // 2
         pre_time = 0
-        temp = 0
+        play_time = 0
         for i, d in enumerate(diffs):
             cur_time = times[i]
-            temp += (cur_time + pre_time) * (d-level) + cur_time if d > level else cur_time
+            play_time += (cur_time + pre_time) * (d-level) + cur_time if d > level else cur_time
             pre_time = cur_time
+        print(f"level: {level}, play time: {play_time}, left: {left}, right: {right}")
 
-        step = play_time - temp
-        idx += 1
-        print(f"level: {level}, puzzle: {play_time}, step: {step}, temp: {temp}, value: {play_time - step * (min_diffs[idx] - min_diffs[idx-1])}")
-
-    # baby step
-    print(f"plus step: {math.ceil((-limit+temp) / step)}, v: {(-limit+temp) / step}")
-    return level + math.ceil((-limit+temp) / step)
+        if play_time <= limit:
+            ans.append(level)
+            right = level-1
+        else:
+            if left == level:
+                break
+            left = level
+    return min(ans) if ans else right
 
 
 # print(solution([1, 5, 3], [2, 4, 7], 30)) # 3
