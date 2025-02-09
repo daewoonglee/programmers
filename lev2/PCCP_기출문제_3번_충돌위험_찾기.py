@@ -17,57 +17,48 @@ def solution(points, routes):
                     q.append([mx+step_x, my+step_y, copy.deepcopy(road)])
         return road
 
-    robot_routes = []
+    robot_N = len(routes)
+    robot_routes = [[] for _ in range(robot_N)]
+    print(robot_routes, len(routes))
     max_len, max_idx = 0, 0
     N, M = max([point[0] for point in points]), max([point[1] for point in points])
-    route_idx = 0
-    for route in routes:
-        for i in range(len(route)-1):
-            start, end = route[i], route[i+1]
+    for i, route in enumerate(routes):
+        for j in range(len(route)-1):
+            start, end = route[j], route[j+1]
             road_map = [[0] * M for _ in range(N)]
             start_x, start_y = points[start-1]
             end_x, end_y = points[end-1]
             queue = deque([[start_x-1, start_y-1, []]])
             r = bfs(queue, end_x-1, end_y-1)
-            robot_routes.append(r)
-            if len(r) > max_len:
-                max_len = len(r)
-                max_idx = route_idx
-            route_idx += 1
-            print(f"max_len: {max_len}, idx: {max_idx}, start: {start}, end: {end}, road: {r}")
+            robot_routes[i].extend(r[1:] if robot_routes[i] else r)
+        if len(robot_routes[i]) > max_len:
+            max_len = len(robot_routes[i])
+        print(f"max_len: {max_len}, road: {robot_routes[i]}")
 
     ans = 0
-    for j, (robot_x, robot_y) in enumerate(robot_routes[max_idx]):
-        check_x = [robot_x]
-        check_y = [robot_y]
-        print(f"max_idx: {max_idx}, check: {check_x}, {check_y}")
-        flag = [False]
-        for i in range(len(routes)):
-            if i == max_idx or j >= len(robot_routes[i]): continue
-            rx, ry = robot_routes[i][j]
-            temp_x = []
-            temp_y = []
-            print(f"checkxy: {check_x}, {check_y}")
-            for z, (cx, cy) in enumerate(zip(check_x, check_y)):
-                print(f"checkxy: {check_x}, {check_y}, z: {z}, cx: {cx}, cy: {cy}, rx: {rx}, ry: {ry}")
-                print(f"FLAG {rx not in check_x}, {ry not in check_y}")
-                if cx == rx and cy == ry:
+    for j in range(max_len):
+        check_xy, flag = [], [False]
+        for i in range(robot_N):
+            if j >= len(robot_routes[i]): continue
+            print(f"j: {j}, i: {i}, robot: {robot_routes[i][j]}, len: {len(robot_routes[i])}, check: {check_xy}")
+            x, y = robot_routes[i][j]
+            for z, (cx, cy) in enumerate(check_xy):
+                if cx == x and cy == y:
                     flag[z] = True
-                elif rx not in check_x and ry not in check_y:
-                    temp_x.append(rx)
-                    temp_y.append(ry)
-                    print(f"tempx: {temp_x}, y: {temp_y}")
-            check_x.extend(temp_x)
-            check_y.extend(temp_y)
-            flag.extend([False]*len(temp_x))
-            print("FIN")
+                    break
+            else:
+                check_xy.append([x,y])
+                flag.append(False)
+        print(f"flag: {flag}")
+        print(f"===")
         for f in flag:
             if f:
                 ans += 1
-        print(f"ans: {ans}\n")
     return ans
 
 
 # print(solution([[3, 2], [6, 4], [4, 7], [1, 4]],[[4, 2], [1, 3], [2, 4]]))# 1
 # print(solution([[3, 2], [6, 4], [4, 7], [1, 4]], [[4, 2], [1, 3], [4, 2], [4, 3]])) # 9
-print(solution([[2, 2], [2, 3], [2, 7], [6, 6], [5, 2]], [[2, 3, 4, 5], [1, 3, 4, 5]])) # 0
+# print(solution([[2, 2], [2, 3], [2, 7], [6, 6], [5, 2]], [[2, 3, 4, 5], [1, 3, 4, 5]])) # 0
+# print(solution([[1, 2], [2, 1]], [[1,2], [1,2]])) # 3
+print(solution([[1, 1], [1, 3]], [[1, 2, 1, 2], [2, 1, 2, 1]])) # 3
