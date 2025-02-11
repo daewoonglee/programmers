@@ -1,44 +1,42 @@
 def solution(points, routes):
-    def search_route(start_x, start_y, end_x, end_y):
-        road = [[start_x-1, start_y-1]]
-        while start_x != end_x:
-            if start_x > end_x:
-                start_x -= 1
-            else:
-                start_x += 1
-            road.append([start_x-1, start_y-1])
-        while start_y != end_y:
-            if start_y > end_y:
-                start_y -= 1
-            else:
-                start_y += 1
-            road.append([start_x-1, start_y-1])
+    def search_route(route):
+        global max_len, robot_map
+        road = []
+        for i in range(len(route)-1):
+            robot_map_k = f"{route[i]}_{route[i+1]}"
+            temp_road = [points[route[i]-1]]
+            if robot_map_k not in robot_map:
+                start_x, start_y = points[route[i]-1]
+                end_x, end_y = points[route[i+1]-1]
+
+                dx = -1 if start_x > end_x else 1
+                dy = -1 if start_y > end_y else 1
+
+                while start_x != end_x:
+                    start_x += dx
+                    temp_road.append([start_x, start_y])
+
+                while start_y != end_y:
+                    start_y += dy
+                    temp_road.append([start_x, start_y])
+                robot_map[robot_map_k] = temp_road
+
+            road.extend(robot_map[robot_map_k][1:] if road else robot_map[robot_map_k])
+            if max_len < len(road):
+                max_len = len(road)
         return road
 
+    global max_len, robot_map
     # 최단 경로 탐색
-    robot_N = len(routes)
     robot_map = dict()
-    robot_routes = [[] for _ in range(robot_N)]
     max_len = 0
-    for i, route in enumerate(routes):
-        for j in range(len(route)-1):
-            start, end = route[j], route[j+1]
-            robot_map_k = f"{start}_{end}"
-            if robot_map_k not in robot_map:
-                r = search_route(*points[start-1], *points[end-1])
-                robot_map[robot_map_k] = r
-            else:
-                r = robot_map[robot_map_k]
-            robot_routes[i].extend(r[1:] if robot_routes[i] else r)
-        if len(robot_routes[i]) > max_len:
-            max_len = len(robot_routes[i])
-        print(f"max_len: {max_len}, road: {robot_routes[i]}")
+    robot_routes = [search_route(r) for r in routes]
 
     # 충돌 횟수 탐색
     ans = 0
     for j in range(max_len):
         check_xy, flag = [], [False]
-        for i in range(robot_N):
+        for i in range(len(routes)):
             if j >= len(robot_routes[i]): continue
             # print(f"j: {j}, i: {i}, robot: {robot_routes[i][j]}, len: {len(robot_routes[i])}, check: {check_xy}")
             x, y = robot_routes[i][j]
@@ -49,9 +47,7 @@ def solution(points, routes):
             else:
                 check_xy.append([x,y])
                 flag.append(False)
-        for f in flag:
-            if f:
-                ans += 1
+        ans += sum(flag)
     return ans
 
 
