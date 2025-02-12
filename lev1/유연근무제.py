@@ -1,14 +1,14 @@
-from datetime import datetime, timedelta
-
-
 def solution(schedules, timelogs, startday):
+    def to_minutes(t):
+        return t//100*60 + t%100
+
     ans = 0
     startday -= 1
-    for s, time_log in zip(schedules, timelogs):
-        s = datetime.strptime(f"{s//100}:{s%100}", "%H:%M") + timedelta(minutes=10)
-        for i, t in enumerate(time_log):
+    for schedule, time_log in zip(schedules, timelogs):
+        allowed = to_minutes(schedule) + 10
+        for i, tl in enumerate(time_log):
             if (i+startday) % 7 in [5, 6]: continue
-            elif datetime.strptime(f"{t//100}:{t%100}", "%H:%M") > s: break
+            elif to_minutes(tl) > allowed: break
         else:
             ans += 1
     return ans
