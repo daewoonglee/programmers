@@ -1,9 +1,11 @@
 def solution(info, n, m):
     def steal(a, b, depth):
         nonlocal ans
+        k = f"{depth}_{a}_{b}"
         if depth == N:
             ans = a if a < ans else ans
-        else:
+        elif k not in memo:
+            memo.append(k)
             steal_a = a+info[depth][0]
             steal_b = b+info[depth][1]
 
@@ -14,6 +16,7 @@ def solution(info, n, m):
 
     N = len(info)
     ans = float('inf')
+    memo = list()
     steal(0, 0, 0)
     return ans if ans != float('inf') else -1
 
