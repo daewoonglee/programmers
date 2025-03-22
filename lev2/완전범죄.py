@@ -1,24 +1,35 @@
 def solution(info, n, m):
-    def steal(a, b, depth):
-        nonlocal ans
-        k = f"{depth}_{a}_{b}"
-        if depth == N:
-            ans = a if a < ans else ans
-        elif k not in memo:
-            memo.append(k)
-            steal_a = a+info[depth][0]
-            steal_b = b+info[depth][1]
+    # def steal(a, b, depth):
+    #     nonlocal ans
+    #     k = f"{depth}_{a}_{b}"
+    #     if depth == N:
+    #         ans = a if a < ans else ans
+    #     elif k not in memo:
+    #         memo.append(k)
+    #         steal_a = a+info[depth][0]
+    #         steal_b = b+info[depth][1]
+    #
+    #         if steal_a < n and steal_a < ans:
+    #             steal(steal_a, b, depth+1)
+    #         if steal_b < m and a < ans:
+    #             steal(a, steal_b, depth+1)
+    #
+    # N = len(info)
+    # ans = float('inf')
+    # memo = list()
+    # steal(0, 0, 0)
+    # return ans if ans != float('inf') else -1
 
-            if steal_a < n and steal_a < ans:
-                steal(steal_a, b, depth+1)
-            if steal_b < m and a < ans:
-                steal(a, steal_b, depth+1)
-
-    N = len(info)
-    ans = float('inf')
-    memo = list()
-    steal(0, 0, 0)
-    return ans if ans != float('inf') else -1
+    dp = {0: 0}
+    for a, b in info:
+        new_dp = {}
+        for k, v in dp.items():
+            if a+k < n:
+                new_dp[a+k] = min(new_dp.get(a+k, v), v)
+            if b+v < m:
+                new_dp[k] = min(new_dp.get(k, b+v), b+v)
+        dp = new_dp
+    return min(dp) if dp else -1
 
 
 print(solution([[1, 2], [2, 3], [2, 1]], 4, 4)) # 2
