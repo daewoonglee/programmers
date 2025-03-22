@@ -1,7 +1,3 @@
-import sys
-sys.setrecursionlimit(10000)
-
-
 def solution(info, n, m):
     def steal(a, b, depth):
         nonlocal ans
@@ -11,16 +7,15 @@ def solution(info, n, m):
             steal_a = a+info[depth][0]
             steal_b = b+info[depth][1]
 
-            if steal_a < n:
+            if steal_a < n and steal_a < ans:
                 steal(steal_a, b, depth+1)
-            if steal_b < m:
+            if steal_b < m and a < ans:
                 steal(a, steal_b, depth+1)
 
     N = len(info)
     ans = float('inf')
     steal(0, 0, 0)
     return ans if ans != float('inf') else -1
-
 
 
 print(solution([[1, 2], [2, 3], [2, 1]], 4, 4)) # 2
